@@ -24,6 +24,26 @@ Live gebruik:
 python -m prijsscraper dagelijks     # scrape + analyse + rapport in output/JJJJ-MM-DD/
 ```
 
+## Webomgeving
+
+```bash
+python -m prijsscraper web                       # http://127.0.0.1:8080
+python -m prijsscraper web --export rapport.html # zelfstandige, deelbare versie
+```
+
+| Scherm | Wat |
+|---|---|
+| **Vandaag** | De voorstellen van vandaag. Per voorstel akkoord of afwijzen, met onderbouwing, de prijzen van de concurrenten en een grafiek van 30 dagen. Bovenaan staat **Exporteer akkoord**. |
+| **Artikelen** | Het hele assortiment met een prijsindex t.o.v. de markt (boven 100 = duurder), marge en trend. Klik op een artikel voor details. |
+| **Concurrenten** | De status per concurrent (actief, geblokkeerd of storing), hun prijsindex en hoeveel scrapes lukten. |
+| **Signalen** | Wat de engine niet zelf oplost: markt onder onze margebodem, verdachte koppelingen of te weinig data. |
+
+In de servermodus worden beoordelingen in de database opgeslagen, zodat `doorvoeren` ze oppakt.
+In de geëxporteerde versie blijven ze in de browser. De vormgeving volgt de beeldtaal van de
+HoutUnie-groep (Jost/Barlow, steen, inkt en maple), zonder hun logo.
+
+Voorbeelden: `docs/omgeving-voorbeeld.html` (gesimuleerd) en `docs/omgeving-live-run-1.html` (echte run 1).
+
 ## Inrichting (eenmalig)
 
 | Bestand | Wat |

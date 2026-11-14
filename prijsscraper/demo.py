@@ -75,7 +75,11 @@ def genereer(doelmap: Path = Path("data/demo"), dagen: int = 30, seed: int = 7) 
         shutil.rmtree(doelmap)
     cfgmap = doelmap / "config"
     cfgmap.mkdir(parents=True)
-    shutil.copy("config/concurrenten.yaml", cfgmap / "concurrenten.yaml")
+    # in de demo zijn alle concurrenten 'bereikbaar' (gesimuleerd)
+    yaml_tekst = Path("config/concurrenten.yaml").read_text(encoding="utf-8")
+    yaml_tekst = "\n".join(r for r in yaml_tekst.splitlines()
+                           if not r.strip().startswith(("bereikbaar:", "notitie:")))
+    (cfgmap / "concurrenten.yaml").write_text(yaml_tekst + "\n", encoding="utf-8")
     shutil.copy("config/strategie.yaml", cfgmap / "strategie.yaml")
 
     producten, matches = [], []

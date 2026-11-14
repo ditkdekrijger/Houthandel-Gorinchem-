@@ -18,6 +18,8 @@ class Concurrent:
     basis_url: str
     min_interval_sec: float | None = None
     selectors: dict = field(default_factory=dict)
+    bereikbaar: bool = True
+    notitie: str = ""
 
 
 @dataclass
@@ -70,6 +72,8 @@ def laad_concurrenten(pad: Path) -> tuple[dict, dict[str, Concurrent]]:
             basis_url=c.get("basis_url", ""),
             min_interval_sec=c.get("min_interval_sec"),
             selectors=c.get("selectors") or {},
+            bereikbaar=bool(c.get("bereikbaar", True)),
+            notitie=c.get("notitie", ""),
         )
     return data.get("instellingen", {}), res
 

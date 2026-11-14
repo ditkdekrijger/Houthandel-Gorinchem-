@@ -49,6 +49,7 @@ def cmd_voorstellen(args, start: str | None = None):
     analyse = PrijsEngine(cfg, db).run()
     for v in analyse.voorstellen:
         v.id = db.bewaar_voorstel(vandaag.isoformat(), v)
+    db.bewaar_signalen(vandaag.isoformat(), analyse.signalen)
     db.commit()
     uit = Path(args.uitvoer) / vandaag.isoformat()
     schrijf_csv(analyse, uit / "voorstellen.csv")
@@ -123,6 +124,21 @@ def cmd_doorvoeren(args):
           f"(of koppel een export, zie README).")
 
 
+def cmd_web(args):
+    from .web.data import bouw_payload
+    from .web.server import render_app, serve
+    cfgmap, dbpad = _paden(args)
+    if args.export:
+        db = DB(dbpad)
+        payload = bouw_payload(laad_config(cfgmap), db, modus=args.modus)
+        db.close()
+        Path(args.export).parent.mkdir(parents=True, exist_ok=True)
+        Path(args.export).write_text(render_app(payload), encoding="utf-8")
+        print(f"Statische omgeving geschreven naar {args.export}")
+        return
+    serve(cfgmap, dbpad, args.host, args.poort)
+
+
 def cmd_demo(args):
     from .demo import genereer
     map_ = genereer(Path(args.map))
@@ -151,6 +167,11 @@ def main(argv=None):
         s = sub.add_parser(naam); s.add_argument("ids", nargs="*"); s.add_argument("--csv")
         s.set_defaults(fn=lambda a, st=st: cmd_status(a, st))
     sub.add_parser("doorvoeren").set_defaults(fn=cmd_doorvoeren)
+    s = sub.add_parser("web", help="webomgeving starten of als statisch bestand exporteren")
+    s.add_argument("--host", default="127.0.0.1"); s.add_argument("--poort", type=int, default=8080)
+    s.add_argument("--export", help="schrijf een zelfstandige HTML-versie naar dit pad")
+    s.add_argument("--modus", default="live", choices=["live", "voorbeeld"])
+    s.set_defaults(fn=cmd_web)
     s = sub.add_parser("demo"); s.add_argument("--map", default="data/demo"); s.set_defaults(fn=cmd_demo)
 
     args = ap.parse_args(argv)

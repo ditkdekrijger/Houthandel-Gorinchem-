@@ -35,6 +35,13 @@ CREATE TABLE IF NOT EXISTS voorstellen (
 );
 CREATE INDEX IF NOT EXISTS ix_vs ON voorstellen (sku, datum);
 
+CREATE TABLE IF NOT EXISTS signalen (
+    datum  TEXT NOT NULL,
+    sku    TEXT NOT NULL,
+    soort  TEXT NOT NULL,
+    tekst  TEXT
+);
+
 CREATE TABLE IF NOT EXISTS eigen_prijzen (
     tijdstip  TEXT NOT NULL,
     sku       TEXT NOT NULL,
@@ -135,6 +142,18 @@ class DB:
         if status:
             q += " AND status=?"; p.append(status)
         return [dict(r) for r in self.con.execute(q + " ORDER BY score DESC", p).fetchall()]
+
+    def bewaar_signalen(self, datum: str, signalen):
+        self.con.execute("DELETE FROM signalen WHERE datum=?", (datum,))
+        self.con.executemany("INSERT INTO signalen VALUES (?,?,?,?)",
+                             [(datum, s.sku, s.soort, s.tekst) for s in signalen])
+
+    def signalen(self, datum: str):
+        return [dict(r) for r in self.con.execute("SELECT * FROM signalen WHERE datum=?", (datum,))]
+
+    def laatste_datum(self) -> str | None:
+        r = self.con.execute("SELECT MAX(datum) d FROM voorstellen").fetchone()
+        return r["d"] if r else None
 
     def registreer_eigen_prijs(self, sku: str, prijs: float, bron: str = "handmatig"):
         self.con.execute("INSERT INTO eigen_prijzen VALUES (?,?,?,?)", (nu(), sku, prijs, bron))

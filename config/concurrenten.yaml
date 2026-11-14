@@ -27,6 +27,8 @@ concurrenten:
     gewicht: 1.0
     prijs_incl_btw: true
     basis_url: https://www.gamma.nl
+    bereikbaar: false
+    notitie: "Botbescherming (HTTP 429)"
 
   - id: karwei
     naam: KARWEI
@@ -34,6 +36,8 @@ concurrenten:
     gewicht: 0.9
     prijs_incl_btw: true
     basis_url: https://www.karwei.nl
+    bereikbaar: false
+    notitie: "Botbescherming (HTTP 429)"
 
   - id: praxis
     naam: Praxis
@@ -41,6 +45,8 @@ concurrenten:
     gewicht: 1.0
     prijs_incl_btw: true
     basis_url: https://www.praxis.nl
+    bereikbaar: false
+    notitie: "Weigert geïdentificeerde bots (HTTP 403)"
 
   - id: hornbach
     naam: HORNBACH
@@ -48,6 +54,8 @@ concurrenten:
     gewicht: 1.2
     prijs_incl_btw: true
     basis_url: https://www.hornbach.nl
+    bereikbaar: false
+    notitie: "JavaScript-botcheck"
 
   - id: bouwmaat
     naam: Bouwmaat
@@ -62,6 +70,8 @@ concurrenten:
     gewicht: 1.5
     prijs_incl_btw: true
     basis_url: https://www.houthandelonline.nl
+    bereikbaar: false
+    notitie: "Botbescherming (HTTP 403)"
 
   - id: gadero
     naam: Gadero
@@ -69,6 +79,7 @@ concurrenten:
     gewicht: 1.2
     prijs_incl_btw: true
     basis_url: https://gadero.nl
+    notitie: "Alleen productpagina's met lengte in de URL"
 
   - id: onlinetuinhout
     naam: Online Tuinhout
@@ -85,6 +96,8 @@ concurrenten:
     gewicht: 1.0
     prijs_incl_btw: true
     basis_url: https://www.opmaatzagen.nl
+    bereikbaar: false
+    notitie: "Alleen vanaf-prijzen voor zaagwerk op maat"
 
   - id: bouwbestel
     naam: Bouwbestel
@@ -92,6 +105,8 @@ concurrenten:
     gewicht: 0.8
     prijs_incl_btw: true
     basis_url: https://www.bouwbestel.nl
+    bereikbaar: false
+    notitie: "Weigert geïdentificeerde bots (HTTP 403)"
     # Voorbeeld van handmatige selectors (alleen nodig als automatische detectie faalt):
     # selectors:
     #   prijs: ".product-info .price-final"

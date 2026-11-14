@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prijsmonitor · Houthandel Gorinchem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Jost:wght@400;500;600&family=Hedvig+Letters+Serif&display=swap" rel="stylesheet">
+<style>
+/* ---------- design tokens ---------- */
+:root{
+  --ink:#0E0D0C; --black:#050505; --paper:#FFFFFF; --stone:#F1F0ED; --stone-2:#E6E3DD;
+  --line:#D8D6D1; --line-dark:#45423E; --muted:#5B5853; --muted-dark:#B4B1AB;
+  --maple:#E0B77A; --maple-deep:#8A5A1C; --green:#1E5C3E; --red:#9E3A22; --cream:#EFE6D2;
+  /* rollen (light) */
+  --bg:var(--stone); --surface:var(--paper); --tx:var(--ink); --tx-2:var(--muted); --rule:var(--line);
+  --band:#E3DCCF; --up:var(--green); --down:var(--red); --chip:var(--paper);
+  --hero:var(--ink); --hero-tx:#fff; --hero-2:var(--muted-dark); --hero-rule:var(--line-dark);
+  --display:'Jost','Barlow',system-ui,sans-serif;
+  --body:'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mark:'Hedvig Letters Serif',Georgia,'Times New Roman',serif;
+  --gut:clamp(16px,4vw,56px);
+  --ease:cubic-bezier(.2,.7,.2,1);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121110; --surface:#1B1A18; --tx:#F1F0ED; --tx-2:#B4B1AB; --rule:#34322F;
+    --band:#3A332A; --up:#6CC294; --down:#E58A6E; --chip:#1B1A18;
+    --hero:#050505; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121110; --surface:#1B1A18; --tx:#F1F0ED; --tx-2:#B4B1AB; --rule:#34322F;
+  --band:#3A332A; --up:#6CC294; --down:#E58A6E; --chip:#1B1A18;
+  --hero:#050505; color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 var(--body);-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+a{color:inherit}
+.wrap{max-width:1400px;margin:0 auto;padding:0 var(--gut)}
+.num{font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- header ---------- */
+header.top{position:sticky;top:0;z-index:20;background:var(--hero);color:var(--hero-tx);border-bottom:1px solid var(--hero-rule)}
+header.top .wrap{display:flex;align-items:center;gap:28px;height:76px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;flex:none}
+.brand svg{width:34px;height:34px}
+.brand b{font:400 24px/1 var(--mark);letter-spacing:-.01em}
+.brand small{display:block;font:600 10px/1 var(--body);letter-spacing:.18em;text-transform:uppercase;color:var(--maple);margin-top:5px}
+nav.main{display:flex;gap:4px;margin-left:auto}
+nav.main a{text-decoration:none;font-weight:500;padding:8px 14px;border-radius:99px;color:#E9E7E2;transition:background .2s var(--ease)}
+nav.main a:hover{background:#1f1d1b}
+nav.main a[aria-current="page"]{background:#24221f;color:#fff}
+nav.main a .cnt{display:inline-block;min-width:20px;margin-left:6px;padding:0 6px;border-radius:99px;background:var(--maple);color:var(--ink);font-size:12px;font-weight:700;text-align:center}
+.btn{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:99px;padding:12px 22px;font-weight:600;cursor:pointer;text-decoration:none;transition:transform .2s var(--ease),background .2s}
+.btn:active{transform:scale(.98)}
+.btn-maple{background:var(--maple);color:var(--ink)}
+.btn-maple:hover{background:#e8c590}
+.btn-ghost{background:transparent;color:inherit;box-shadow:inset 0 0 0 1px currentColor}
+.btn-ink{background:var(--tx);color:var(--bg)}
+.btn svg{width:16px;height:16px}
+
+/* ---------- hero ---------- */
+.hero{background:var(--hero);color:var(--hero-tx);padding:56px 0 44px}
+.eyebrow{display:flex;align-items:center;gap:14px;font:600 12px/1 var(--body);letter-spacing:.2em;text-transform:uppercase}
+.eyebrow::before{content:"";width:28px;height:3px;background:var(--maple);border-radius:2px}
+.hero h1{font:500 clamp(48px,8.5vw,120px)/.95 var(--display);letter-spacing:-.035em;margin:22px 0 18px}
+.dot{color:var(--maple)}
+.hero p.lead{font-size:clamp(18px,1.6vw,22px);color:#D6D4CF;max-width:760px;margin:0}
+.hero p.lead b{color:#fff;font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:40px}
+.kpi{border:1px solid var(--hero-rule);border-radius:14px;padding:18px 20px;min-height:120px;display:flex;flex-direction:column}
+.kpi .n{font:600 12px/1 var(--body);letter-spacing:.14em;color:var(--maple)}
+.kpi .v{font:500 36px/1.1 var(--display);margin-top:auto}
+.kpi .l{color:var(--hero-2);font-size:14px}
+.banner{background:var(--maple);color:var(--ink);font-weight:500;font-size:14px;text-align:center;padding:8px var(--gut)}
+
+/* ---------- sectie ---------- */
+section.blok{padding:56px 0 72px}
+.kop{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:24px}
+.kop h2{font:500 clamp(30px,3.6vw,48px)/1.05 var(--display);letter-spacing:-.02em;margin:0}
+.kop p{margin:6px 0 0;color:var(--tx-2)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--rule);background:var(--chip);border-radius:99px;padding:8px 16px;cursor:pointer;font-weight:500;font-size:15px}
+.chip[aria-pressed="true"]{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.chip .c{opacity:.6;margin-left:4px}
+.voortgang{display:flex;align-items:center;gap:12px;color:var(--tx-2);font-size:14px;margin-top:14px}
+.voortgang .bar{width:180px;height:4px;border-radius:2px;background:var(--rule);overflow:hidden}
+.voortgang .bar i{display:block;height:100%;background:var(--maple-deep);border-radius:2px;transition:width .4s var(--ease)}
+
+/* ---------- voorstel-rijen ---------- */
+.lijst{border-top:1px solid var(--rule)}
+.rij{border-bottom:1px solid var(--rule)}
+.rij-kop{display:grid;grid-template-columns:62px minmax(220px,1.6fr) 1.1fr 1.1fr .8fr auto;gap:24px;align-items:center;padding:22px 0;cursor:pointer}
+.cirkel{width:62px;height:62px;border-radius:50%;border:1.5px solid var(--tx);display:grid;place-items:center;flex:none}
+.cirkel svg{width:22px;height:22px}
+.cirkel.omhoog{color:var(--up);border-color:var(--up)}
+.cirkel.omlaag{color:var(--down);border-color:var(--down)}
+.titel{font:500 clamp(19px,1.6vw,24px)/1.2 var(--display);letter-spacing:-.01em}
+.sub{color:var(--tx-2);font-size:14px;margin-top:3px}
+.prijs{font:500 22px/1.2 var(--display)}
+.prijs s{color:var(--tx-2);font-size:16px;text-decoration-thickness:1px;margin-right:6px}
+.delta{font-size:14px;font-weight:600}
+.delta.omhoog{color:var(--up)} .delta.omlaag{color:var(--down)}
+.acties{display:flex;gap:10px;align-items:center}
+.rond{width:46px;height:46px;border-radius:50%;border:1.5px solid var(--tx);background:transparent;display:grid;place-items:center;cursor:pointer;transition:background .2s var(--ease),color .2s}
+.rond svg{width:18px;height:18px}
+.rond:hover{background:var(--tx);color:var(--bg)}
+.rond.ok[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+.rond.nee[aria-pressed="true"]{background:var(--tx-2);border-color:var(--tx-2);color:var(--bg)}
+.rond.uit svg{transition:transform .3s var(--ease)}
+.rij.open .rond.uit svg{transform:rotate(180deg)}
+.rij.st-afgewezen .rij-kop > :not(.acties){opacity:.45}
+.tikhint{display:none;font-size:13px;color:var(--maple-deep);font-weight:600;margin-top:6px}
+.statuslabel{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:4px}
+.statuslabel.akkoord{color:var(--green)} .statuslabel.afgewezen{color:var(--tx-2)}
+
+/* marktband */
+.markt{min-width:0}
+.mband{position:relative;height:22px;margin:0 7px}
+.mband .lijn{position:absolute;left:0;right:0;top:10px;height:2px;background:var(--rule);border-radius:1px}
+.mband .rng{position:absolute;top:8px;height:6px;background:var(--band);border-radius:3px}
+.mband i{position:absolute;top:5px;width:12px;height:12px;margin-left:-6px;border-radius:50%}
+.mband .c{background:var(--muted-dark);box-shadow:0 0 0 2px var(--surface)}
+.mband .o{border:2px solid var(--tx);background:var(--bg)}
+.mband .n.omhoog{background:var(--up);box-shadow:0 0 0 2px var(--bg)} .mband .n.omlaag{background:var(--down);box-shadow:0 0 0 2px var(--bg)}
+.mlab{display:flex;justify-content:space-between;font-size:12px;color:var(--tx-2);margin-top:2px}
+
+/* detail */
+.detail{display:none;padding:0 0 30px 86px}
+.rij.open .detail{display:grid;grid-template-columns:1fr 1.25fr;gap:32px}
+.kaart{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:22px}
+.kaart h3{font:500 18px/1.2 var(--display);margin:0 0 12px}
+.reden{font-size:17px;line-height:1.55;margin:0 0 18px}
+table.kale{width:100%;border-collapse:collapse;font-size:15px}
+table.kale td,table.kale th{padding:9px 0;border-bottom:1px solid var(--rule);text-align:left}
+table.kale th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-2);font-weight:600}
+table.kale tr:last-child td{border-bottom:0}
+table.kale .r{text-align:right}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:99px;background:var(--cream);color:var(--maple-deep);margin-left:6px}
+.wij td{font-weight:600}
+
+/* grafiek */
+.grafiek{position:relative}
+.grafiek svg{display:block;width:100%;height:auto;overflow:visible}
+.legenda{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--tx-2);margin-bottom:10px}
+.legenda span{display:inline-flex;align-items:center;gap:7px}
+.legenda i{display:inline-block;width:18px;height:2px;background:var(--tx)}
+.legenda i.band{height:10px;background:var(--band);border-radius:2px}
+.legenda i.med{background:repeating-linear-gradient(90deg,var(--maple-deep) 0 5px,transparent 5px 8px)}
+.tip{position:absolute;pointer-events:none;background:var(--tx);color:var(--bg);font-size:13px;line-height:1.45;padding:10px 12px;border-radius:10px;min-width:170px;opacity:0;transform:translateY(4px);transition:opacity .12s,transform .12s;z-index:5}
+.tip.aan{opacity:1;transform:none}
+.tip b{font-weight:600}
+.tip .rg{display:flex;justify-content:space-between;gap:14px}
+.tip .rg span:first-child{opacity:.7}
+
+/* artikelen */
+.zoek{display:flex;gap:10px;flex-wrap:wrap}
+.zoek input,.zoek select{border:1px solid var(--rule);background:var(--surface);border-radius:99px;padding:10px 18px;min-width:220px}
+.tabel{width:100%;border-collapse:collapse}
+.tabel th{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--tx-2);font-weight:600;text-align:left;padding:12px 10px;border-bottom:1px solid var(--tx)}
+.tabel td{padding:16px 10px;border-bottom:1px solid var(--rule);vertical-align:middle}
+.tabel tr.klik{cursor:pointer}
+.tabel tr.klik:hover td{background:var(--surface)}
+.tabel .r{text-align:right}
+.idx{display:inline-block;font-weight:600;font-size:13px;padding:3px 10px;border-radius:99px}
+.idx.hoog{background:#F3E3E0;color:#7F2E1B} .idx.laag{background:#DCEADF;color:#174A31} .idx.mid{background:var(--stone-2);color:var(--ink)}
+.spark{width:120px;height:30px;display:block}
+.leeg{padding:48px 0;text-align:center;color:var(--tx-2)}
+
+/* concurrenten */
+.raster{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.ckaart{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:14px;min-height:220px}
+.ckaart .nr{font:600 12px/1 var(--body);letter-spacing:.14em;color:var(--maple-deep)}
+.ckaart h3{font:500 26px/1.1 var(--display);margin:0;letter-spacing:-.01em}
+.status{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;padding:4px 12px 4px 10px;border-radius:99px;align-self:flex-start}
+.status svg{width:14px;height:14px}
+.status.actief{background:#DCEADF;color:#174A31}
+.status.geblokkeerd{background:var(--stone-2);color:var(--ink)}
+.status.storing{background:#F6E6CC;color:#6B4512}
+.status.niet{background:var(--stone-2);color:var(--muted)}
+.cstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:auto;border-top:1px solid var(--rule);padding-top:14px}
+.cstats b{display:block;font:500 22px/1.2 var(--display)}
+.cstats span{font-size:12px;color:var(--tx-2)}
+.notitie{font-size:14px;color:var(--tx-2);margin:0}
+
+/* signalen */
+.sig{display:grid;grid-template-columns:62px 1fr auto;gap:24px;align-items:center;padding:20px 0;border-bottom:1px solid var(--rule)}
+.sig .cirkel{color:var(--maple-deep);border-color:var(--maple-deep)}
+.sig .cirkel.onder_bodem{color:var(--down);border-color:var(--down)}
+.sig .cirkel.te_weinig_data{color:var(--tx-2);border-color:var(--tx-2)}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(5,5,5,.55);display:none;align-items:flex-start;justify-content:center;padding:6vh 16px;z-index:40;overflow:auto}
+.modal.aan{display:flex}
+.modal .doos{background:var(--bg);border-radius:20px;max-width:980px;width:100%;padding:28px;position:relative}
+.modal .sluit{position:absolute;top:18px;right:18px}
+
+footer{background:var(--hero);color:var(--hero-2);font-size:14px;padding:28px 0}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+/* responsive */
+@media (max-width:1080px){
+  .rij-kop{grid-template-columns:52px 1fr auto;row-gap:12px}
+  .rij-kop .markt,.rij-kop .mrg{grid-column:2 / -1}
+  .rij-kop .prijzen{grid-column:2 / 3}
+  .rij-kop .acties{grid-column:3;grid-row:1 / 3;align-self:start;flex-direction:column}
+  .cirkel{width:52px;height:52px}
+  .detail{padding-left:0}
+  .rij.open .detail{grid-template-columns:1fr}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:760px){
+  header.top{position:static}
+  header.top .wrap{height:auto;flex-wrap:wrap;gap:6px 10px;padding-top:12px;padding-bottom:6px}
+  .brand b{font-size:20px}
+  nav.main{order:3;width:calc(100% + 2 * var(--gut));margin:0 calc(-1 * var(--gut));padding:0 var(--gut) 4px;overflow-x:auto;scrollbar-width:none}
+  nav.main a{white-space:nowrap;padding:7px 12px;font-size:15px}
+  .top .btn-maple{margin-left:auto;padding:0;width:42px;height:42px;justify-content:center}
+  .top .btn-maple .lbl{display:none}
+  .hero{padding:36px 0 32px}
+  .rij-kop .mrg{display:flex;align-items:baseline;gap:8px}
+  .tikhint{display:block!important}
+  .rij-kop{grid-template-columns:44px 1fr;gap:12px}
+  .cirkel{width:44px;height:44px}.cirkel svg{width:18px;height:18px}
+  .rij-kop .markt,.rij-kop .mrg,.rij-kop .prijzen,.rij-kop .acties{grid-column:2}
+  .rij-kop .acties{grid-row:auto;flex-direction:row}
+  .verberg-m{display:none}
+  .tabel td,.tabel th{padding:12px 6px}
+  .sig{grid-template-columns:44px 1fr}
+  .sig .rond{display:none}
+  .kpi .v{font-size:28px}
+}
+</style>
+</head>
+<body>
+<div id="banner" class="banner" hidden></div>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#vandaag" aria-label="Prijsmonitor Houthandel Gorinchem">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18.5" fill="none" stroke="#E0B77A" stroke-width="2"/><circle cx="20" cy="20" r="12.5" fill="none" stroke="#E0B77A" stroke-width="1.6"/><circle cx="21" cy="19.5" r="6.5" fill="none" stroke="#E0B77A" stroke-width="1.4"/><circle cx="21.5" cy="19" r="2" fill="#E0B77A"/></svg>
+      <span><b>Houthandel Gorinchem</b><small>Prijsmonitor</small></span>
+    </a>
+    <nav class="main" aria-label="Hoofdmenu">
+      <a href="#vandaag" data-v="vandaag">Vandaag</a>
+      <a href="#artikelen" data-v="artikelen">Artikelen</a>
+      <a href="#concurrenten" data-v="concurrenten">Concurrenten</a>
+      <a href="#signalen" data-v="signalen">Signalen<span class="cnt" id="sigcnt"></span></a>
+    </nav>
+    <button class="btn btn-maple" id="export" title="Exporteer goedgekeurde prijzen als CSV">
+      <span class="lbl">Exporteer akkoord</span>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 2v9M4 7l4 4 4-4M2.5 14h11"/></svg>
+    </button>
+  </div>
+</header>
+<main id="app"></main>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mtitel"><div class="doos" id="mdoos"></div></div>
+<footer><div class="wrap"><span id="voet"></span><span>Prijsmonitor · gebouwd door MUSTANG</span></div></footer>
+
+<script>
+const DATA_INGEBED = {"meta": {"datum": "2026-11-14", "gegenereerd": "2026-11-14T15:19:47Z", "modus": "live", "bedrijf": "Houthandel Gorinchem", "laatste_scrape": "2026-11-14T15:07:54", "voorstellen_per_dag": 20}, "kpis": {"voorstellen": 3, "omhoog": 2, "omlaag": 1, "bw_week": 34.87, "artikelen": 12, "gedekt": 3, "concurrenten_actief": 2, "concurrenten_totaal": 10, "signalen": 9}, "voorstellen": [{"id": 4, "sku": "HG-1001", "naam": "Steigerhout nieuw vuren 32x200 mm 300 cm", "categorie": "steigerhout", "rol": "trekker", "huidig": 12.95, "voorstel": 12.49, "richting": "omlaag", "pct": -0.0355, "marge_oud": 0.43, "marge_nieuw": 0.409, "bw": 1.65, "score": 61.34, "reden": "1 van 2 concurrenten goedkoper; goedkoopste kwart € 12,36", "status": "open", "laagste": 11.96, "mediaan": 15.27, "hoogste": 18.59, "concurrenten": [{"id": "onlinetuinhout", "naam": "Online Tuinhout", "prijs": 11.96, "url": "https://www.onlinetuinhout.nl/steigerplank-nieuw-29-x-19-x-400-cm-blank", "actie": false}, {"id": "bouwmaat", "naam": "Bouwmaat", "prijs": 18.59, "url": "https://www.bouwmaat.nl/products/steigerhout-gekramd-c18-32x200x5000mm-70-pefc-928258", "actie": false}]}, {"id": 5, "sku": "HG-5001", "naam": "Hardhout vlonderplank Bangkirai 25x145 mm 305 cm", "categorie": "vlonderhout", "rol": "marge", "huidig": 31.95, "voorstel": 34.49, "richting": "omhoog", "pct": 0.0795, "marge_oud": 0.4849, "marge_nieuw": 0.5229, "bw": 27.69, "score": 27.69, "reden": "we zijn nu de goedkoopste; marktmediaan € 52,15 laat ruimte voor marge; stapsgewijs richting doel € 54,24", "status": "open", "laagste": 45.75, "mediaan": 51.47, "hoogste": 57.18, "concurrenten": [{"id": "onlinetuinhout", "naam": "Online Tuinhout", "prijs": 45.75, "url": "https://www.onlinetuinhout.nl/bangkirai-loopdekdeel-grof-profiel-glad-geschaafd-25-x-145-x-305-cm", "actie": false}, {"id": "bouwmaat", "naam": "Bouwmaat", "prijs": 57.18, "url": "https://www.bouwmaat.nl/products/elephant-bangkirai-vlonderplank-25x145mm-fsc-mix-70-f10592?variant=56807727006022", "actie": false}]}, {"id": 6, "sku": "HG-4001", "naam": "Douglas tuinplank 22x200 mm 400 cm", "categorie": "tuinhout", "rol": "kern", "huidig": 17.95, "voorstel": 18.49, "richting": "omhoog", "pct": 0.0301, "marge_oud": 0.4405, "marge_nieuw": 0.4568, "bw": 5.53, "score": 5.53, "reden": "we zijn nu nr. 2 van 3; marktmediaan € 19,06 laat ruimte voor marge", "status": "open", "laagste": 16.95, "mediaan": 18.83, "hoogste": 20.72, "concurrenten": [{"id": "onlinetuinhout", "naam": "Online Tuinhout", "prijs": 16.95, "url": "https://www.onlinetuinhout.nl/kantplank-lariks-douglas-bezaagd-22-x-20-x-400-cm", "actie": false}, {"id": "bouwmaat", "naam": "Bouwmaat", "prijs": 20.72, "url": "https://www.bouwmaat.nl/products/douglas-gedroogd-22x200mm-70-pefc-f10586?variant=56807941767494", "actie": false}]}], "artikelen": [{"sku": "HG-1001", "naam": "Steigerhout nieuw vuren 32x200 mm 300 cm", "categorie": "steigerhout", "rol": "trekker", "eenheid": "stuk", "prijs": 12.95, "inkoop": 6.1, "marge": 0.43, "afzet": 85.0, "n": 2, "concurrenten": [{"id": "onlinetuinhout", "naam": "Online Tuinhout", "prijs": 11.96, "url": "https://www.onlinetuinhout.nl/steigerplank-nieuw-29-x-19-x-400-cm-blank", "actie": false}, {"id": "bouwmaat", "naam": "Bouwmaat", "prijs": 18.59, "url": "https://www.bouwmaat.nl/products/steigerhout-gekramd-c18-32x200x5000mm-70-pefc-928258", "actie": false}], "laagste": 11.96, "mediaan": 15.27, "hoogste": 18.59, "index": 0.8478, "positie": 2}, {"sku": "HG-1002", "naam": "Steigerhout gebruikt 32x200 mm 300 cm", "categorie": "steigerhout", "rol": "trekker", "eenheid": "stuk", "prijs": 15.49, "inkoop": 7.4, "marge": 0.4219, "afzet": 60.0, "n": 0, "concurrenten": []}, {"sku": "HG-2001", "naam": "OSB/3 plaat 18 mm 244x122 cm", "categorie": "plaatmateriaal", "rol": "trekker", "eenheid": "stuk", "prijs": 27.95, "inkoop": 14.2, "marge": 0.3853, "afzet": 40.0, "n": 1, "concurrenten": [{"id": "bouwmaat", "naam": "Bouwmaat", "prijs": 27.35, "url": "https://www.bouwmaat.nl/products/osb-3-constructieplaat-tg2-2440x1220x18mm-fsc-mix-70-585424", "actie": false}], "laagste": 27.35, "mediaan": 27.35, "hoogste": 27.35, "index": 1.0221, "positie": 2}, {"sku": "HG-2002", "naam": "Underlayment 18 mm 244x122 cm", "categorie": "plaatmateriaal", "rol": "kern", "eenheid": "stuk", "prijs": 34.95, "inkoop": 17.9, "marge": 0.3803, "afzet": 22.0, "n": 1, "concurrenten": [{"id": "bouwmaat", "naam": "Bouwmaat", "prijs": 34.59, "url": "https://www.bouwmaat.nl/products/elliottis-underlayment-tg2-2440x1220x18mm-fsc-mix-70-589433", "actie": false}], "laagste": 34.59, "mediaan": 34.59, "hoogste": 34.59, "index": 1.0103, "positie": 2}, {"sku": "HG-2003", "naam": "Betonplex 18 mm 250x125 cm", "categorie": "plaatmateriaal", "rol": "kern", "eenheid": "stuk", "prijs": 57.95, "inkoop": 29.5, "marge": 0.384, "afzet": 15.0, "n": 1, "concurrenten": [{"id": "bouwmaat", "naam": "Bouwmaat", "prijs": 79.29, "url": "https://www.bouwmaat.nl/products/acacia-betonplex-2500x1250x18mm-fsc-mix-70-10000961", "actie": false}], "laagste": 79.29, "mediaan": 79.29, "hoogste": 79.29, "index": 0.7308, "positie": 1}, {"sku": "HG-3001", "naam": "Vuren geschaafd 44x69 mm 300 cm", "categorie": "constructiehout", "rol": "trekker", "eenheid": "stuk", "prijs": 6.99, "inkoop": 3.2, "marge": 0.4461, "afzet": 120.0, "n": 1, "concurrenten": [{"id": "bouwmaat", "naam": "Bouwmaat", "prijs": 5.99, "url": "https://www.bouwmaat.nl/products/vuren-geschaafd-c24-44x69mm-fsc-mix-70-f10019?variant=56807926923590", "actie": false}], "laagste": 5.99, "mediaan": 5.99, "hoogste": 5.99, "index": 1.167, "positie": 2}, {"sku": "HG-3002", "naam": "Vuren geschaafd 69x169 mm 400 cm (C24)", "categorie": "constructiehout", "rol": "kern", "eenheid": "stuk", "prijs": 32.49, "inkoop": 15.1, "marge": 0.4376, "afzet": 18.0, "n": 1, "concurrenten": [{"id": "bouwmaat", "naam": "Bouwmaat", "prijs": 37.9, "url": "https://www.bouwmaat.nl/products/vuren-geschaafd-c24-69x169mm-fsc-mix-70-f10022?variant=56807896842566", "actie": false}], "laagste": 37.9, "mediaan": 37.9, "hoogste": 37.9, "index": 0.8572, "positie": 1}, {"sku": "HG-4001", "naam": "Douglas tuinplank 22x200 mm 400 cm", "categorie": "tuinhout", "rol": "kern", "eenheid": "stuk", "prijs": 17.95, "inkoop": 8.3, "marge": 0.4405, "afzet": 45.0, "n": 2, "concurrenten": [{"id": "onlinetuinhout", "naam": "Online Tuinhout", "prijs": 16.95, "url": "https://www.onlinetuinhout.nl/kantplank-lariks-douglas-bezaagd-22-x-20-x-400-cm", "actie": false}, {"id": "bouwmaat", "naam": "Bouwmaat", "prijs": 20.72, "url": "https://www.bouwmaat.nl/products/douglas-gedroogd-22x200mm-70-pefc-f10586?variant=56807941767494", "actie": false}], "laagste": 16.95, "mediaan": 18.83, "hoogste": 20.72, "index": 0.9531, "positie": 2}, {"sku": "HG-4002", "naam": "Douglas paal 7x7 cm 270 cm", "categorie": "tuinhout", "rol": "kern", "eenheid": "stuk", "prijs": 14.49, "inkoop": 6.8, "marge": 0.4322, "afzet": 30.0, "n": 0, "concurrenten": []}, {"sku": "HG-5001", "naam": "Hardhout vlonderplank Bangkirai 25x145 mm 305 cm", "categorie": "vlonderhout", "rol": "marge", "eenheid": "stuk", "prijs": 31.95, "inkoop": 13.6, "marge": 0.4849, "afzet": 25.0, "n": 2, "concurrenten": [{"id": "onlinetuinhout", "naam": "Online Tuinhout", "prijs": 45.75, "url": "https://www.onlinetuinhout.nl/bangkirai-loopdekdeel-grof-profiel-glad-geschaafd-25-x-145-x-305-cm", "actie": false}, {"id": "bouwmaat", "naam": "Bouwmaat", "prijs": 57.18, "url": "https://www.bouwmaat.nl/products/elephant-bangkirai-vlonderplank-25x145mm-fsc-mix-70-f10592?variant=56807727006022", "actie": false}], "laagste": 45.75, "mediaan": 51.47, "hoogste": 57.18, "index": 0.6208, "positie": 1}, {"sku": "HG-6001", "naam": "Zweeds rabat Thermowood 18x165 mm 420 cm", "categorie": "gevelbekleding", "rol": "marge", "eenheid": "stuk", "prijs": 29.95, "inkoop": 12.4, "marge": 0.499, "afzet": 20.0, "n": 0, "concurrenten": []}, {"sku": "HG-6002", "naam": "Channelsiding Red Cedar 18x140 mm per m1", "categorie": "gevelbekleding", "rol": "marge", "eenheid": "m1", "prijs": 17.49, "inkoop": 6.9, "marge": 0.5226, "afzet": 35.0, "n": 0, "concurrenten": []}], "historie": {"HG-1001": [{"d": "2026-11-14", "min": 11.96, "med": 15.27, "max": 18.59, "n": 2, "per": {"bouwmaat": 18.59, "onlinetuinhout": 11.96}}], "HG-2001": [{"d": "2026-11-14", "min": 27.35, "med": 27.35, "max": 27.35, "n": 1, "per": {"bouwmaat": 27.35}}], "HG-4001": [{"d": "2026-11-14", "min": 16.95, "med": 18.83, "max": 20.72, "n": 2, "per": {"onlinetuinhout": 16.95, "bouwmaat": 20.72}}], "HG-2002": [{"d": "2026-11-14", "min": 34.59, "med": 34.59, "max": 34.59, "n": 1, "per": {"bouwmaat": 34.59}}], "HG-5001": [{"d": "2026-11-14", "min": 45.75, "med": 51.47, "max": 57.18, "n": 2, "per": {"onlinetuinhout": 45.75, "bouwmaat": 57.18}}], "HG-2003": [{"d": "2026-11-14", "min": 79.29, "med": 79.29, "max": 79.29, "n": 1, "per": {"bouwmaat": 79.29}}], "HG-3001": [{"d": "2026-11-14", "min": 5.99, "med": 5.99, "max": 5.99, "n": 1, "per": {"bouwmaat": 5.99}}], "HG-3002": [{"d": "2026-11-14", "min": 37.9, "med": 37.9, "max": 37.9, "n": 1, "per": {"bouwmaat": 37.9}}]}, "concurrenten": [{"id": "gamma", "naam": "GAMMA", "type": "bouwmarkt", "gewicht": 1.0, "url": "https://www.gamma.nl", "status": "geblokkeerd", "notitie": "Botbescherming (HTTP 429)", "ok": 0, "mislukt": 0, "matches": 0, "prijsindex": null, "artikelen": 0}, {"id": "karwei", "naam": "KARWEI", "type": "bouwmarkt", "gewicht": 0.9, "url": "https://www.karwei.nl", "status": "geblokkeerd", "notitie": "Botbescherming (HTTP 429)", "ok": 0, "mislukt": 0, "matches": 0, "prijsindex": null, "artikelen": 0}, {"id": "praxis", "naam": "Praxis", "type": "bouwmarkt", "gewicht": 1.0, "url": "https://www.praxis.nl", "status": "geblokkeerd", "notitie": "Weigert geïdentificeerde bots (HTTP 403)", "ok": 0, "mislukt": 0, "matches": 0, "prijsindex": null, "artikelen": 0}, {"id": "hornbach", "naam": "HORNBACH", "type": "bouwmarkt", "gewicht": 1.2, "url": "https://www.hornbach.nl", "status": "geblokkeerd", "notitie": "JavaScript-botcheck", "ok": 0, "mislukt": 0, "matches": 0, "prijsindex": null, "artikelen": 0}, {"id": "bouwmaat", "naam": "Bouwmaat", "type": "houthandel", "gewicht": 1.4, "url": "https://www.bouwmaat.nl", "status": "actief", "notitie": "", "ok": 8, "mislukt": 0, "matches": 8, "prijsindex": 1.1604, "artikelen": 8}, {"id": "houthandelonline", "naam": "HouthandelOnline", "type": "online", "gewicht": 1.5, "url": "https://www.houthandelonline.nl", "status": "geblokkeerd", "notitie": "Botbescherming (HTTP 403)", "ok": 0, "mislukt": 0, "matches": 0, "prijsindex": null, "artikelen": 0}, {"id": "gadero", "naam": "Gadero", "type": "online", "gewicht": 1.2, "url": "https://gadero.nl", "status": "niet gekoppeld", "notitie": "Alleen productpagina's met lengte in de URL", "ok": 0, "mislukt": 0, "matches": 0, "prijsindex": null, "artikelen": 0}, {"id": "onlinetuinhout", "naam": "Online Tuinhout", "type": "online", "gewicht": 1.1, "url": "https://www.onlinetuinhout.nl", "status": "actief", "notitie": "", "ok": 3, "mislukt": 0, "matches": 3, "prijsindex": 0.9443, "artikelen": 3}, {"id": "opmaatzagen", "naam": "OPMAATZAGEN.nl", "type": "online", "gewicht": 1.0, "url": "https://www.opmaatzagen.nl", "status": "geblokkeerd", "notitie": "Alleen vanaf-prijzen voor zaagwerk op maat", "ok": 0, "mislukt": 0, "matches": 0, "prijsindex": null, "artikelen": 0}, {"id": "bouwbestel", "naam": "Bouwbestel", "type": "online", "gewicht": 0.8, "url": "https://www.bouwbestel.nl", "status": "geblokkeerd", "notitie": "Weigert geïdentificeerde bots (HTTP 403)", "ok": 0, "mislukt": 0, "matches": 0, "prijsindex": null, "artikelen": 0}], "signalen": [{"sku": "HG-1002", "naam": "Steigerhout gebruikt 32x200 mm 300 cm", "soort": "te_weinig_data", "tekst": "slechts 0 geldige concurrentprijs/prijzen"}, {"sku": "HG-2001", "naam": "OSB/3 plaat 18 mm 244x122 cm", "soort": "te_weinig_data", "tekst": "slechts 1 geldige concurrentprijs/prijzen"}, {"sku": "HG-2002", "naam": "Underlayment 18 mm 244x122 cm", "soort": "te_weinig_data", "tekst": "slechts 1 geldige concurrentprijs/prijzen"}, {"sku": "HG-2003", "naam": "Betonplex 18 mm 250x125 cm", "soort": "te_weinig_data", "tekst": "slechts 1 geldige concurrentprijs/prijzen"}, {"sku": "HG-3001", "naam": "Vuren geschaafd 44x69 mm 300 cm", "soort": "te_weinig_data", "tekst": "slechts 1 geldige concurrentprijs/prijzen"}, {"sku": "HG-3002", "naam": "Vuren geschaafd 69x169 mm 400 cm (C24)", "soort": "te_weinig_data", "tekst": "slechts 1 geldige concurrentprijs/prijzen"}, {"sku": "HG-4002", "naam": "Douglas paal 7x7 cm 270 cm", "soort": "te_weinig_data", "tekst": "slechts 0 geldige concurrentprijs/prijzen"}, {"sku": "HG-6001", "naam": "Zweeds rabat Thermowood 18x165 mm 420 cm", "soort": "te_weinig_data", "tekst": "slechts 0 geldige concurrentprijs/prijzen"}, {"sku": "HG-6002", "naam": "Channelsiding Red Cedar 18x140 mm per m1", "soort": "te_weinig_data", "tekst": "slechts 0 geldige concurrentprijs/prijzen"}]};
+const $ = (s, el = document) => el.querySelector(s);
+const eur = new Intl.NumberFormat('nl-NL', {style: 'currency', currency: 'EUR'});
+const eur0 = new Intl.NumberFormat('nl-NL', {style: 'currency', currency: 'EUR', maximumFractionDigits: 0});
+const pct = (x, teken = true) => x == null ? '–' : (teken && x > 0 ? '+' : '') + (x * 100).toLocaleString('nl-NL', {maximumFractionDigits: 1, minimumFractionDigits: 1}) + '%';
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const datumNL = iso => new Date(iso + 'T12:00:00').toLocaleDateString('nl-NL', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
+const kortDatum = iso => new Date(iso + 'T12:00:00').toLocaleDateString('nl-NL', {day: 'numeric', month: 'short'});
+
+const ICON = {
+  op: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></svg>',
+  neer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5.5 12.5 12 19l6.5-6.5"/></svg>',
+  ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+  nee: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>',
+  uit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9.5 6 6 6-6"/></svg>',
+  pijl: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  let: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 2.8 19.5h18.4L12 4z"/><path d="M12 10v4.5M12 17.2v.1"/></svg>',
+  info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.8v.1"/></svg>',
+  slot: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>',
+  vink: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3.5 8.5 3 3 6-7"/></svg>',
+  stip: '<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>',
+  sluit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+};
+const ROL = {trekker: 'Trekker', kern: 'Kern', marge: 'Marge'};
+
+let D = null;
+const UI = {filter: 'alle', open: new Set(), zoek: '', cat: '', sort: 'index'};
+const SERVER = DATA_INGEBED === null;
+const LSKEY = () => 'prijsmonitor-status-' + (D?.meta?.datum || '');
+
+/* ---------- data & status ---------- */
+async function laad() {
+  D = SERVER ? await (await fetch('/api/data', {cache: 'no-store'})).json() : DATA_INGEBED;
+  if (!SERVER) {           // statische versie: beoordelingen lokaal in deze browser
+    try {
+      const st = JSON.parse(localStorage.getItem(LSKEY()) || '{}');
+      D.voorstellen.forEach(v => { if (st[v.id]) v.status = st[v.id]; });
+    } catch (e) {}
+    const b = $('#banner');
+    b.hidden = false;
+    b.textContent = D.meta.modus === 'voorbeeld'
+      ? 'Voorbeeldomgeving met gesimuleerde data. Beoordelingen worden alleen in deze browser bewaard.'
+      : 'Momentopname. Beoordelingen worden alleen in deze browser bewaard.';
+  }
+  render();
+}
+
+async function zetStatus(id, status) {
+  const v = D.voorstellen.find(x => x.id === id);
+  if (!v) return;
+  const nieuw = v.status === status ? 'open' : status;
+  v.status = nieuw;
+  if (SERVER) {
+    fetch('/api/voorstel/' + id, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({status: nieuw})})
+      .catch(() => alert('Opslaan mislukt – controleer de verbinding met de server.'));
+  } else {
+    try {
+      const st = JSON.parse(localStorage.getItem(LSKEY()) || '{}');
+      st[id] = nieuw; localStorage.setItem(LSKEY(), JSON.stringify(st));
+    } catch (e) {}
+  }
+  render();
+}
+
+function exporteer() {
+  const ok = D.voorstellen.filter(v => v.status === 'akkoord');
+  if (!ok.length) { alert('Er zijn nog geen voorstellen akkoord gegeven.'); return; }
+  const r = [['voorstel_id', 'sku', 'naam', 'oude_prijs', 'nieuwe_prijs']];
+  ok.forEach(v => r.push([v.id, v.sku, '"' + v.naam.replace(/"/g, '""') + '"', v.huidig.toFixed(2).replace('.', ','), v.voorstel.toFixed(2).replace('.', ',')]));
+  const blob = new Blob(['﻿' + r.map(x => x.join(';')).join('\n')], {type: 'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = `goedgekeurde-prijzen-${D.meta.datum}.csv`; a.click();
+}
+$('#export').onclick = exporteer;
+
+/* ---------- views ---------- */
+function view() { return (location.hash || '#vandaag').slice(1).split('/')[0]; }
+window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
+
+function render() {
+  if (!D) return;
+  const v = view();
+  document.querySelectorAll('nav.main a').forEach(a => a.dataset.v === v ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+  $('#sigcnt').textContent = D.signalen.length || '';
+  $('#sigcnt').hidden = !D.signalen.length;
+  $('#voet').textContent = `Laatste scrape ${new Date(D.meta.laatste_scrape + 'Z').toLocaleString('nl-NL', {dateStyle: 'medium', timeStyle: 'short'})} · ${D.kpis.artikelen} artikelen · ${D.kpis.concurrenten_actief} van ${D.kpis.concurrenten_totaal} concurrenten actief`;
+  const app = $('#app');
+  app.innerHTML = ({vandaag, artikelen, concurrenten, signalen}[v] || vandaag)();
+  bind(v);
+}
+
+function vandaag() {
+  const k = D.kpis, vs = D.voorstellen;
+  const beoordeeld = vs.filter(v => v.status !== 'open').length;
+  const tellers = {alle: vs.length, omhoog: k.omhoog, omlaag: k.omlaag,
+    open: vs.filter(v => v.status === 'open').length, akkoord: vs.filter(v => v.status === 'akkoord').length,
+    afgewezen: vs.filter(v => v.status === 'afgewezen').length};
+  const lbl = {alle: 'Alles', omhoog: 'Verhogen', omlaag: 'Verlagen', open: 'Open', akkoord: 'Akkoord', afgewezen: 'Afgewezen'};
+  const zicht = vs.filter(v => UI.filter === 'alle' || v.richting === UI.filter || v.status === UI.filter);
+  const bwAkk = vs.filter(v => v.status === 'akkoord').reduce((s, v) => s + (v.bw || 0), 0);
+  return `
+  <section class="hero"><div class="wrap">
+    <div class="eyebrow">Prijsmonitor · ${esc(datumNL(D.meta.datum))}</div>
+    <h1>${vs.length} voorstel${vs.length === 1 ? '' : 'len'}<span class="dot">.</span></h1>
+    <p class="lead">${vs.length ? `<b>${k.omhoog} omhoog</b> om marge te pakken, <b>${k.omlaag} omlaag</b> om de prijspositie te bewaken. Verwacht effect: <b>${eur0.format(k.bw_week)} brutowinst per week</b>.` : 'Geen prijsaanpassingen nodig vandaag.'}</p>
+    <div class="kpis">
+      <div class="kpi"><span class="n">01</span><span class="v num">${k.gedekt}<small style="font-size:.5em;color:var(--hero-2)"> / ${k.artikelen}</small></span><span class="l">artikelen met voldoende marktdata</span></div>
+      <div class="kpi"><span class="n">02</span><span class="v num">${k.concurrenten_actief}<small style="font-size:.5em;color:var(--hero-2)"> / ${k.concurrenten_totaal}</small></span><span class="l">concurrenten actief gevolgd</span></div>
+      <div class="kpi"><span class="n">03</span><span class="v num">${beoordeeld}<small style="font-size:.5em;color:var(--hero-2)"> / ${vs.length}</small></span><span class="l">voorstellen beoordeeld</span></div>
+      <div class="kpi"><span class="n">04</span><span class="v num">${k.signalen}</span><span class="l">signalen ter controle</span></div>
+    </div>
+  </div></section>
+  <section class="blok"><div class="wrap">
+    <div class="kop">
+      <div><h2>Te beoordelen</h2>
+        <div class="voortgang"><span class="bar"><i style="width:${vs.length ? beoordeeld / vs.length * 100 : 0}%"></i></span>
+        ${beoordeeld} van ${vs.length} beoordeeld${bwAkk ? ` · akkoord: ${eur0.format(bwAkk)} per week` : ''}</div></div>
+      <div class="chips" role="group" aria-label="Filter">${Object.keys(lbl).map(f => `<button class="chip" data-f="${f}" aria-pressed="${UI.filter === f}">${lbl[f]}<span class="c">${tellers[f]}</span></button>`).join('')}</div>
+    </div>
+    <div class="lijst">${zicht.map(rijHTML).join('') || '<div class="leeg">Geen voorstellen in deze selectie.</div>'}</div>
+  </div></section>`;
+}
+
+function band(lo, hi, conc, huidig, voorstel, richting) {
+  const vals = [lo, hi, huidig, voorstel, ...conc.map(c => c.prijs)].filter(x => x != null);
+  const a = Math.min(...vals), b = Math.max(...vals), sp = (b - a) || 1;
+  const x = p => ((p - a) / sp * 100).toFixed(1) + '%';
+  return `<div class="mband" title="Concurrenten (grijs), huidige prijs (open), voorstel (gevuld)">
+    <span class="lijn"></span>${lo != null ? `<span class="rng" style="left:${x(lo)};width:calc(${x(hi)} - ${x(lo)})"></span>` : ''}
+    ${conc.map(c => `<i class="c" style="left:${x(c.prijs)}"></i>`).join('')}
+    <i class="o" style="left:${x(huidig)}"></i>${voorstel != null ? `<i class="n ${richting}" style="left:${x(voorstel)}"></i>` : ''}
+  </div><div class="mlab num"><span>${lo != null ? eur.format(lo) : ''}</span><span>${conc.length} concurrent${conc.length === 1 ? '' : 'en'}</span><span>${hi != null ? eur.format(hi) : ''}</span></div>`;
+}
+
+function rijHTML(v) {
+  const open = UI.open.has(v.id);
+  return `<div class="rij ${open ? 'open' : ''} st-${v.status}" data-id="${v.id}">
+    <div class="rij-kop" data-toggle="${v.id}">
+      <span class="cirkel ${v.richting}" aria-label="${v.richting}">${v.richting === 'omhoog' ? ICON.op : ICON.neer}</span>
+      <div><div class="titel">${esc(v.naam)}</div><div class="sub">${esc(v.sku)} · ${esc(v.categorie)} · ${ROL[v.rol] || esc(v.rol)}</div>
+        <div class="tikhint">${open ? 'Details verbergen' : 'Tik voor onderbouwing en grafiek'}</div>
+        ${v.status !== 'open' ? `<div class="statuslabel ${v.status}">${v.status === 'akkoord' ? 'Akkoord' : 'Afgewezen'}</div>` : ''}</div>
+      <div class="prijzen"><div class="prijs num"><s>${eur.format(v.huidig)}</s>${eur.format(v.voorstel)}</div>
+        <div class="delta ${v.richting} num">${pct(v.pct)} · marge ${pct(v.marge_oud, false)} → ${pct(v.marge_nieuw, false)}</div></div>
+      <div class="markt">${band(v.laagste, v.hoogste, v.concurrenten, v.huidig, v.voorstel, v.richting)}</div>
+      <div class="mrg"><div class="prijs num" style="font-size:19px;color:${v.bw >= 0 ? 'var(--up)' : 'var(--down)'}">${v.bw >= 0 ? '+' : ''}${eur.format(v.bw)}</div><div class="sub">brutowinst / week</div></div>
+      <div class="acties">
+        <button class="rond ok" data-st="akkoord" data-id="${v.id}" aria-pressed="${v.status === 'akkoord'}" title="Akkoord" aria-label="Akkoord ${esc(v.naam)}">${ICON.ok}</button>
+        <button class="rond nee" data-st="afgewezen" data-id="${v.id}" aria-pressed="${v.status === 'afgewezen'}" title="Afwijzen" aria-label="Afwijzen ${esc(v.naam)}">${ICON.nee}</button>
+        <button class="rond uit verberg-m" data-toggle="${v.id}" aria-expanded="${open}" title="Details" aria-label="Details">${ICON.uit}</button>
+      </div>
+    </div>
+    <div class="detail">${open ? detailHTML(v) : ''}</div>
+  </div>`;
+}
+
+function concTabel(conc, eigen, voorstel) {
+  const rijen = conc.map(c => ({...c, wij: false}));
+  rijen.push({naam: 'Houthandel Gorinchem (nu)', prijs: eigen, wij: true});
+  if (voorstel != null) rijen.push({naam: 'Houthandel Gorinchem (voorstel)', prijs: voorstel, wij: true});
+  rijen.sort((a, b) => a.prijs - b.prijs);
+  return `<table class="kale"><thead><tr><th>Aanbieder</th><th class="r">Prijs per eenheid</th><th class="r">t.o.v. ons</th></tr></thead><tbody>
+    ${rijen.map(c => `<tr class="${c.wij ? 'wij' : ''}"><td>${c.url && !c.url.includes('demo.invalid') ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.naam)}</a>` : esc(c.naam)}${c.actie ? '<span class="tag">actie</span>' : ''}</td>
+      <td class="r num">${eur.format(c.prijs)}</td><td class="r num">${c.wij ? '' : pct(c.prijs / eigen - 1)}</td></tr>`).join('')}
+  </tbody></table>`;
+}
+
+function detailHTML(v) {
+  return `<div class="kaart"><h3>Onderbouwing</h3><p class="reden">${esc(v.reden.charAt(0).toUpperCase() + v.reden.slice(1))}.</p>${concTabel(v.concurrenten, v.huidig, v.voorstel)}</div>
+    <div class="kaart"><h3>Marktprijs afgelopen 30 dagen</h3>${grafiekHTML(v.sku, v.huidig, v.voorstel)}</div>`;
+}
+
+/* ---------- grafiek: onze prijs t.o.v. marktbandbreedte ---------- */
+function grafiekHTML(sku, eigen, voorstel) {
+  const h = D.historie[sku] || [];
+  if (h.length < 2) return '<p class="sub">Nog te weinig historie – na een paar dagelijkse runs verschijnt hier het verloop.</p>';
+  const W = 640, H = 260, L = 52, R = 70, T = 12, B = 30;
+  const ys = h.flatMap(d => [d.min, d.max]).concat([eigen, voorstel].filter(x => x != null));
+  let lo = Math.min(...ys), hi = Math.max(...ys); const pad = (hi - lo) * .12 || 1; lo -= pad; hi += pad;
+  const x = i => L + i / (h.length - 1) * (W - L - R), y = p => T + (1 - (p - lo) / (hi - lo)) * (H - T - B);
+  const ticks = []; const stap = niceStap((hi - lo) / 4);
+  for (let t = Math.ceil(lo / stap) * stap; t <= hi; t += stap) ticks.push(t);
+  const bandPad = h.map((d, i) => `${x(i)},${y(d.max)}`).join(' ') + ' ' + h.map((d, i) => `${x(h.length - 1 - i)},${y(h[h.length - 1 - i].min)}`).join(' ');
+  const med = h.map((d, i) => `${i ? 'L' : 'M'}${x(i)},${y(d.med)}`).join('');
+  const xl = [0, Math.floor((h.length - 1) / 2), h.length - 1];
+  const laatste = x(h.length - 1);
+  return `<div class="legenda"><span><i class="band"></i>Bandbreedte concurrenten</span><span><i class="med"></i>Mediaan markt</span><span><i></i>Onze prijs</span></div>
+  <div class="grafiek" data-sku="${esc(sku)}" data-eigen="${eigen}">
+  <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Prijsverloop markt en eigen prijs">
+    ${ticks.map(t => `<line x1="${L}" x2="${W - R}" y1="${y(t)}" y2="${y(t)}" stroke="var(--rule)" stroke-width="1"/><text x="${L - 8}" y="${y(t) + 4}" text-anchor="end" font-size="11" fill="var(--tx-2)">${eur0.format(t)}</text>`).join('')}
+    ${xl.map(i => `<text x="${x(i)}" y="${H - 8}" text-anchor="${i === 0 ? 'start' : i === h.length - 1 ? 'end' : 'middle'}" font-size="11" fill="var(--tx-2)">${kortDatum(h[i].d)}</text>`).join('')}
+    <polygon points="${bandPad}" fill="var(--band)"/>
+    <path d="${med}" fill="none" stroke="var(--maple-deep)" stroke-width="2" stroke-dasharray="5 3" stroke-linejoin="round"/>
+    <line x1="${L}" x2="${laatste}" y1="${y(eigen)}" y2="${y(eigen)}" stroke="var(--tx)" stroke-width="2"/>
+    <circle cx="${laatste}" cy="${y(eigen)}" r="4" fill="var(--bg)" stroke="var(--tx)" stroke-width="2"/>
+    <text x="${laatste + 10}" y="${y(eigen) + 4}" font-size="12" font-weight="600" fill="var(--tx)">${eur.format(eigen)}</text>
+    ${voorstel != null ? `<circle cx="${laatste}" cy="${y(voorstel)}" r="5" fill="${voorstel > eigen ? 'var(--up)' : 'var(--down)'}" stroke="var(--surface)" stroke-width="2"/>
+      <text x="${laatste + 10}" y="${y(voorstel) + 4 + (Math.abs(y(voorstel) - y(eigen)) < 14 ? (voorstel > eigen ? -10 : 10) : 0)}" font-size="12" font-weight="600" fill="var(--tx)">→ ${eur.format(voorstel)}</text>` : ''}
+    <line class="kruis" x1="0" x2="0" y1="${T}" y2="${H - B}" stroke="var(--tx-2)" stroke-width="1" opacity="0"/>
+    <rect class="hit" x="${L}" y="${T}" width="${W - L - R}" height="${H - T - B}" fill="transparent"/>
+  </svg><div class="tip"></div></div>`;
+}
+function niceStap(r) { const m = Math.pow(10, Math.floor(Math.log10(r))); const f = r / m; return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * m; }
+
+function bindGrafieken(root) {
+  root.querySelectorAll('.grafiek').forEach(g => {
+    const h = D.historie[g.dataset.sku] || [], svg = g.querySelector('svg'), tip = g.querySelector('.tip'), kruis = g.querySelector('.kruis');
+    const W = 640, L = 52, R = 70, namen = Object.fromEntries(D.concurrenten.map(c => [c.id, c.naam]));
+    const toon = ev => {
+      const bb = svg.getBoundingClientRect(), sx = (ev.clientX - bb.left) / bb.width * W;
+      const i = Math.max(0, Math.min(h.length - 1, Math.round((sx - L) / (W - L - R) * (h.length - 1))));
+      const px = L + i / (h.length - 1) * (W - L - R), d = h[i];
+      kruis.setAttribute('x1', px); kruis.setAttribute('x2', px); kruis.setAttribute('opacity', 1);
+      const per = Object.entries(d.per).sort((a, b) => a[1] - b[1]);
+      tip.innerHTML = `<b>${kortDatum(d.d)}</b><div class="rg"><span>Mediaan</span><span>${eur.format(d.med)}</span></div>
+        <div class="rg"><span>Laagste – hoogste</span><span>${eur.format(d.min)} – ${eur.format(d.max)}</span></div>
+        <div style="border-top:1px solid rgba(127,127,127,.4);margin:6px 0 4px"></div>${per.slice(0, 6).map(([k, p]) => `<div class="rg"><span>${esc(namen[k] || k)}</span><span>${eur.format(p)}</span></div>`).join('')}
+        <div class="rg"><span>Onze prijs</span><span><b>${eur.format(+g.dataset.eigen)}</b></span></div>`;
+      const tx = px / W * bb.width; const links = tx > bb.width * .55;
+      tip.style.left = (links ? tx - tip.offsetWidth - 12 : tx + 12) + 'px'; tip.style.top = '30px'; tip.classList.add('aan');
+    };
+    const verberg = () => { tip.classList.remove('aan'); kruis.setAttribute('opacity', 0); };
+    svg.addEventListener('pointermove', toon); svg.addEventListener('pointerleave', verberg);
+  });
+}
+
+function spark(sku) {
+  const h = D.historie[sku] || []; if (h.length < 2) return '<span class="sub">–</span>';
+  const v = h.map(d => d.med), lo = Math.min(...v), hi = Math.max(...v), sp = (hi - lo) || 1;
+  const pts = v.map((p, i) => `${(i / (v.length - 1) * 116 + 2).toFixed(1)},${(26 - (p - lo) / sp * 22).toFixed(1)}`).join(' ');
+  const ch = v[v.length - 1] / v[0] - 1;
+  return `<svg class="spark" viewBox="0 0 120 30" aria-label="Marktmediaan 30 dagen ${pct(ch)}"><polyline points="${pts}" fill="none" stroke="var(--maple-deep)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
+}
+
+function artikelen() {
+  const cats = [...new Set(D.artikelen.map(a => a.categorie))].sort();
+  let rij = D.artikelen.filter(a => (!UI.cat || a.categorie === UI.cat) &&
+    (!UI.zoek || (a.naam + ' ' + a.sku).toLowerCase().includes(UI.zoek.toLowerCase())));
+  const sorteer = {index: (a, b) => (b.index ?? -9) - (a.index ?? -9), naam: (a, b) => a.naam.localeCompare(b.naam), marge: (a, b) => a.marge - b.marge};
+  rij.sort(sorteer[UI.sort]);
+  return `<section class="blok"><div class="wrap">
+    <div class="kop"><div><div class="eyebrow" style="color:var(--tx-2)">Assortiment</div><h2 style="margin-top:14px">Artikelen in de markt</h2>
+      <p>Prijsindex = onze prijs t.o.v. de mediaan van de concurrenten. Boven 100 zijn we duurder.</p></div>
+      <div class="zoek"><input id="zoek" type="search" placeholder="Zoek artikel of SKU" value="${esc(UI.zoek)}" aria-label="Zoeken">
+        <select id="cat" aria-label="Categorie"><option value="">Alle categorieën</option>${cats.map(c => `<option ${c === UI.cat ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select>
+        <select id="sort" aria-label="Sorteren"><option value="index" ${UI.sort === 'index' ? 'selected' : ''}>Duurste t.o.v. markt eerst</option><option value="marge" ${UI.sort === 'marge' ? 'selected' : ''}>Laagste marge eerst</option><option value="naam" ${UI.sort === 'naam' ? 'selected' : ''}>Naam</option></select></div></div>
+    <div style="overflow-x:auto"><table class="tabel"><thead><tr><th>Artikel</th><th class="r">Onze prijs</th><th class="r verberg-m">Markt (laag – mediaan – hoog)</th><th class="r">Index</th><th class="r verberg-m">Marge</th><th class="verberg-m">Mediaan 30 dagen</th></tr></thead><tbody>
+    ${rij.map(a => {
+      const idx = a.index == null ? null : Math.round(a.index * 100);
+      const cls = idx == null ? '' : idx > 103 ? 'hoog' : idx < 97 ? 'laag' : 'mid';
+      return `<tr class="klik" data-sku="${esc(a.sku)}" tabindex="0"><td><div class="titel" style="font-size:18px">${esc(a.naam)}</div><div class="sub">${esc(a.sku)} · ${esc(a.categorie)} · ${ROL[a.rol] || ''} · ${a.n} concurrent${a.n === 1 ? '' : 'en'}</div></td>
+      <td class="r num"><b>${eur.format(a.prijs)}</b></td>
+      <td class="r num verberg-m">${a.mediaan != null ? `${eur.format(a.laagste)} – <b>${eur.format(a.mediaan)}</b> – ${eur.format(a.hoogste)}` : '<span class="sub">geen data</span>'}</td>
+      <td class="r">${idx == null ? '–' : `<span class="idx ${cls} num">${idx}</span>`}</td>
+      <td class="r num verberg-m">${pct(a.marge, false)}</td><td class="verberg-m">${spark(a.sku)}</td></tr>`;
+    }).join('') || '<tr><td colspan="6" class="leeg">Geen artikelen gevonden.</td></tr>'}
+    </tbody></table></div></div></section>`;
+}
+
+function openArtikel(sku) {
+  const a = D.artikelen.find(x => x.sku === sku); if (!a) return;
+  const v = D.voorstellen.find(x => x.sku === sku);
+  $('#mdoos').innerHTML = `<button class="rond sluit" aria-label="Sluiten">${ICON.sluit}</button>
+    <div class="eyebrow" style="color:var(--tx-2)">${esc(a.sku)} · ${esc(a.categorie)}</div>
+    <h2 id="mtitel" style="font:500 clamp(26px,3vw,38px)/1.1 var(--display);margin:14px 0 6px;padding-right:56px">${esc(a.naam)}</h2>
+    <p class="sub" style="margin:0 0 22px">Rol: ${ROL[a.rol] || a.rol} · inkoop ${eur.format(a.inkoop)} excl. btw · marge ${pct(a.marge, false)} · afzet ${a.afzet} per week${v ? ` · <b style="color:var(--tx)">voorstel vandaag: ${eur.format(v.voorstel)}</b>` : ''}</p>
+    <div class="rij open" style="border:0"><div class="detail" style="padding:0;grid-template-columns:1fr">
+      <div class="kaart"><h3>Concurrenten nu</h3>${a.concurrenten.length ? concTabel(a.concurrenten, a.prijs, v?.voorstel) : '<p class="sub">Nog geen concurrenten gekoppeld voor dit artikel.</p>'}</div>
+      <div class="kaart"><h3>Marktprijs afgelopen 30 dagen</h3>${grafiekHTML(a.sku, a.prijs, v?.voorstel)}</div>
+    </div></div>`;
+  $('#modal').classList.add('aan'); bindGrafieken($('#mdoos'));
+  $('.sluit', $('#modal')).onclick = sluitModal; $('.sluit', $('#modal')).focus();
+}
+function sluitModal() { $('#modal').classList.remove('aan'); }
+$('#modal').addEventListener('click', e => { if (e.target.id === 'modal') sluitModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') sluitModal(); });
+
+function concurrenten() {
+  const lbl = {actief: 'Actief', geblokkeerd: 'Geblokkeerd', storing: 'Storing', 'niet gekoppeld': 'Niet gekoppeld'};
+  const ic = {actief: ICON.vink, geblokkeerd: ICON.slot, storing: ICON.stip, 'niet gekoppeld': ICON.stip};
+  const volg = {actief: 0, storing: 1, 'niet gekoppeld': 2, geblokkeerd: 3};
+  const cs = [...D.concurrenten].sort((a, b) => volg[a.status] - volg[b.status] || b.artikelen - a.artikelen);
+  return `<section class="hero" style="padding-bottom:56px"><div class="wrap">
+      <div class="eyebrow">Top 10 concurrentie</div>
+      <h1 style="font-size:clamp(44px,6.5vw,92px)">${D.kpis.concurrenten_actief} van ${D.kpis.concurrenten_totaal} actief<span class="dot">.</span></h1>
+      <p class="lead">Prijsindex = hun prijs t.o.v. die van ons, mediaan over de gedeelde artikelen. Onder 100 zijn zij goedkoper.</p></div></section>
+    <section class="blok"><div class="wrap"><div class="raster">
+    ${cs.map((c, i) => `<article class="ckaart">
+      <div style="display:flex;justify-content:space-between;align-items:center"><span class="nr">${String(i + 1).padStart(2, '0')} · ${esc(c.type)}</span>
+        <span class="status ${c.status === 'niet gekoppeld' ? 'niet' : c.status}">${ic[c.status]}${lbl[c.status]}</span></div>
+      <h3>${esc(c.naam)}</h3>
+      ${c.notitie ? `<p class="notitie">${esc(c.notitie)}</p>` : ''}
+      <div class="cstats">
+        <div><b class="num">${c.prijsindex == null ? '–' : Math.round(c.prijsindex * 100)}</b><span>prijsindex</span></div>
+        <div><b class="num">${c.artikelen}</b><span>artikelen</span></div>
+        <div><b class="num">${c.ok + c.mislukt ? Math.round(c.ok / (c.ok + c.mislukt) * 100) + '%' : '–'}</b><span>scrape gelukt</span></div>
+      </div></article>`).join('')}
+    </div></div></section>`;
+}
+
+function signalen() {
+  const kop = {onder_bodem: 'Markt onder onze margebodem', uitschieter: 'Verdachte koppeling', actie: 'Tijdelijke actie', te_weinig_data: 'Te weinig marktdata'};
+  const volg = ['onder_bodem', 'uitschieter', 'actie', 'te_weinig_data'];
+  const s = [...D.signalen].sort((a, b) => volg.indexOf(a.soort) - volg.indexOf(b.soort));
+  return `<section class="blok"><div class="wrap">
+    <div class="kop"><div><div class="eyebrow" style="color:var(--tx-2)">Ter controle</div><h2 style="margin-top:14px">Signalen</h2>
+    <p>Situaties die de prijsengine niet zelf oplost: inkoop heroverwegen, koppelingen nakijken of meer concurrenten koppelen.</p></div></div>
+    <div class="lijst">${s.map(x => `<div class="sig"><span class="cirkel ${x.soort}">${x.soort === 'te_weinig_data' ? ICON.info : ICON.let}</span>
+      <div><div class="titel" style="font-size:20px">${esc(kop[x.soort] || x.soort)}</div><div class="sub"><b style="color:var(--tx)">${esc(x.naam)}</b> (${esc(x.sku)}) – ${esc(x.tekst.replace(/\s*\(https?:[^)]*\)/g, ''))}</div></div>
+      <button class="rond" data-sku="${esc(x.sku)}" aria-label="Bekijk artikel">${ICON.pijl}</button></div>`).join('') || '<div class="leeg">Geen signalen. Alles ziet er goed uit.</div>'}</div>
+  </div></section>`;
+}
+
+/* ---------- events ---------- */
+function bind(v) {
+  const app = $('#app');
+  app.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { UI.filter = b.dataset.f; render(); });
+  app.querySelectorAll('button[data-st]').forEach(b => b.onclick = e => { e.stopPropagation(); zetStatus(+b.dataset.id, b.dataset.st); });
+  app.querySelectorAll('[data-toggle]').forEach(el => el.onclick = e => {
+    if (e.target.closest('button[data-st]')) return;
+    e.stopPropagation(); const id = +el.dataset.toggle;
+    UI.open.has(id) ? UI.open.delete(id) : UI.open.add(id); render();
+  });
+  app.querySelectorAll('tr.klik').forEach(tr => { tr.onclick = () => openArtikel(tr.dataset.sku); tr.onkeydown = e => { if (e.key === 'Enter') openArtikel(tr.dataset.sku); }; });
+  app.querySelectorAll('.sig .rond').forEach(b => b.onclick = () => openArtikel(b.dataset.sku));
+  const z = $('#zoek'); if (z) { z.oninput = () => { UI.zoek = z.value; const pos = z.selectionStart; render(); const n = $('#zoek'); n.focus(); n.setSelectionRange(pos, pos); }; }
+  const c = $('#cat'); if (c) c.onchange = () => { UI.cat = c.value; render(); };
+  const s = $('#sort'); if (s) s.onchange = () => { UI.sort = s.value; render(); };
+  bindGrafieken(app);
+}
+
+laad().catch(e => { $('#app').innerHTML = `<div class="wrap leeg">Kon gegevens niet laden: ${esc(e.message)}</div>`; });
+</script>
+</body>
+</html>
