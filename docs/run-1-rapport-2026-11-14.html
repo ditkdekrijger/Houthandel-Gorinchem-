@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prijsvoorstellen 2026-11-14</title>
+<style>
+:root{--bg:#f7f6f3;--card:#fff;--tx:#1d1d1b;--mu:#6b6a66;--ln:#e4e2dc;--up:#1f7a4d;--dn:#b4462b;--ac:#8a5a2b;--dot:#b9b6ae}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#161614;--card:#1f1f1c;--tx:#ecebe6;--mu:#a3a199;--ln:#34332f;--up:#5cc28f;--dn:#ef8a6c;--ac:#d6a26b;--dot:#6c6a64}}
+:root[data-theme=dark]{--bg:#161614;--card:#1f1f1c;--tx:#ecebe6;--mu:#a3a199;--ln:#34332f;--up:#5cc28f;--dn:#ef8a6c;--ac:#d6a26b;--dot:#6c6a64}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1280px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:22px;margin:0 0 4px}h2{font-size:16px;margin:32px 0 10px}.sub{color:var(--mu);font-size:12px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:20px 0}
+.kpi{background:var(--card);border:1px solid var(--ln);border-radius:10px;padding:12px 14px}.kpi b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.wrap{overflow-x:auto;background:var(--card);border:1px solid var(--ln);border-radius:10px}
+table{border-collapse:collapse;width:100%}th,td{padding:9px 10px;border-bottom:1px solid var(--ln);vertical-align:top;text-align:left}
+th{font-size:12px;color:var(--mu);font-weight:600;white-space:nowrap;position:sticky;top:0;background:var(--card)}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.naam{font-weight:600;min-width:200px}
+.omhoog{color:var(--up)}.omlaag{color:var(--dn)}.reden{min-width:260px;max-width:380px;font-size:13px}
+details summary{cursor:pointer;color:var(--ac);font-size:12px;margin-top:4px}table.mini td{padding:3px 6px;font-size:12px;border:0}tr.uit td{opacity:.5;text-decoration:line-through}
+.band{position:relative;height:14px;min-width:140px;margin:3px 6px;border-bottom:2px solid var(--ln)}
+.band i{position:absolute;top:2px;width:9px;height:9px;margin-left:-4.5px;border-radius:50%}
+.band .c{background:var(--dot)}.band .o{border:2px solid var(--tx);background:var(--card)}.band .n.omhoog{background:var(--up)}.band .n.omlaag{background:var(--dn)}
+tr.rij.uitgevinkt td:not(:first-child){opacity:.4}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0}
+button{font:inherit;background:var(--ac);color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer}button.sec{background:transparent;color:var(--tx);border:1px solid var(--ln)}
+ul.sig{list-style:none;padding:0;margin:0;background:var(--card);border:1px solid var(--ln);border-radius:10px}ul.sig li{padding:8px 12px;border-bottom:1px solid var(--ln);font-size:13px}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:99px;border:1px solid var(--ln);color:var(--mu);margin-right:4px}.tag.onder_bodem{color:var(--dn);border-color:var(--dn)}.tag.uitschieter{color:var(--ac);border-color:var(--ac)}
+</style></head><body><main>
+<h1>Prijsvoorstellen Houthandel Gorinchem</h1>
+<div class="sub">14-11-2026 · 12 artikelen geanalyseerd · 3 kandidaat-wijzigingen · top 3 geselecteerd</div>
+<div class="kpis">
+ <div class="kpi"><span class="sub">Voorstellen</span><b>3</b></div>
+ <div class="kpi"><span class="sub">Verhogen</span><b class="omhoog">2</b></div>
+ <div class="kpi"><span class="sub">Verlagen</span><b class="omlaag">1</b></div>
+ <div class="kpi"><span class="sub">Verwacht effect brutowinst / week</span><b class="omhoog">€ 34,87</b></div>
+ <div class="kpi"><span class="sub">Signalen ter controle</span><b>9</b></div>
+</div>
+<div class="bar"><button id="exp">Exporteer goedgekeurde prijzen (CSV)</button><button class="sec" id="alles">Alles aan/uit</button>
+<span class="sub" id="telling"></span></div>
+<div class="wrap"><table>
+<thead><tr><th>Akkoord</th><th>Artikel</th><th class="num">Nu</th><th class="num">Voorstel</th><th>Markt</th><th class="num">Positie</th><th class="num">Marge</th><th class="num">Δ brutowinst/wk</th><th>Onderbouwing</th></tr></thead>
+<tbody>
+<tr class="rij" data-i="0">
+  <td><input type="checkbox" class="ok" data-i="0" checked aria-label="akkoord HG-1001"></td>
+  <td><div class="naam">Steigerhout nieuw vuren 32x200 mm 300 cm</div><div class="sub">HG-1001 · steigerhout · trekker</div></td>
+  <td class="num">€ 12,95</td>
+  <td class="num"><b>€ 12,49</b><div class="sub omlaag">▼ -3,5%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:0.0%'></i><i class='c' style='left:99.9%'></i><i class='o' style='left:14.9%'></i><i class='n omlaag' style='left:8.0%'></i></div><div class="sub">€ 11,96 – € 18,59 · 2 conc.</div></td>
+  <td class="num">2 → 2</td>
+  <td class="num">43,0% → 40,9%</td>
+  <td class="num omhoog">€ 1,65</td>
+  <td class="reden">1 van 2 concurrenten goedkoper; goedkoopste kwart € 12,36<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>Online Tuinhout</td><td class='num'>€ 11,96</td><td></td><td><a href="https://www.onlinetuinhout.nl/steigerplank-nieuw-29-x-19-x-400-cm-blank" target="_blank" rel="noopener">bekijk</a></td></tr><tr class=''><td>Bouwmaat</td><td class='num'>€ 18,59</td><td></td><td><a href="https://www.bouwmaat.nl/products/steigerhout-gekramd-c18-32x200x5000mm-70-pefc-928258" target="_blank" rel="noopener">bekijk</a></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="1">
+  <td><input type="checkbox" class="ok" data-i="1" checked aria-label="akkoord HG-5001"></td>
+  <td><div class="naam">Hardhout vlonderplank Bangkirai 25x145 mm 305 cm</div><div class="sub">HG-5001 · vlonderhout · marge</div></td>
+  <td class="num">€ 31,95</td>
+  <td class="num"><b>€ 34,49</b><div class="sub omhoog">▲ +8,0%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:54.7%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:0.0%'></i><i class='n omhoog' style='left:10.1%'></i></div><div class="sub">€ 45,75 – € 57,18 · 2 conc.</div></td>
+  <td class="num">1 → 1</td>
+  <td class="num">48,5% → 52,3%</td>
+  <td class="num omhoog">€ 27,69</td>
+  <td class="reden">we zijn nu de goedkoopste; marktmediaan € 52,15 laat ruimte voor marge; stapsgewijs richting doel € 54,24<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>Online Tuinhout</td><td class='num'>€ 45,75</td><td></td><td><a href="https://www.onlinetuinhout.nl/bangkirai-loopdekdeel-grof-profiel-glad-geschaafd-25-x-145-x-305-cm" target="_blank" rel="noopener">bekijk</a></td></tr><tr class=''><td>Bouwmaat</td><td class='num'>€ 57,18</td><td></td><td><a href="https://www.bouwmaat.nl/products/elephant-bangkirai-vlonderplank-25x145mm-fsc-mix-70-f10592?variant=56807727006022" target="_blank" rel="noopener">bekijk</a></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="2">
+  <td><input type="checkbox" class="ok" data-i="2" checked aria-label="akkoord HG-4001"></td>
+  <td><div class="naam">Douglas tuinplank 22x200 mm 400 cm</div><div class="sub">HG-4001 · tuinhout · kern</div></td>
+  <td class="num">€ 17,95</td>
+  <td class="num"><b>€ 18,49</b><div class="sub omhoog">▲ +3,0%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:0.0%'></i><i class='c' style='left:99.9%'></i><i class='o' style='left:26.5%'></i><i class='n omhoog' style='left:40.8%'></i></div><div class="sub">€ 16,95 – € 20,72 · 2 conc.</div></td>
+  <td class="num">2 → 2</td>
+  <td class="num">44,0% → 45,7%</td>
+  <td class="num omhoog">€ 5,53</td>
+  <td class="reden">we zijn nu nr. 2 van 3; marktmediaan € 19,06 laat ruimte voor marge<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>Online Tuinhout</td><td class='num'>€ 16,95</td><td></td><td><a href="https://www.onlinetuinhout.nl/kantplank-lariks-douglas-bezaagd-22-x-20-x-400-cm" target="_blank" rel="noopener">bekijk</a></td></tr><tr class=''><td>Bouwmaat</td><td class='num'>€ 20,72</td><td></td><td><a href="https://www.bouwmaat.nl/products/douglas-gedroogd-22x200mm-70-pefc-f10586?variant=56807941767494" target="_blank" rel="noopener">bekijk</a></td></tr></table></details></td>
+</tr></tbody></table></div>
+<p class="sub">Positie: 1 = goedkoopste van de markt. Marge = brutomarge op verkoopprijs excl. btw. Δ brutowinst is een schatting op basis van weekafzet en prijselasticiteit per artikelrol.</p>
+<h2>Signalen ter controle</h2>
+<ul class="sig"><li><span class='tag te_weinig_data'>te weinig data</span> <b>HG-1002</b> – slechts 0 geldige concurrentprijs/prijzen</li><li><span class='tag te_weinig_data'>te weinig data</span> <b>HG-2001</b> – slechts 1 geldige concurrentprijs/prijzen</li><li><span class='tag te_weinig_data'>te weinig data</span> <b>HG-2002</b> – slechts 1 geldige concurrentprijs/prijzen</li><li><span class='tag te_weinig_data'>te weinig data</span> <b>HG-2003</b> – slechts 1 geldige concurrentprijs/prijzen</li><li><span class='tag te_weinig_data'>te weinig data</span> <b>HG-3001</b> – slechts 1 geldige concurrentprijs/prijzen</li><li><span class='tag te_weinig_data'>te weinig data</span> <b>HG-3002</b> – slechts 1 geldige concurrentprijs/prijzen</li><li><span class='tag te_weinig_data'>te weinig data</span> <b>HG-4002</b> – slechts 0 geldige concurrentprijs/prijzen</li><li><span class='tag te_weinig_data'>te weinig data</span> <b>HG-6001</b> – slechts 0 geldige concurrentprijs/prijzen</li><li><span class='tag te_weinig_data'>te weinig data</span> <b>HG-6002</b> – slechts 0 geldige concurrentprijs/prijzen</li></ul>
+<h2>Scrape-status (laatste run)</h2><div class="wrap"><table><thead><tr><th>Concurrent</th><th class="num">Gelukt</th><th class="num">Mislukt</th><th class="num">Slagingspercentage</th></tr></thead><tbody><tr><td>bouwmaat</td><td class='num'>8</td><td class='num'>0</td><td class='num'>100%</td></tr><tr><td>onlinetuinhout</td><td class='num'>3</td><td class='num'>0</td><td class='num'>100%</td></tr></tbody></table></div>
+</main>
+<script>
+const V=[{"id": 1, "sku": "HG-1001", "naam": "Steigerhout nieuw vuren 32x200 mm 300 cm", "oud": 12.95, "nieuw": 12.49}, {"id": 2, "sku": "HG-5001", "naam": "Hardhout vlonderplank Bangkirai 25x145 mm 305 cm", "oud": 31.95, "nieuw": 34.49}, {"id": 3, "sku": "HG-4001", "naam": "Douglas tuinplank 22x200 mm 400 cm", "oud": 17.95, "nieuw": 18.49}];
+const boxes=[...document.querySelectorAll('input.ok')];
+function upd(){let n=0;boxes.forEach(b=>{b.closest('tr').classList.toggle('uitgevinkt',!b.checked);if(b.checked)n++});document.getElementById('telling').textContent=n+' van '+boxes.length+' geselecteerd';}
+boxes.forEach(b=>b.addEventListener('change',upd));upd();
+document.getElementById('alles').onclick=()=>{const aan=!boxes.every(b=>b.checked);boxes.forEach(b=>b.checked=aan);upd();};
+document.getElementById('exp').onclick=()=>{
+ const r=[['voorstel_id','sku','naam','oude_prijs','nieuwe_prijs']];
+ boxes.forEach(b=>{if(b.checked){const v=V[+b.dataset.i];r.push([v.id??'',v.sku,'"'+v.naam.replace(/"/g,'""')+'"',v.oud.toFixed(2).replace('.',','),v.nieuw.toFixed(2).replace('.',',')])}});
+ const blob=new Blob(['\ufeff'+r.map(x=>x.join(';')).join('\n')],{type:'text/csv'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='goedgekeurde-prijzen-2026-11-14.csv';a.click();
+};
+</script></body></html>

@@ -1,8 +1,12 @@
 sku,concurrent,url,omrekenfactor,opmerking
-HG-1001,gamma,https://www.gamma.nl/assortiment/steigerhout-vuren-ruw-32x200-mm-300-cm/p/VOORBEELD,1,
-HG-1001,praxis,https://www.praxis.nl/bouwmaterialen/hout/steigerhout/VOORBEELD,1,
-HG-1001,houthandelonline,https://www.houthandelonline.nl/steigerhout/VOORBEELD,1,
-HG-1001,onlinetuinhout,https://www.onlinetuinhout.nl/steigerhout/VOORBEELD,1.2,concurrent verkoopt 250 cm -> 300/250
-HG-2001,hornbach,https://www.hornbach.nl/p/osb-3-plaat-18-mm/VOORBEELD,1,
-HG-2001,bouwmaat,https://www.bouwmaat.nl/osb-18mm/VOORBEELD,1,prijs excl. btw -> automatisch omgerekend
-HG-6002,houthandelonline,https://www.houthandelonline.nl/channelsiding/VOORBEELD,0.25,concurrent prijst per lengte 400 cm -> per m1
+HG-1001,bouwmaat,https://www.bouwmaat.nl/products/steigerhout-gekramd-c18-32x200x5000mm-70-pefc-928258,0.6,500 cm -> 300 cm; gekramd C18
+HG-1001,onlinetuinhout,https://www.onlinetuinhout.nl/steigerplank-nieuw-29-x-19-x-400-cm-blank,0.75,400 cm -> 300 cm; 29x190 i.p.v. 32x200
+HG-2001,bouwmaat,https://www.bouwmaat.nl/products/osb-3-constructieplaat-tg2-2440x1220x18mm-fsc-mix-70-585424,1,TG2 (mes en groef 2 zijden)
+HG-2002,bouwmaat,https://www.bouwmaat.nl/products/elliottis-underlayment-tg2-2440x1220x18mm-fsc-mix-70-589433,1,Elliottis pine TG2
+HG-2003,bouwmaat,https://www.bouwmaat.nl/products/acacia-betonplex-2500x1250x18mm-fsc-mix-70-10000961,1,acacia
+HG-3001,bouwmaat,https://www.bouwmaat.nl/products/vuren-geschaafd-c24-44x69mm-fsc-mix-70-f10019?variant=56807926923590,1,variant 300 cm; C24
+HG-3002,bouwmaat,https://www.bouwmaat.nl/products/vuren-geschaafd-c24-69x169mm-fsc-mix-70-f10022?variant=56807896842566,0.9524,variant 420 cm -> 400 cm
+HG-4001,bouwmaat,https://www.bouwmaat.nl/products/douglas-gedroogd-22x200mm-70-pefc-f10586?variant=56807941767494,1,variant 400 cm; gedroogd
+HG-4001,onlinetuinhout,https://www.onlinetuinhout.nl/kantplank-lariks-douglas-bezaagd-22-x-20-x-400-cm,1,lariks/douglas bezaagd
+HG-5001,bouwmaat,https://www.bouwmaat.nl/products/elephant-bangkirai-vlonderplank-25x145mm-fsc-mix-70-f10592?variant=56807727006022,1,variant 305 cm
+HG-5001,onlinetuinhout,https://www.onlinetuinhout.nl/bangkirai-loopdekdeel-grof-profiel-glad-geschaafd-25-x-145-x-305-cm,1,grof profiel

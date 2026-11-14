@@ -54,3 +54,12 @@ def test_geen_prijs():
 def test_beschikbaarheid(tekst, verwacht):
     from prijsscraper.scraper.extract import _beschikbaarheid
     assert _beschikbaarheid(tekst) is verwacht
+
+
+def test_shopify_variant_uit_url():
+    html = (FIX / "shopify_varianten.html").read_text()
+    basis = "https://www.bouwmaat.nl/products/vuren-geschaafd-c24-44x69mm-fsc-mix-70-f10019"
+    assert extraheer(html, None, basis + "?variant=56807926923590").prijs == 4.95   # 300 cm
+    assert extraheer(html, None, basis + "?variant=56807733788998").prijs == 5.94   # 360 cm
+    # zonder variant-id geen gok bij meerdere prijzen
+    assert extraheer(html, None, basis).prijs is None

@@ -75,7 +75,7 @@ def cmd_test_url(args):
     cfg = laad_config(cfgmap)
     sel = cfg.concurrenten[args.concurrent].selectors if args.concurrent else {}
     f = Fetcher(cfg.instellingen.get("user_agent", "Prijsmonitor/1.0"), standaard_interval=0)
-    ex = extraheer(f.haal(args.url), sel)
+    ex = extraheer(f.haal(args.url), sel, args.url)
     print(f"prijs={ex.prijs} van_prijs={ex.van_prijs} voorraad={ex.op_voorraad} "
           f"methode={ex.methode} betrouwbaarheid={ex.betrouwbaarheid}")
 

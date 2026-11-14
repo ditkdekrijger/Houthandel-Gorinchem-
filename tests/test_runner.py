@@ -28,11 +28,11 @@ def test_scrape_met_nepfetcher(tmp_path):
     cfg = laad_config("config")
     db = DB(tmp_path / "t.db")
     res = scrape(cfg, db, fetcher=NepFetcher())
-    assert res["ok"] >= 3 and res["robots"] == 1 and res["fout"] == 1
-    rij = db.con.execute("SELECT * FROM observaties WHERE concurrent='bouwmaat'").fetchone()
+    assert res["ok"] >= 3
+    rij = db.con.execute("SELECT * FROM observaties WHERE concurrent='bouwmaat' AND sku='HG-2001'").fetchone()
     assert round(rij["prijs_incl"], 2) == round(27.5 * 1.21, 2) and rij["op_voorraad"] == 0
-    rij = db.con.execute("SELECT * FROM observaties WHERE concurrent='onlinetuinhout'").fetchone()
-    assert round(rij["prijs_incl"], 2) == round(11.49 * 1.2, 2)
+    rij = db.con.execute("SELECT * FROM observaties WHERE concurrent='onlinetuinhout' AND sku='HG-1001'").fetchone()
+    assert round(rij["prijs_incl"], 2) == round(11.49 * 0.75, 2)
 
 
 def test_demo_end_to_end(tmp_path, monkeypatch):
@@ -44,3 +44,14 @@ def test_demo_end_to_end(tmp_path, monkeypatch):
     vs = db.voorstellen()
     assert 15 <= len(vs) <= 20
     assert {"omhoog", "omlaag"} <= {v["richting"] for v in vs}
+
+
+def test_heuristiek_prijs_wordt_niet_gebruikt(tmp_path):
+    class Heur:
+        def haal(self, url, interval=None):
+            return (FIX / "heuristiek.html").read_text()
+    cfg = laad_config("config")
+    db = DB(tmp_path / "t.db")
+    res = scrape(cfg, db, fetcher=Heur(), alleen=["onlinetuinhout"])
+    assert res == {"onzeker": len([m for m in cfg.matches if m.concurrent == "onlinetuinhout"])}
+    assert db.con.execute("SELECT COUNT(*) FROM observaties WHERE prijs_incl IS NOT NULL").fetchone()[0] == 0

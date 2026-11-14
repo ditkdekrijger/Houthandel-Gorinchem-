@@ -81,6 +81,25 @@ verdachte matches en artikelen met te weinig marktdata.
    ```
 4. Zet de nieuwe prijzen in kassa/webshop (of bouw een koppeling, zie hieronder).
 
+## Status live (run 1, 14-11-2026)
+
+| Concurrent | Status | Toelichting |
+|---|---|---|
+| Bouwmaat | ✅ werkt | JSON-LD, prijzen excl. btw (wordt omgerekend). Lengtes via `?variant=<id>` in de URL. |
+| Online Tuinhout | ✅ werkt | CSS-selector `#base_price`. Gebruik URL's mét lengte. |
+| Gadero | ⚠️ beperkt | Alleen productpagina's met lengte in de URL (eindigend op `-prod`) hebben een prijs. |
+| HORNBACH | ❌ geblokkeerd | JavaScript-botcheck. |
+| GAMMA, KARWEI | ❌ geblokkeerd | HTTP 429 (botbescherming). |
+| HouthandelOnline | ❌ geblokkeerd | HTTP 403. |
+| Praxis, Bouwbestel | ❌ geblokkeerd | Weigeren onze (eerlijke) bot-identificatie. |
+| OPMAATZAGEN.nl | ⚠️ niet vergelijkbaar | Toont "vanaf"-prijs voor zaagwerk op maat, geen prijs per hele plaat. |
+
+Geblokkeerde sites worden **niet** omzeild. Alternatieven: een prijsdata-leverancier,
+handmatige steekproeven, of de site om toestemming vragen.
+
+Let op: een prijs die alleen via de heuristiek gevonden wordt krijgt status `onzeker` en telt
+**niet** mee. In run 1 pakte de heuristiek bij Online Tuinhout de prijs van een gerelateerd product.
+
 ## Volgende stappen
 
 - **Koppeling kassa/webshop**: `producten.csv` automatisch vullen vanuit het ERP en goedgekeurde

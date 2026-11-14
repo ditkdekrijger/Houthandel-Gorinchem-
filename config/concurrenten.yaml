@@ -68,7 +68,7 @@ concurrenten:
     type: online
     gewicht: 1.2
     prijs_incl_btw: true
-    basis_url: https://www.gadero.nl
+    basis_url: https://gadero.nl
 
   - id: onlinetuinhout
     naam: Online Tuinhout
@@ -76,6 +76,8 @@ concurrenten:
     gewicht: 1.1
     prijs_incl_btw: true
     basis_url: https://www.onlinetuinhout.nl
+    selectors:
+      prijs: "#base_price"
 
   - id: opmaatzagen
     naam: OPMAATZAGEN.nl

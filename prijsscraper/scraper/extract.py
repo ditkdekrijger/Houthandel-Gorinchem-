@@ -88,7 +88,16 @@ def _is_type(d: dict, *types) -> bool:
     return any(str(x).lower() in types for x in t if x)
 
 
-def uit_jsonld(soup: BeautifulSoup) -> Extractie | None:
+def _variant_id(url: str | None) -> str | None:
+    m = re.search(r"[?&]variant=(\w+)", url or "")
+    return m.group(1) if m else None
+
+
+def uit_jsonld(soup: BeautifulSoup, url: str | None = None) -> Extractie | None:
+    """Leest schema.org Product/ProductGroup. Bij een ProductGroup (bijv. hout in meerdere
+    lengtes) wordt de variant uit '?variant=...' in de URL gekozen; zonder variant-id wordt
+    niets teruggegeven als er meerdere varianten met verschillende prijzen zijn (te riskant)."""
+    vid = _variant_id(url)
     for script in soup.find_all("script", attrs={"type": re.compile("ld\\+json", re.I)}):
         raw = script.string or script.get_text() or ""
         try:
@@ -99,12 +108,30 @@ def uit_jsonld(soup: BeautifulSoup) -> Extractie | None:
                 data = json.loads(re.sub(r",\s*([}\]])", r"\1", raw.strip()))
             except Exception:
                 continue
+        if not vid:
+            for g in _walk(data):
+                if _is_type(g, "productgroup"):
+                    vp = {str((v.get("offers") or {}).get("price")) for v in g.get("hasVariant") or []
+                          if isinstance(v, dict)}
+                    if len(vp) > 1:
+                        # meerdere lengtes/maten met eigen prijs: zonder variant-id niet gokken
+                        return Extractie(prijs=None, methode="variant_vereist", betrouwbaarheid="laag")
         for d in _walk(data):
             if not _is_type(d, "product", "productgroup"):
                 continue
             offers = d.get("offers")
-            if not offers and isinstance(d.get("hasVariant"), list) and d["hasVariant"]:
-                offers = d["hasVariant"][0].get("offers")
+            varianten = [v for v in (d.get("hasVariant") or []) if isinstance(v, dict)]
+            if not offers and varianten:
+                if vid:
+                    gekozen = [v for v in varianten if vid in json.dumps(v)]
+                    if not gekozen:
+                        continue
+                    offers = gekozen[0].get("offers")
+                else:
+                    prijzen = {str((v.get("offers") or {}).get("price")) for v in varianten}
+                    if len(prijzen) > 1:
+                        continue  # meerdere lengtes/maten met eigen prijs: variant-id verplicht
+                    offers = varianten[0].get("offers")
             if not offers:
                 continue
             offer_lijst = offers if isinstance(offers, list) else [offers]
@@ -188,14 +215,14 @@ def uit_heuristiek(soup: BeautifulSoup) -> Extractie | None:
     return None
 
 
-def extraheer(html: str, selectors: dict | None = None) -> Extractie:
+def extraheer(html: str, selectors: dict | None = None, url: str | None = None) -> Extractie:
     soup = BeautifulSoup(html, "html.parser")
-    for fn in (lambda: uit_selectors(soup, selectors or {}),
-               lambda: uit_jsonld(soup),
-               lambda: uit_microdata(soup),
-               lambda: uit_meta(soup),
-               lambda: uit_heuristiek(soup)):
+    stappen = [lambda: uit_selectors(soup, selectors or {}), lambda: uit_jsonld(soup, url)]
+    if not _variant_id(url):
+        # bij een specifieke variant geen gok-methodes: die pakken mogelijk een andere lengte
+        stappen += [lambda: uit_microdata(soup), lambda: uit_meta(soup), lambda: uit_heuristiek(soup)]
+    for fn in stappen:
         res = fn()
-        if res and res.prijs:
+        if res and (res.prijs or res.methode == "variant_vereist"):
             return res
     return Extractie(prijs=None, methode="geen", betrouwbaarheid="laag")

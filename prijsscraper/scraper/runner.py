@@ -29,10 +29,17 @@ def _scrape_concurrent(fetcher: Fetcher, conc, matches: list[Match], btw: float)
         basis = dict(sku=m.sku, concurrent=m.concurrent, url=m.url, tijdstip=nu())
         try:
             html = fetcher.haal(m.url, conc.min_interval_sec)
-            ex = extraheer(html, conc.selectors)
+            ex = extraheer(html, conc.selectors, m.url)
             if not ex.prijs:
                 resultaten.append({**basis, "prijs_ruw": None, "prijs_incl": None,
-                                   "status": "geen_prijs", "melding": "geen prijs gevonden op pagina"})
+                                   "status": "geen_prijs",
+                                   "melding": "pagina heeft meerdere varianten: zet ?variant=<id> in de URL"
+                                   if ex.methode == "variant_vereist" else "geen prijs gevonden op pagina"})
+                continue
+            if ex.betrouwbaarheid == "laag":
+                # gok-methode (heuristiek): opslaan ter controle, niet gebruiken voor prijsadvies
+                resultaten.append({**basis, "prijs_ruw": ex.prijs, "prijs_incl": None, "status": "onzeker",
+                                   "melding": f"prijs {ex.prijs} via {ex.methode}: stel CSS-selector in voor deze site"})
                 continue
             van = normaliseer(ex.van_prijs, conc.prijs_incl_btw, btw, m.omrekenfactor) if ex.van_prijs else None
             resultaten.append({**basis, "prijs_ruw": ex.prijs,

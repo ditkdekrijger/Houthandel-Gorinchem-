@@ -1,0 +1,4 @@
+﻿voorstel_id;sku;naam;rol;richting;huidige_prijs;voorgestelde_prijs;wijziging_pct;laagste_conc;mediaan_conc;positie_oud;positie_nieuw;marge_oud;marge_nieuw;brutowinst_delta_week;score;reden
+1;HG-1001;Steigerhout nieuw vuren 32x200 mm 300 cm;trekker;omlaag;12,95;12,49;-3.5%;11,96;15,27;2;2;43.0%;40.9%;1,65;61,3;"1 van 2 concurrenten goedkoper; goedkoopste kwart € 12,36"
+2;HG-5001;Hardhout vlonderplank Bangkirai 25x145 mm 305 cm;marge;omhoog;31,95;34,49;8.0%;45,75;51,47;1;1;48.5%;52.3%;27,69;27,7;"we zijn nu de goedkoopste; marktmediaan € 52,15 laat ruimte voor marge; stapsgewijs richting doel € 54,24"
+3;HG-4001;Douglas tuinplank 22x200 mm 400 cm;kern;omhoog;17,95;18,49;3.0%;16,95;18,83;2;2;44.0%;45.7%;5,53;5,5;"we zijn nu nr. 2 van 3; marktmediaan € 19,06 laat ruimte voor marge"
