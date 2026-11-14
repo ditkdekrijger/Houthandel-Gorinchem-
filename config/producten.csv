@@ -1,0 +1,13 @@
+sku,naam,categorie,eenheid,inkoopprijs_excl_btw,verkoopprijs_incl_btw,rol,afzet_per_week,ean
+HG-1001,Steigerhout nieuw vuren 32x200 mm 300 cm,steigerhout,stuk,6.10,12.95,trekker,85,
+HG-1002,Steigerhout gebruikt 32x200 mm 300 cm,steigerhout,stuk,7.40,15.49,trekker,60,
+HG-2001,OSB/3 plaat 18 mm 244x122 cm,plaatmateriaal,stuk,14.20,27.95,trekker,40,
+HG-2002,Underlayment 18 mm 244x122 cm,plaatmateriaal,stuk,17.90,34.95,kern,22,
+HG-2003,Betonplex 18 mm 250x125 cm,plaatmateriaal,stuk,29.50,57.95,kern,15,
+HG-3001,Vuren geschaafd 44x69 mm 300 cm,constructiehout,stuk,3.20,6.99,trekker,120,
+HG-3002,Vuren geschaafd 69x169 mm 400 cm (C24),constructiehout,stuk,15.10,32.49,kern,18,
+HG-4001,Douglas tuinplank 22x200 mm 400 cm,tuinhout,stuk,8.30,17.95,kern,45,
+HG-4002,Douglas paal 7x7 cm 270 cm,tuinhout,stuk,6.80,14.49,kern,30,
+HG-5001,Hardhout vlonderplank Bangkirai 25x145 mm 305 cm,vlonderhout,stuk,13.60,31.95,marge,25,
+HG-6001,Zweeds rabat Thermowood 18x165 mm 420 cm,gevelbekleding,stuk,12.40,29.95,marge,20,
+HG-6002,Channelsiding Red Cedar 18x140 mm per m1,gevelbekleding,m1,6.90,17.49,marge,35,

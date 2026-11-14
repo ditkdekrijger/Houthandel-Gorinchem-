@@ -1,0 +1,97 @@
+# Top-10 concurrenten van Houthandel Gorinchem.
+#
+# VOORSTEL – valideer deze lijst met de verkoop: wie verliezen we offertes/klanten aan?
+#
+# Velden:
+#   id            korte sleutel (gebruikt in config/matches.csv)
+#   naam          weergavenaam in rapporten
+#   type          bouwmarkt | houthandel | online
+#   gewicht       relevantie 0.1 - 2.0. Directe, regionale concurrenten wegen zwaarder
+#                 mee in de marktprijs dan landelijke bouwmarkten.
+#   prijs_incl_btw  true als de site prijzen incl. 21% btw toont (consumentensites)
+#   min_interval_sec  minimale wachttijd tussen requests naar dit domein (beleefd scrapen)
+#   selectors     optioneel: CSS-selectors als JSON-LD/microdata ontbreekt
+#                 (prijs, actieprijs, voorraad). Laat leeg voor automatische detectie.
+
+instellingen:
+  user_agent: "HoutGorinchemPrijsmonitor/1.0 (+prijsmonitor; contact via website)"
+  timeout_sec: 20
+  max_pogingen: 3
+  respecteer_robots_txt: true
+  standaard_min_interval_sec: 4
+
+concurrenten:
+  - id: gamma
+    naam: GAMMA
+    type: bouwmarkt
+    gewicht: 1.0
+    prijs_incl_btw: true
+    basis_url: https://www.gamma.nl
+
+  - id: karwei
+    naam: KARWEI
+    type: bouwmarkt
+    gewicht: 0.9
+    prijs_incl_btw: true
+    basis_url: https://www.karwei.nl
+
+  - id: praxis
+    naam: Praxis
+    type: bouwmarkt
+    gewicht: 1.0
+    prijs_incl_btw: true
+    basis_url: https://www.praxis.nl
+
+  - id: hornbach
+    naam: HORNBACH
+    type: bouwmarkt
+    gewicht: 1.2
+    prijs_incl_btw: true
+    basis_url: https://www.hornbach.nl
+
+  - id: bouwmaat
+    naam: Bouwmaat
+    type: houthandel
+    gewicht: 1.4
+    prijs_incl_btw: false
+    basis_url: https://www.bouwmaat.nl
+
+  - id: houthandelonline
+    naam: HouthandelOnline
+    type: online
+    gewicht: 1.5
+    prijs_incl_btw: true
+    basis_url: https://www.houthandelonline.nl
+
+  - id: gadero
+    naam: Gadero
+    type: online
+    gewicht: 1.2
+    prijs_incl_btw: true
+    basis_url: https://www.gadero.nl
+
+  - id: onlinetuinhout
+    naam: Online Tuinhout
+    type: online
+    gewicht: 1.1
+    prijs_incl_btw: true
+    basis_url: https://www.onlinetuinhout.nl
+
+  - id: opmaatzagen
+    naam: OPMAATZAGEN.nl
+    type: online
+    gewicht: 1.0
+    prijs_incl_btw: true
+    basis_url: https://www.opmaatzagen.nl
+
+  - id: bouwbestel
+    naam: Bouwbestel
+    type: online
+    gewicht: 0.8
+    prijs_incl_btw: true
+    basis_url: https://www.bouwbestel.nl
+    # Voorbeeld van handmatige selectors (alleen nodig als automatische detectie faalt):
+    # selectors:
+    #   prijs: ".product-info .price-final"
+    #   actieprijs: ".product-info .price-special"
+    #   voorraad: ".stock-status"

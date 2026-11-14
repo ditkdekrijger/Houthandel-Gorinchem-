@@ -1,0 +1,8 @@
+sku,concurrent,url,omrekenfactor,opmerking
+HG-1001,gamma,https://www.gamma.nl/assortiment/steigerhout-vuren-ruw-32x200-mm-300-cm/p/VOORBEELD,1,
+HG-1001,praxis,https://www.praxis.nl/bouwmaterialen/hout/steigerhout/VOORBEELD,1,
+HG-1001,houthandelonline,https://www.houthandelonline.nl/steigerhout/VOORBEELD,1,
+HG-1001,onlinetuinhout,https://www.onlinetuinhout.nl/steigerhout/VOORBEELD,1.2,concurrent verkoopt 250 cm -> 300/250
+HG-2001,hornbach,https://www.hornbach.nl/p/osb-3-plaat-18-mm/VOORBEELD,1,
+HG-2001,bouwmaat,https://www.bouwmaat.nl/osb-18mm/VOORBEELD,1,prijs excl. btw -> automatisch omgerekend
+HG-6002,houthandelonline,https://www.houthandelonline.nl/channelsiding/VOORBEELD,0.25,concurrent prijst per lengte 400 cm -> per m1

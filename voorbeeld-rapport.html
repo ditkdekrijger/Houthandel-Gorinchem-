@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prijsvoorstellen 2026-11-14</title>
+<style>
+:root{--bg:#f7f6f3;--card:#fff;--tx:#1d1d1b;--mu:#6b6a66;--ln:#e4e2dc;--up:#1f7a4d;--dn:#b4462b;--ac:#8a5a2b;--dot:#b9b6ae}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#161614;--card:#1f1f1c;--tx:#ecebe6;--mu:#a3a199;--ln:#34332f;--up:#5cc28f;--dn:#ef8a6c;--ac:#d6a26b;--dot:#6c6a64}}
+:root[data-theme=dark]{--bg:#161614;--card:#1f1f1c;--tx:#ecebe6;--mu:#a3a199;--ln:#34332f;--up:#5cc28f;--dn:#ef8a6c;--ac:#d6a26b;--dot:#6c6a64}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1280px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:22px;margin:0 0 4px}h2{font-size:16px;margin:32px 0 10px}.sub{color:var(--mu);font-size:12px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:20px 0}
+.kpi{background:var(--card);border:1px solid var(--ln);border-radius:10px;padding:12px 14px}.kpi b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.wrap{overflow-x:auto;background:var(--card);border:1px solid var(--ln);border-radius:10px}
+table{border-collapse:collapse;width:100%}th,td{padding:9px 10px;border-bottom:1px solid var(--ln);vertical-align:top;text-align:left}
+th{font-size:12px;color:var(--mu);font-weight:600;white-space:nowrap;position:sticky;top:0;background:var(--card)}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.naam{font-weight:600;min-width:200px}
+.omhoog{color:var(--up)}.omlaag{color:var(--dn)}.reden{min-width:260px;max-width:380px;font-size:13px}
+details summary{cursor:pointer;color:var(--ac);font-size:12px;margin-top:4px}table.mini td{padding:3px 6px;font-size:12px;border:0}tr.uit td{opacity:.5;text-decoration:line-through}
+.band{position:relative;height:14px;min-width:140px;margin:3px 6px;border-bottom:2px solid var(--ln)}
+.band i{position:absolute;top:2px;width:9px;height:9px;margin-left:-4.5px;border-radius:50%}
+.band .c{background:var(--dot)}.band .o{border:2px solid var(--tx);background:var(--card)}.band .n.omhoog{background:var(--up)}.band .n.omlaag{background:var(--dn)}
+tr.rij.uitgevinkt td:not(:first-child){opacity:.4}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0}
+button{font:inherit;background:var(--ac);color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer}button.sec{background:transparent;color:var(--tx);border:1px solid var(--ln)}
+ul.sig{list-style:none;padding:0;margin:0;background:var(--card);border:1px solid var(--ln);border-radius:10px}ul.sig li{padding:8px 12px;border-bottom:1px solid var(--ln);font-size:13px}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:99px;border:1px solid var(--ln);color:var(--mu);margin-right:4px}.tag.onder_bodem{color:var(--dn);border-color:var(--dn)}.tag.uitschieter{color:var(--ac);border-color:var(--ac)}
+</style></head><body><main>
+<h1>Prijsvoorstellen Houthandel Gorinchem</h1>
+<div class="sub">14-11-2026 · 84 artikelen geanalyseerd · 72 kandidaat-wijzigingen · top 20 geselecteerd</div>
+<div class="kpis">
+ <div class="kpi"><span class="sub">Voorstellen</span><b>20</b></div>
+ <div class="kpi"><span class="sub">Verhogen</span><b class="omhoog">14</b></div>
+ <div class="kpi"><span class="sub">Verlagen</span><b class="omlaag">6</b></div>
+ <div class="kpi"><span class="sub">Verwacht effect brutowinst / week</span><b class="omhoog">€ 417,85</b></div>
+ <div class="kpi"><span class="sub">Signalen ter controle</span><b>9</b></div>
+</div>
+<div class="bar"><button id="exp">Exporteer goedgekeurde prijzen (CSV)</button><button class="sec" id="alles">Alles aan/uit</button>
+<span class="sub" id="telling"></span></div>
+<div class="wrap"><table>
+<thead><tr><th>Akkoord</th><th>Artikel</th><th class="num">Nu</th><th class="num">Voorstel</th><th>Markt</th><th class="num">Positie</th><th class="num">Marge</th><th class="num">Δ brutowinst/wk</th><th>Onderbouwing</th></tr></thead>
+<tbody>
+<tr class="rij" data-i="0">
+  <td><input type="checkbox" class="ok" data-i="0" checked aria-label="akkoord HG-1004"></td>
+  <td><div class="naam">Steigerhout gebruikt 32x200 mm 250 cm</div><div class="sub">HG-1004 · steigerhout · trekker</div></td>
+  <td class="num">€ 17,07</td>
+  <td class="num"><b>€ 15,95</b><div class="sub omlaag">▼ -6,6%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:0.0%'></i><i class='c' style='left:11.7%'></i><i class='c' style='left:13.4%'></i><i class='c' style='left:29.2%'></i><i class='c' style='left:55.5%'></i><i class='c' style='left:64.1%'></i><i class='c' style='left:74.7%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:41.4%'></i><i class='n omlaag' style='left:24.1%'></i></div><div class="sub">€ 14,39 – € 20,86 · 8 conc.</div></td>
+  <td class="num">5 → 4</td>
+  <td class="num">34,6% → 30,1%</td>
+  <td class="num omlaag">€ -13,52</td>
+  <td class="reden">markt gedaald met 14% in 7 dagen; 4 van 8 concurrenten goedkoper; goedkoopste kwart € 15,21; tijdelijke actie bij Bouwmaat, GAMMA, KARWEI (telt half mee)<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>Bouwmaat</td><td class='num'>€ 14,39</td><td>actie</td><td></td></tr><tr class=''><td>Gadero</td><td class='num'>€ 15,15</td><td></td><td></td></tr><tr class=''><td>GAMMA</td><td class='num'>€ 15,26</td><td>actie</td><td></td></tr><tr class=''><td>KARWEI</td><td class='num'>€ 16,28</td><td>actie</td><td></td></tr><tr class=''><td>Bouwbestel</td><td class='num'>€ 17,98</td><td></td><td></td></tr><tr class=''><td>HORNBACH</td><td class='num'>€ 18,54</td><td></td><td></td></tr><tr class=''><td>Online Tuinhout</td><td class='num'>€ 19,22</td><td></td><td></td></tr><tr class=''><td>Praxis</td><td class='num'>€ 20,86</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="1">
+  <td><input type="checkbox" class="ok" data-i="1" checked aria-label="akkoord HG-1006"></td>
+  <td><div class="naam">Steigerhout gebruikt 32x200 mm 400 cm</div><div class="sub">HG-1006 · steigerhout · trekker</div></td>
+  <td class="num">€ 16,39</td>
+  <td class="num"><b>€ 15,49</b><div class="sub omlaag">▼ -5,5%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:0.0%'></i><i class='c' style='left:12.9%'></i><i class='c' style='left:19.9%'></i><i class='c' style='left:35.0%'></i><i class='c' style='left:56.2%'></i><i class='c' style='left:72.6%'></i><i class='c' style='left:80.5%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:30.9%'></i><i class='n omlaag' style='left:11.2%'></i></div><div class="sub">€ 14,98 – € 19,55 · 8 conc.</div></td>
+  <td class="num">4 → 2</td>
+  <td class="num">41,1% → 37,7%</td>
+  <td class="num omlaag">€ -1,69</td>
+  <td class="reden">markt gestegen met 4% in 7 dagen; 3 van 8 concurrenten goedkoper; goedkoopste kwart € 15,64<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>Online Tuinhout</td><td class='num'>€ 14,98</td><td></td><td></td></tr><tr class=''><td>Bouwmaat</td><td class='num'>€ 15,57</td><td></td><td></td></tr><tr class=''><td>HORNBACH</td><td class='num'>€ 15,89</td><td></td><td></td></tr><tr class=''><td>Bouwbestel</td><td class='num'>€ 16,58</td><td></td><td></td></tr><tr class=''><td>GAMMA</td><td class='num'>€ 17,55</td><td></td><td></td></tr><tr class=''><td>OPMAATZAGEN.nl</td><td class='num'>€ 18,30</td><td></td><td></td></tr><tr class=''><td>Praxis</td><td class='num'>€ 18,66</td><td></td><td></td></tr><tr class=''><td>KARWEI</td><td class='num'>€ 19,55</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="2">
+  <td><input type="checkbox" class="ok" data-i="2" checked aria-label="akkoord HG-1010"></td>
+  <td><div class="naam">Plaatmateriaal OSB/3 18 mm 244x122</div><div class="sub">HG-1010 · plaatmateriaal · trekker</div></td>
+  <td class="num">€ 20,04</td>
+  <td class="num"><b>€ 19,49</b><div class="sub omlaag">▼ -2,7%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:0.0%'></i><i class='c' style='left:56.9%'></i><i class='c' style='left:63.3%'></i><i class='c' style='left:77.5%'></i><i class='c' style='left:85.2%'></i><i class='c' style='left:85.9%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:58.6%'></i><i class='n omlaag' style='left:52.2%'></i></div><div class="sub">€ 15,04 – € 23,57 · 7 conc.</div></td>
+  <td class="num">3 → 2</td>
+  <td class="num">42,0% → 40,3%</td>
+  <td class="num omhoog">€ 1,60</td>
+  <td class="reden">markt gestegen met 3% in 7 dagen; 2 van 7 concurrenten goedkoper; goedkoopste kwart € 19,35<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>HouthandelOnline</td><td class='num'>€ 15,04</td><td></td><td></td></tr><tr class=''><td>HORNBACH</td><td class='num'>€ 19,89</td><td></td><td></td></tr><tr class=''><td>Bouwmaat</td><td class='num'>€ 20,44</td><td></td><td></td></tr><tr class=''><td>Bouwbestel</td><td class='num'>€ 21,65</td><td></td><td></td></tr><tr class=''><td>OPMAATZAGEN.nl</td><td class='num'>€ 22,31</td><td></td><td></td></tr><tr class=''><td>Praxis</td><td class='num'>€ 22,37</td><td></td><td></td></tr><tr class=''><td>KARWEI</td><td class='num'>€ 23,57</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="3">
+  <td><input type="checkbox" class="ok" data-i="3" checked aria-label="akkoord HG-1008"></td>
+  <td><div class="naam">Steigerhout balk 70x70 mm 250 cm</div><div class="sub">HG-1008 · steigerhout · trekker</div></td>
+  <td class="num">€ 24,68</td>
+  <td class="num"><b>€ 23,95</b><div class="sub omlaag">▼ -3,0%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:0.0%'></i><i class='c' style='left:4.9%'></i><i class='c' style='left:17.4%'></i><i class='c' style='left:33.3%'></i><i class='c' style='left:35.5%'></i><i class='c' style='left:45.7%'></i><i class='c' style='left:50.6%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:18.5%'></i><i class='n omlaag' style='left:2.4%'></i></div><div class="sub">€ 23,84 – € 28,37 · 8 conc.</div></td>
+  <td class="num">4 → 2</td>
+  <td class="num">40,8% → 39,0%</td>
+  <td class="num omlaag">€ -0,26</td>
+  <td class="reden">markt gestegen met 5% in 7 dagen; 3 van 8 concurrenten goedkoper; goedkoopste kwart € 24,15<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>Gadero</td><td class='num'>€ 23,84</td><td></td><td></td></tr><tr class=''><td>HouthandelOnline</td><td class='num'>€ 24,06</td><td></td><td></td></tr><tr class=''><td>Bouwbestel</td><td class='num'>€ 24,63</td><td></td><td></td></tr><tr class=''><td>OPMAATZAGEN.nl</td><td class='num'>€ 25,35</td><td></td><td></td></tr><tr class=''><td>Praxis</td><td class='num'>€ 25,45</td><td></td><td></td></tr><tr class=''><td>Online Tuinhout</td><td class='num'>€ 25,91</td><td></td><td></td></tr><tr class=''><td>GAMMA</td><td class='num'>€ 26,13</td><td></td><td></td></tr><tr class=''><td>KARWEI</td><td class='num'>€ 28,37</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="4">
+  <td><input type="checkbox" class="ok" data-i="4" checked aria-label="akkoord HG-1022"></td>
+  <td><div class="naam">Plaatmateriaal Hardboard 3 mm</div><div class="sub">HG-1022 · plaatmateriaal · kern</div></td>
+  <td class="num">€ 93,23</td>
+  <td class="num"><b>€ 99,95</b><div class="sub omhoog">▲ +7,2%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:2.9%'></i><i class='c' style='left:35.8%'></i><i class='c' style='left:40.0%'></i><i class='c' style='left:47.0%'></i><i class='c' style='left:53.1%'></i><i class='c' style='left:57.4%'></i><i class='c' style='left:76.7%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:0.0%'></i><i class='n omhoog' style='left:21.6%'></i></div><div class="sub">€ 94,13 – € 124,35 · 8 conc.</div></td>
+  <td class="num">1 → 2</td>
+  <td class="num">41,6% → 45,5%</td>
+  <td class="num omhoog">€ 66,95</td>
+  <td class="reden">we zijn nu de goedkoopste; marktmediaan € 108,15 laat ruimte voor marge; stapsgewijs richting doel € 105,98<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>Praxis</td><td class='num'>€ 94,13</td><td></td><td></td></tr><tr class=''><td>HouthandelOnline</td><td class='num'>€ 104,38</td><td></td><td></td></tr><tr class=''><td>OPMAATZAGEN.nl</td><td class='num'>€ 105,67</td><td></td><td></td></tr><tr class=''><td>Bouwmaat</td><td class='num'>€ 107,85</td><td></td><td></td></tr><tr class=''><td>HORNBACH</td><td class='num'>€ 109,77</td><td></td><td></td></tr><tr class=''><td>Bouwbestel</td><td class='num'>€ 111,09</td><td></td><td></td></tr><tr class=''><td>GAMMA</td><td class='num'>€ 117,09</td><td></td><td></td></tr><tr class=''><td>KARWEI</td><td class='num'>€ 124,35</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="5">
+  <td><input type="checkbox" class="ok" data-i="5" checked aria-label="akkoord HG-1066"></td>
+  <td><div class="naam">Hardhout Eiken balk 70x70 mm 250 cm</div><div class="sub">HG-1066 · hardhout · marge</div></td>
+  <td class="num">€ 56,24</td>
+  <td class="num"><b>€ 60,49</b><div class="sub omhoog">▲ +7,6%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:0.0%'></i><i class='c' style='left:72.0%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:13.2%'></i><i class='n omhoog' style='left:33.1%'></i></div><div class="sub">€ 53,43 – € 74,75 · 3 conc.</div></td>
+  <td class="num">2 → 2</td>
+  <td class="num">42,6% → 46,6%</td>
+  <td class="num omhoog">€ 50,82</td>
+  <td class="reden">markt gedaald met 2% in 7 dagen; we zijn nu nr. 2 van 4; marktmediaan € 69,60 laat ruimte voor marge; tijdelijke actie bij Bouwmaat (telt half mee); stapsgewijs richting doel € 72,39<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>Bouwmaat</td><td class='num'>€ 53,43</td><td>actie</td><td></td></tr><tr class=''><td>HORNBACH</td><td class='num'>€ 68,79</td><td></td><td></td></tr><tr class=''><td>OPMAATZAGEN.nl</td><td class='num'>€ 74,75</td><td></td><td></td></tr><tr class='uit'><td>HouthandelOnline</td><td class='num'>€ 169,68</td><td> · afwijkend</td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="6">
+  <td><input type="checkbox" class="ok" data-i="6" checked aria-label="akkoord HG-1013"></td>
+  <td><div class="naam">Plaatmateriaal Underlayment 18 mm</div><div class="sub">HG-1013 · plaatmateriaal · kern</div></td>
+  <td class="num">€ 49,96</td>
+  <td class="num"><b>€ 53,95</b><div class="sub omhoog">▲ +8,0%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:0.0%'></i><i class='c' style='left:26.0%'></i><i class='c' style='left:62.3%'></i><i class='c' style='left:63.7%'></i><i class='c' style='left:94.7%'></i><i class='c' style='left:94.8%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:26.0%'></i><i class='n omhoog' style='left:43.2%'></i></div><div class="sub">€ 43,94 – € 67,10 · 7 conc.</div></td>
+  <td class="num">2 → 3</td>
+  <td class="num">38,8% → 43,4%</td>
+  <td class="num omhoog">€ 41,41</td>
+  <td class="reden">markt gedaald met 5% in 7 dagen; we zijn nu nr. 2 van 8; marktmediaan € 59,27 laat ruimte voor marge; tijdelijke actie bij Bouwmaat (telt half mee); stapsgewijs richting doel € 58,09<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>Bouwmaat</td><td class='num'>€ 43,94</td><td>actie</td><td></td></tr><tr class=''><td>Bouwbestel</td><td class='num'>€ 49,96</td><td></td><td></td></tr><tr class=''><td>HORNBACH</td><td class='num'>€ 58,38</td><td></td><td></td></tr><tr class=''><td>HouthandelOnline</td><td class='num'>€ 58,70</td><td></td><td></td></tr><tr class=''><td>OPMAATZAGEN.nl</td><td class='num'>€ 65,88</td><td></td><td></td></tr><tr class=''><td>KARWEI</td><td class='num'>€ 65,90</td><td></td><td></td></tr><tr class=''><td>GAMMA</td><td class='num'>€ 67,10</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="7">
+  <td><input type="checkbox" class="ok" data-i="7" checked aria-label="akkoord HG-1003"></td>
+  <td><div class="naam">Steigerhout nieuw 32x200 mm 400 cm</div><div class="sub">HG-1003 · steigerhout · trekker</div></td>
+  <td class="num">€ 13,39</td>
+  <td class="num"><b>€ 12,95</b><div class="sub omlaag">▼ -3,3%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:0.0%'></i><i class='c' style='left:0.9%'></i><i class='c' style='left:11.7%'></i><i class='c' style='left:15.7%'></i><i class='c' style='left:46.2%'></i><i class='c' style='left:54.3%'></i><i class='c' style='left:56.1%'></i><i class='c' style='left:56.5%'></i><i class='c' style='left:75.8%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:26.9%'></i><i class='n omlaag' style='left:7.2%'></i></div><div class="sub">€ 12,79 – € 15,02 · 10 conc.</div></td>
+  <td class="num">5 → 3</td>
+  <td class="num">40,7% → 38,7%</td>
+  <td class="num omlaag">€ -0,16</td>
+  <td class="reden">markt gestegen met 4% in 7 dagen; 4 van 10 concurrenten goedkoper; goedkoopste kwart € 12,94<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>HouthandelOnline</td><td class='num'>€ 12,79</td><td></td><td></td></tr><tr class=''><td>Bouwmaat</td><td class='num'>€ 12,81</td><td></td><td></td></tr><tr class=''><td>Bouwbestel</td><td class='num'>€ 13,05</td><td></td><td></td></tr><tr class=''><td>Online Tuinhout</td><td class='num'>€ 13,14</td><td></td><td></td></tr><tr class=''><td>HORNBACH</td><td class='num'>€ 13,82</td><td></td><td></td></tr><tr class=''><td>OPMAATZAGEN.nl</td><td class='num'>€ 14,00</td><td></td><td></td></tr><tr class=''><td>Praxis</td><td class='num'>€ 14,04</td><td></td><td></td></tr><tr class=''><td>Gadero</td><td class='num'>€ 14,05</td><td></td><td></td></tr><tr class=''><td>KARWEI</td><td class='num'>€ 14,48</td><td></td><td></td></tr><tr class=''><td>GAMMA</td><td class='num'>€ 15,02</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="8">
+  <td><input type="checkbox" class="ok" data-i="8" checked aria-label="akkoord HG-1018"></td>
+  <td><div class="naam">Plaatmateriaal MDF 12 mm</div><div class="sub">HG-1018 · plaatmateriaal · kern</div></td>
+  <td class="num">€ 92,31</td>
+  <td class="num"><b>€ 99,49</b><div class="sub omhoog">▲ +7,8%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:20.2%'></i><i class='c' style='left:27.9%'></i><i class='c' style='left:71.6%'></i><i class='c' style='left:83.4%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:0.0%'></i><i class='n omhoog' style='left:33.9%'></i></div><div class="sub">€ 96,60 – € 113,51 · 5 conc.</div></td>
+  <td class="num">1 → 3</td>
+  <td class="num">46,6% → 50,4%</td>
+  <td class="num omhoog">€ 32,46</td>
+  <td class="reden">we zijn nu de goedkoopste; marktmediaan € 104,71 laat ruimte voor marge; stapsgewijs richting doel € 102,62<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>HouthandelOnline</td><td class='num'>€ 96,60</td><td></td><td></td></tr><tr class=''><td>Praxis</td><td class='num'>€ 98,23</td><td></td><td></td></tr><tr class=''><td>GAMMA</td><td class='num'>€ 107,49</td><td></td><td></td></tr><tr class=''><td>KARWEI</td><td class='num'>€ 109,99</td><td></td><td></td></tr><tr class=''><td>OPMAATZAGEN.nl</td><td class='num'>€ 113,51</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="9">
+  <td><input type="checkbox" class="ok" data-i="9" checked aria-label="akkoord HG-1047"></td>
+  <td><div class="naam">Vlonderhout Bangkirai 25x145 mm 305 cm</div><div class="sub">HG-1047 · vlonderhout · marge</div></td>
+  <td class="num">€ 53,21</td>
+  <td class="num"><b>€ 56,99</b><div class="sub omhoog">▲ +7,1%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:0.0%'></i><i class='c' style='left:43.0%'></i><i class='c' style='left:47.7%'></i><i class='c' style='left:60.2%'></i><i class='c' style='left:61.7%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:5.4%'></i><i class='n omhoog' style='left:27.0%'></i></div><div class="sub">€ 52,27 – € 69,74 · 6 conc.</div></td>
+  <td class="num">2 → 2</td>
+  <td class="num">47,1% → 50,6%</td>
+  <td class="num omhoog">€ 32,23</td>
+  <td class="reden">we zijn nu nr. 2 van 7; marktmediaan € 61,74 laat ruimte voor marge; tijdelijke actie bij HouthandelOnline (telt half mee)<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>HouthandelOnline</td><td class='num'>€ 52,27</td><td>actie</td><td></td></tr><tr class=''><td>Gadero</td><td class='num'>€ 59,78</td><td></td><td></td></tr><tr class=''><td>HORNBACH</td><td class='num'>€ 60,60</td><td></td><td></td></tr><tr class=''><td>Praxis</td><td class='num'>€ 62,79</td><td></td><td></td></tr><tr class=''><td>Online Tuinhout</td><td class='num'>€ 63,05</td><td></td><td></td></tr><tr class=''><td>GAMMA</td><td class='num'>€ 69,74</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="10">
+  <td><input type="checkbox" class="ok" data-i="10" checked aria-label="akkoord HG-1016"></td>
+  <td><div class="naam">Plaatmateriaal Betonplex 15 mm</div><div class="sub">HG-1016 · plaatmateriaal · kern</div></td>
+  <td class="num">€ 45,50</td>
+  <td class="num"><b>€ 48,99</b><div class="sub omhoog">▲ +7,7%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:0.0%'></i><i class='c' style='left:45.7%'></i><i class='c' style='left:81.3%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:24.7%'></i><i class='n omhoog' style='left:47.8%'></i></div><div class="sub">€ 41,76 – € 56,89 · 4 conc.</div></td>
+  <td class="num">2 → 3</td>
+  <td class="num">38,7% → 43,1%</td>
+  <td class="num omhoog">€ 31,91</td>
+  <td class="reden">markt gedaald met 6% in 7 dagen; we zijn nu nr. 2 van 5; marktmediaan € 54,12 laat ruimte voor marge; tijdelijke actie bij KARWEI (telt half mee); stapsgewijs richting doel € 53,04<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>KARWEI</td><td class='num'>€ 41,76</td><td>actie</td><td></td></tr><tr class=''><td>OPMAATZAGEN.nl</td><td class='num'>€ 48,67</td><td></td><td></td></tr><tr class=''><td>Bouwbestel</td><td class='num'>€ 54,06</td><td></td><td></td></tr><tr class=''><td>HouthandelOnline</td><td class='num'>€ 56,89</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="11">
+  <td><input type="checkbox" class="ok" data-i="11" checked aria-label="akkoord HG-1015"></td>
+  <td><div class="naam">Plaatmateriaal Multiplex berken 18 mm</div><div class="sub">HG-1015 · plaatmateriaal · kern</div></td>
+  <td class="num">€ 100,46</td>
+  <td class="num"><b>€ 97,49</b><div class="sub omlaag">▼ -3,0%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:0.8%'></i><i class='c' style='left:6.9%'></i><i class='c' style='left:8.6%'></i><i class='c' style='left:11.5%'></i><i class='c' style='left:57.0%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:17.4%'></i><i class='n omlaag' style='left:0.0%'></i></div><div class="sub">€ 97,63 – € 114,58 · 6 conc.</div></td>
+  <td class="num">5 → 1</td>
+  <td class="num">49,7% → 48,2%</td>
+  <td class="num omlaag">€ -21,84</td>
+  <td class="reden">4 van 6 concurrenten goedkoper; marktmediaan € 99,20<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>HORNBACH</td><td class='num'>€ 97,63</td><td></td><td></td></tr><tr class=''><td>Bouwbestel</td><td class='num'>€ 98,67</td><td></td><td></td></tr><tr class=''><td>HouthandelOnline</td><td class='num'>€ 98,96</td><td></td><td></td></tr><tr class=''><td>Bouwmaat</td><td class='num'>€ 99,45</td><td></td><td></td></tr><tr class=''><td>OPMAATZAGEN.nl</td><td class='num'>€ 107,23</td><td></td><td></td></tr><tr class=''><td>Praxis</td><td class='num'>€ 114,58</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="12">
+  <td><input type="checkbox" class="ok" data-i="12" checked aria-label="akkoord HG-1052"></td>
+  <td><div class="naam">Vlonderhout Composiet antraciet 23x146 mm 400 cm</div><div class="sub">HG-1052 · vlonderhout · marge</div></td>
+  <td class="num">€ 34,32</td>
+  <td class="num"><b>€ 36,99</b><div class="sub omhoog">▲ +7,8%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:55.8%'></i><i class='c' style='left:60.0%'></i><i class='c' style='left:97.1%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:0.0%'></i><i class='n omhoog' style='left:33.6%'></i></div><div class="sub">€ 38,76 – € 42,27 · 4 conc.</div></td>
+  <td class="num">1 → 1</td>
+  <td class="num">47,3% → 51,1%</td>
+  <td class="num omhoog">€ 30,89</td>
+  <td class="reden">markt gestegen met 3% in 7 dagen; we zijn nu de goedkoopste; marktmediaan € 40,62 laat ruimte voor marge; stapsgewijs richting doel € 42,24<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>Online Tuinhout</td><td class='num'>€ 38,76</td><td></td><td></td></tr><tr class=''><td>HORNBACH</td><td class='num'>€ 39,09</td><td></td><td></td></tr><tr class=''><td>HouthandelOnline</td><td class='num'>€ 42,04</td><td></td><td></td></tr><tr class=''><td>GAMMA</td><td class='num'>€ 42,27</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="13">
+  <td><input type="checkbox" class="ok" data-i="13" checked aria-label="akkoord HG-1053"></td>
+  <td><div class="naam">Vlonderhout Composiet grijs 23x146 mm 400 cm</div><div class="sub">HG-1053 · vlonderhout · marge</div></td>
+  <td class="num">€ 60,47</td>
+  <td class="num"><b>€ 64,99</b><div class="sub omhoog">▲ +7,5%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:60.2%'></i><i class='c' style='left:64.7%'></i><i class='c' style='left:74.6%'></i><i class='c' style='left:81.1%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:0.0%'></i><i class='n omhoog' style='left:27.1%'></i></div><div class="sub">€ 70,52 – € 77,16 · 5 conc.</div></td>
+  <td class="num">1 → 1</td>
+  <td class="num">46,9% → 50,6%</td>
+  <td class="num omhoog">€ 28,41</td>
+  <td class="reden">markt gestegen met 5% in 7 dagen; we zijn nu de goedkoopste; marktmediaan € 72,70 laat ruimte voor marge; stapsgewijs richting doel € 75,60<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>HORNBACH</td><td class='num'>€ 70,52</td><td></td><td></td></tr><tr class=''><td>Gadero</td><td class='num'>€ 71,27</td><td></td><td></td></tr><tr class=''><td>GAMMA</td><td class='num'>€ 72,92</td><td></td><td></td></tr><tr class=''><td>Praxis</td><td class='num'>€ 74,00</td><td></td><td></td></tr><tr class=''><td>Online Tuinhout</td><td class='num'>€ 77,16</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="14">
+  <td><input type="checkbox" class="ok" data-i="14" checked aria-label="akkoord HG-1050"></td>
+  <td><div class="naam">Vlonderhout Ipe 21x145 mm 305 cm</div><div class="sub">HG-1050 · vlonderhout · marge</div></td>
+  <td class="num">€ 43,31</td>
+  <td class="num"><b>€ 46,49</b><div class="sub omhoog">▲ +7,3%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:4.1%'></i><i class='c' style='left:76.0%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:0.0%'></i><i class='n omhoog' style='left:21.6%'></i></div><div class="sub">€ 43,92 – € 58,04 · 3 conc.</div></td>
+  <td class="num">1 → 2</td>
+  <td class="num">44,4% → 48,2%</td>
+  <td class="num omhoog">€ 26,70</td>
+  <td class="reden">we zijn nu de goedkoopste; marktmediaan € 54,92 laat ruimte voor marge; tijdelijke actie bij HouthandelOnline (telt half mee); stapsgewijs richting doel € 57,12<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>HouthandelOnline</td><td class='num'>€ 43,92</td><td>actie</td><td></td></tr><tr class=''><td>Online Tuinhout</td><td class='num'>€ 54,50</td><td></td><td></td></tr><tr class=''><td>GAMMA</td><td class='num'>€ 58,04</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="15">
+  <td><input type="checkbox" class="ok" data-i="15" checked aria-label="akkoord HG-1017"></td>
+  <td><div class="naam">Plaatmateriaal Betonplex 18 mm</div><div class="sub">HG-1017 · plaatmateriaal · kern</div></td>
+  <td class="num">€ 39,08</td>
+  <td class="num"><b>€ 41,99</b><div class="sub omhoog">▲ +7,4%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:0.0%'></i><i class='c' style='left:63.8%'></i><i class='c' style='left:87.3%'></i><i class='c' style='left:92.7%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:24.7%'></i><i class='n omhoog' style='left:42.9%'></i></div><div class="sub">€ 35,15 – € 51,08 · 5 conc.</div></td>
+  <td class="num">2 → 2</td>
+  <td class="num">37,7% → 42,0%</td>
+  <td class="num omhoog">€ 25,48</td>
+  <td class="reden">we zijn nu nr. 2 van 6; marktmediaan € 49,05 laat ruimte voor marge; tijdelijke actie bij HORNBACH (telt half mee); stapsgewijs richting doel € 48,07<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>HORNBACH</td><td class='num'>€ 35,15</td><td>actie</td><td></td></tr><tr class=''><td>Bouwmaat</td><td class='num'>€ 45,32</td><td></td><td></td></tr><tr class=''><td>HouthandelOnline</td><td class='num'>€ 49,05</td><td></td><td></td></tr><tr class=''><td>Praxis</td><td class='num'>€ 49,91</td><td></td><td></td></tr><tr class=''><td>OPMAATZAGEN.nl</td><td class='num'>€ 51,08</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="16">
+  <td><input type="checkbox" class="ok" data-i="16" checked aria-label="akkoord HG-1023"></td>
+  <td><div class="naam">Plaatmateriaal Gipsplaat 12,5 mm 260x60</div><div class="sub">HG-1023 · plaatmateriaal · kern</div></td>
+  <td class="num">€ 40,50</td>
+  <td class="num"><b>€ 43,49</b><div class="sub omhoog">▲ +7,4%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:0.0%'></i><i class='c' style='left:48.2%'></i><i class='c' style='left:56.4%'></i><i class='c' style='left:65.3%'></i><i class='c' style='left:73.7%'></i><i class='c' style='left:99.5%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:28.3%'></i><i class='n omhoog' style='left:47.9%'></i></div><div class="sub">€ 36,19 – € 51,42 · 7 conc.</div></td>
+  <td class="num">2 → 2</td>
+  <td class="num">42,4% → 46,4%</td>
+  <td class="num omhoog">€ 23,63</td>
+  <td class="reden">we zijn nu nr. 2 van 8; marktmediaan € 45,73 laat ruimte voor marge; stapsgewijs richting doel € 44,82<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>Bouwbestel</td><td class='num'>€ 36,19</td><td></td><td></td></tr><tr class=''><td>Bouwmaat</td><td class='num'>€ 43,53</td><td></td><td></td></tr><tr class=''><td>HouthandelOnline</td><td class='num'>€ 44,78</td><td></td><td></td></tr><tr class=''><td>HORNBACH</td><td class='num'>€ 46,13</td><td></td><td></td></tr><tr class=''><td>Praxis</td><td class='num'>€ 47,42</td><td></td><td></td></tr><tr class=''><td>OPMAATZAGEN.nl</td><td class='num'>€ 51,34</td><td></td><td></td></tr><tr class=''><td>KARWEI</td><td class='num'>€ 51,42</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="17">
+  <td><input type="checkbox" class="ok" data-i="17" checked aria-label="akkoord HG-1019"></td>
+  <td><div class="naam">Plaatmateriaal MDF 18 mm</div><div class="sub">HG-1019 · plaatmateriaal · kern</div></td>
+  <td class="num">€ 74,39</td>
+  <td class="num"><b>€ 79,99</b><div class="sub omhoog">▲ +7,5%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:45.0%'></i><i class='c' style='left:74.9%'></i><i class='c' style='left:78.9%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:0.0%'></i><i class='n omhoog' style='left:17.5%'></i></div><div class="sub">€ 88,75 – € 106,31 · 4 conc.</div></td>
+  <td class="num">1 → 1</td>
+  <td class="num">37,0% → 41,4%</td>
+  <td class="num omhoog">€ 21,12</td>
+  <td class="reden">we zijn nu de goedkoopste; marktmediaan € 98,86 laat ruimte voor marge; stapsgewijs richting doel € 96,89<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>HORNBACH</td><td class='num'>€ 88,75</td><td></td><td></td></tr><tr class=''><td>Bouwbestel</td><td class='num'>€ 98,30</td><td></td><td></td></tr><tr class=''><td>OPMAATZAGEN.nl</td><td class='num'>€ 99,57</td><td></td><td></td></tr><tr class=''><td>GAMMA</td><td class='num'>€ 106,31</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="18">
+  <td><input type="checkbox" class="ok" data-i="18" checked aria-label="akkoord HG-1011"></td>
+  <td><div class="naam">Plaatmateriaal OSB/3 22 mm 244x59 mes/groef</div><div class="sub">HG-1011 · plaatmateriaal · trekker</div></td>
+  <td class="num">€ 22,21</td>
+  <td class="num"><b>€ 23,95</b><div class="sub omhoog">▲ +7,8%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:62.6%'></i><i class='c' style='left:80.0%'></i><i class='c' style='left:87.9%'></i><i class='c' style='left:88.5%'></i><i class='c' style='left:91.2%'></i><i class='c' style='left:96.1%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:0.0%'></i><i class='n omhoog' style='left:25.9%'></i></div><div class="sub">€ 26,41 – € 28,92 · 7 conc.</div></td>
+  <td class="num">1 → 1</td>
+  <td class="num">28,7% → 33,9%</td>
+  <td class="num omhoog">€ 21,04</td>
+  <td class="reden">we zijn nu de goedkoopste; goedkoopste kwart € 27,65 laat ruimte voor marge; stapsgewijs richting doel € 27,37<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>Bouwmaat</td><td class='num'>€ 26,41</td><td></td><td></td></tr><tr class=''><td>Bouwbestel</td><td class='num'>€ 27,58</td><td></td><td></td></tr><tr class=''><td>HouthandelOnline</td><td class='num'>€ 28,11</td><td></td><td></td></tr><tr class=''><td>Praxis</td><td class='num'>€ 28,15</td><td></td><td></td></tr><tr class=''><td>HORNBACH</td><td class='num'>€ 28,33</td><td></td><td></td></tr><tr class=''><td>KARWEI</td><td class='num'>€ 28,66</td><td></td><td></td></tr><tr class=''><td>GAMMA</td><td class='num'>€ 28,92</td><td></td><td></td></tr></table></details></td>
+</tr>
+<tr class="rij" data-i="19">
+  <td><input type="checkbox" class="ok" data-i="19" checked aria-label="akkoord HG-1069"></td>
+  <td><div class="naam">Hardhout Azobé paal 8x8 cm 300 cm</div><div class="sub">HG-1069 · hardhout · marge</div></td>
+  <td class="num">€ 54,86</td>
+  <td class="num"><b>€ 58,99</b><div class="sub omhoog">▲ +7,5%</div></td>
+  <td><div class='band' title='concurrenten (grijs), nu (open), voorstel (gevuld)'><i class='c' style='left:35.9%'></i><i class='c' style='left:52.6%'></i><i class='c' style='left:100.0%'></i><i class='o' style='left:0.0%'></i><i class='n omhoog' style='left:23.2%'></i></div><div class="sub">€ 61,25 – € 72,65 · 3 conc.</div></td>
+  <td class="num">1 → 1</td>
+  <td class="num">46,0% → 49,8%</td>
+  <td class="num omhoog">€ 20,67</td>
+  <td class="reden">markt gestegen met 4% in 7 dagen; we zijn nu de goedkoopste; marktmediaan € 63,96 laat ruimte voor marge; stapsgewijs richting doel € 66,52<details><summary>concurrenten</summary><table class="mini"><tr class=''><td>Gadero</td><td class='num'>€ 61,25</td><td></td><td></td></tr><tr class=''><td>HORNBACH</td><td class='num'>€ 64,21</td><td></td><td></td></tr><tr class=''><td>OPMAATZAGEN.nl</td><td class='num'>€ 72,65</td><td></td><td></td></tr></table></details></td>
+</tr></tbody></table></div>
+<p class="sub">Positie: 1 = goedkoopste van de markt. Marge = brutomarge op verkoopprijs excl. btw. Δ brutowinst is een schatting op basis van weekafzet en prijselasticiteit per artikelrol.</p>
+<h2>Signalen ter controle</h2>
+<ul class="sig"><li><span class='tag uitschieter'>uitschieter</span> <b>HG-1001</b> – HORNBACH € 29,87 wijkt sterk af van de markt – controleer de match (https://demo.invalid/hornbach/hg-1001)</li><li><span class='tag uitschieter'>uitschieter</span> <b>HG-1029</b> – Praxis € 74,36 wijkt sterk af van de markt – controleer de match (https://demo.invalid/praxis/hg-1029)</li><li><span class='tag uitschieter'>uitschieter</span> <b>HG-1033</b> – HouthandelOnline € 38,15 wijkt sterk af van de markt – controleer de match (https://demo.invalid/houthandelonline/hg-1033)</li><li><span class='tag uitschieter'>uitschieter</span> <b>HG-1035</b> – Online Tuinhout € 34,75 wijkt sterk af van de markt – controleer de match (https://demo.invalid/onlinetuinhout/hg-1035)</li><li><span class='tag uitschieter'>uitschieter</span> <b>HG-1040</b> – Gadero € 27,09 wijkt sterk af van de markt – controleer de match (https://demo.invalid/gadero/hg-1040)</li><li><span class='tag uitschieter'>uitschieter</span> <b>HG-1051</b> – Praxis € 82,59 wijkt sterk af van de markt – controleer de match (https://demo.invalid/praxis/hg-1051)</li><li><span class='tag uitschieter'>uitschieter</span> <b>HG-1055</b> – GAMMA € 117,35 wijkt sterk af van de markt – controleer de match (https://demo.invalid/gamma/hg-1055)</li><li><span class='tag uitschieter'>uitschieter</span> <b>HG-1066</b> – HouthandelOnline € 169,68 wijkt sterk af van de markt – controleer de match (https://demo.invalid/houthandelonline/hg-1066)</li><li><span class='tag uitschieter'>uitschieter</span> <b>HG-1082</b> – GAMMA € 45,20 wijkt sterk af van de markt – controleer de match (https://demo.invalid/gamma/hg-1082)</li></ul>
+
+</main>
+<script>
+const V=[{"id": 1, "sku": "HG-1004", "naam": "Steigerhout gebruikt 32x200 mm 250 cm", "oud": 17.07, "nieuw": 15.95}, {"id": 2, "sku": "HG-1006", "naam": "Steigerhout gebruikt 32x200 mm 400 cm", "oud": 16.39, "nieuw": 15.49}, {"id": 3, "sku": "HG-1010", "naam": "Plaatmateriaal OSB/3 18 mm 244x122", "oud": 20.04, "nieuw": 19.49}, {"id": 4, "sku": "HG-1008", "naam": "Steigerhout balk 70x70 mm 250 cm", "oud": 24.68, "nieuw": 23.95}, {"id": 5, "sku": "HG-1022", "naam": "Plaatmateriaal Hardboard 3 mm", "oud": 93.23, "nieuw": 99.95}, {"id": 6, "sku": "HG-1066", "naam": "Hardhout Eiken balk 70x70 mm 250 cm", "oud": 56.24, "nieuw": 60.49}, {"id": 7, "sku": "HG-1013", "naam": "Plaatmateriaal Underlayment 18 mm", "oud": 49.96, "nieuw": 53.95}, {"id": 8, "sku": "HG-1003", "naam": "Steigerhout nieuw 32x200 mm 400 cm", "oud": 13.39, "nieuw": 12.95}, {"id": 9, "sku": "HG-1018", "naam": "Plaatmateriaal MDF 12 mm", "oud": 92.31, "nieuw": 99.49}, {"id": 10, "sku": "HG-1047", "naam": "Vlonderhout Bangkirai 25x145 mm 305 cm", "oud": 53.21, "nieuw": 56.99}, {"id": 11, "sku": "HG-1016", "naam": "Plaatmateriaal Betonplex 15 mm", "oud": 45.5, "nieuw": 48.99}, {"id": 12, "sku": "HG-1015", "naam": "Plaatmateriaal Multiplex berken 18 mm", "oud": 100.46, "nieuw": 97.49}, {"id": 13, "sku": "HG-1052", "naam": "Vlonderhout Composiet antraciet 23x146 mm 400 cm", "oud": 34.32, "nieuw": 36.99}, {"id": 14, "sku": "HG-1053", "naam": "Vlonderhout Composiet grijs 23x146 mm 400 cm", "oud": 60.47, "nieuw": 64.99}, {"id": 15, "sku": "HG-1050", "naam": "Vlonderhout Ipe 21x145 mm 305 cm", "oud": 43.31, "nieuw": 46.49}, {"id": 16, "sku": "HG-1017", "naam": "Plaatmateriaal Betonplex 18 mm", "oud": 39.08, "nieuw": 41.99}, {"id": 17, "sku": "HG-1023", "naam": "Plaatmateriaal Gipsplaat 12,5 mm 260x60", "oud": 40.5, "nieuw": 43.49}, {"id": 18, "sku": "HG-1019", "naam": "Plaatmateriaal MDF 18 mm", "oud": 74.39, "nieuw": 79.99}, {"id": 19, "sku": "HG-1011", "naam": "Plaatmateriaal OSB/3 22 mm 244x59 mes/groef", "oud": 22.21, "nieuw": 23.95}, {"id": 20, "sku": "HG-1069", "naam": "Hardhout Azob\u00e9 paal 8x8 cm 300 cm", "oud": 54.86, "nieuw": 58.99}];
+const boxes=[...document.querySelectorAll('input.ok')];
+function upd(){let n=0;boxes.forEach(b=>{b.closest('tr').classList.toggle('uitgevinkt',!b.checked);if(b.checked)n++});document.getElementById('telling').textContent=n+' van '+boxes.length+' geselecteerd';}
+boxes.forEach(b=>b.addEventListener('change',upd));upd();
+document.getElementById('alles').onclick=()=>{const aan=!boxes.every(b=>b.checked);boxes.forEach(b=>b.checked=aan);upd();};
+document.getElementById('exp').onclick=()=>{
+ const r=[['voorstel_id','sku','naam','oude_prijs','nieuwe_prijs']];
+ boxes.forEach(b=>{if(b.checked){const v=V[+b.dataset.i];r.push([v.id??'',v.sku,'"'+v.naam.replace(/"/g,'""')+'"',v.oud.toFixed(2).replace('.',','),v.nieuw.toFixed(2).replace('.',',')])}});
+ const blob=new Blob(['\ufeff'+r.map(x=>x.join(';')).join('\n')],{type:'text/csv'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='goedgekeurde-prijzen-2026-11-14.csv';a.click();
+};
+</script></body></html>

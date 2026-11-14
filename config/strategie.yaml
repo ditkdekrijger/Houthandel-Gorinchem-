@@ -1,0 +1,53 @@
+# Prijsstrategie voor de dagelijkse prijsvoorstellen.
+# Alle bedragen zijn incl. btw tenzij anders vermeld.
+
+algemeen:
+  btw: 0.21
+  voorstellen_per_dag: 20        # maximaal aantal voorstellen per run
+  min_aandeel_omhoog: 0.25       # min. 25% van de voorstellen is een verhoging (als die er zijn)
+  min_aandeel_omlaag: 0.25       # min. 25% is een verlaging (als die er zijn)
+  min_concurrenten: 2            # minimaal aantal geldige concurrentprijzen per artikel
+  max_leeftijd_uur: 48           # concurrentprijzen ouder dan dit tellen niet mee
+  min_wijziging_pct: 0.015       # kleinere wijzigingen zijn ruis -> geen voorstel
+  min_wijziging_eur: 0.10
+  max_stap_pct: 0.08             # max. 8% aanpassing per voorstel (geleidelijk bijsturen)
+  afkoelperiode_dagen: 3         # zelfde artikel niet vaker dan 1x per 3 dagen aanpassen
+  afronding: psychologisch       # psychologisch | cent | geen
+  # Hoe zwaar weegt het herstellen van de prijspositie bij verlagingen t.o.v. directe brutowinst?
+  # Hoger = sneller volgen van concurrenten op trekkers; lager = meer focus op marge.
+  strategische_weging: 0.3
+
+# Uitschieters / data-kwaliteit
+kwaliteit:
+  max_afwijking_mediaan: 0.45    # concurrentprijs > 45% van de mediaan af = waarschijnlijk verkeerde match
+  actie_drempel: 0.15            # >15% onder eigen 30-dagen mediaan = waarschijnlijk tijdelijke actie
+  actie_gewicht: 0.5             # acties tellen voor 50% mee in de marktprijs
+  niet_op_voorraad_meetellen: false
+
+# Positionering per artikelrol (kolom 'rol' in config/producten.csv)
+#   index:       doelprijs t.o.v. referentie (−0.02 = 2% onder de referentie)
+#   referentie:  min | p25 | mediaan | p75  (gewogen over de concurrenten)
+#   elasticiteit: prijsgevoeligheid voor de impactschatting (negatief)
+#   strategisch: extra gewicht in de ranking voor het bewaken van prijsimago
+rollen:
+  trekker:        # bekende artikelen waar klanten op vergelijken (steigerhout, OSB, vurenhout)
+    referentie: p25
+    index: -0.01
+    min_marge: 0.12
+    elasticiteit: -2.5
+    strategisch: 1.5
+  kern:           # normaal assortiment
+    referentie: mediaan
+    index: -0.02
+    min_marge: 0.20
+    elasticiteit: -1.6
+    strategisch: 1.0
+  marge:          # specialistisch / service / lage vergelijkbaarheid (hardhout op maat, gevelbekleding)
+    referentie: mediaan
+    index: 0.04
+    min_marge: 0.30
+    elasticiteit: -0.9
+    strategisch: 0.6
+
+# Plafond: nooit duurder dan (hoogste concurrent x factor)
+plafond_factor_max_concurrent: 1.05

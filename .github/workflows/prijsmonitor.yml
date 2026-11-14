@@ -1,0 +1,53 @@
+name: Prijsmonitor
+
+on:
+  push:
+    branches: ["**"]
+  workflow_dispatch:
+  schedule:
+    # dagelijks om 05:17 UTC (06:17/07:17 NL-tijd): voorstellen klaar bij opening
+    - cron: "17 5 * * *"
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest -q
+
+  dagelijkse-run:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements.txt
+
+      # prijshistorie bewaren tussen runs (nodig voor actie-detectie en 7-dagen trend)
+      - name: Database herstellen
+        uses: actions/cache/restore@v4
+        with:
+          path: data/prijzen.db
+          key: prijzen-db-${{ github.run_id }}
+          restore-keys: prijzen-db-
+
+      - name: Scrapen + voorstellen
+        run: python -m prijsscraper dagelijks
+
+      - name: Database opslaan
+        uses: actions/cache/save@v4
+        with:
+          path: data/prijzen.db
+          key: prijzen-db-${{ github.run_id }}
+
+      - name: Rapport publiceren
+        uses: actions/upload-artifact@v4
+        with:
+          name: prijsvoorstellen-${{ github.run_number }}
+          path: output/
+          retention-days: 30
