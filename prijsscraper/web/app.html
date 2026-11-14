@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Prijsmonitor · Houthandel Gorinchem</title>
+<title>Prijsmonitor Gorinchem</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Jost:wght@400;500;600&family=Hedvig+Letters+Serif&display=swap" rel="stylesheet">
@@ -42,12 +43,13 @@ html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 var(--body);-webkit-font-smoothing:antialiased}
 button,input,select{font:inherit;color:inherit}
 a{color:inherit}
-.wrap{max-width:1400px;margin:0 auto;padding:0 var(--gut)}
+.wrap{max-width:1400px;margin:0 auto;padding-left:max(var(--gut),env(safe-area-inset-left,0px));padding-right:max(var(--gut),env(safe-area-inset-right,0px))}
 .num{font-variant-numeric:tabular-nums}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
 /* ---------- header ---------- */
-header.top{position:sticky;top:0;z-index:20;background:var(--hero);color:var(--hero-tx);border-bottom:1px solid var(--hero-rule)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--hero)}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--hero);color:var(--hero-tx);border-bottom:1px solid var(--hero-rule)}
 header.top .wrap{display:flex;align-items:center;gap:28px;height:76px}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;flex:none}
 .brand svg{width:34px;height:34px}
@@ -79,7 +81,12 @@ nav.main a .cnt{display:inline-block;min-width:20px;margin-left:6px;padding:0 6p
 .kpi .n{font:600 12px/1 var(--body);letter-spacing:.14em;color:var(--maple)}
 .kpi .v{font:500 36px/1.1 var(--display);margin-top:auto}
 .kpi .l{color:var(--hero-2);font-size:14px}
-.banner{background:var(--maple);color:var(--ink);font-weight:500;font-size:14px;text-align:center;padding:8px var(--gut)}
+.banner{background:var(--maple);color:var(--ink);font-weight:500;font-size:14px;text-align:center;padding-block:8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,12px);background:var(--tx);color:var(--bg);padding:12px 18px;border-radius:12px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s var(--ease);z-index:60;max-width:calc(100% - 32px)}
+.toast.aan{opacity:1;transform:translate(-50%,0)}
+textarea.csv{width:100%;min-height:180px;border:1px solid var(--rule);border-radius:12px;background:var(--surface);color:var(--tx);padding:12px;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;resize:vertical}
+:focus-visible{outline:2px solid var(--maple-deep);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 
 /* ---------- sectie ---------- */
 section.blok{padding:56px 0 72px}
@@ -261,6 +268,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 </header>
 <main id="app"></main>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mtitel"><div class="doos" id="mdoos"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <footer><div class="wrap"><span id="voet"></span><span>Prijsmonitor · gebouwd door MUSTANG</span></div></footer>
 
 <script>
@@ -318,7 +326,7 @@ async function zetStatus(id, status) {
   v.status = nieuw;
   if (SERVER) {
     fetch('/api/voorstel/' + id, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({status: nieuw})})
-      .catch(() => alert('Opslaan mislukt – controleer de verbinding met de server.'));
+      .catch(() => toast('Opslaan mislukt. Controleer de verbinding met de server en probeer het opnieuw.'));
   } else {
     try {
       const st = JSON.parse(localStorage.getItem(LSKEY()) || '{}');
@@ -328,14 +336,38 @@ async function zetStatus(id, status) {
   render();
 }
 
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('aan');
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('aan'), 3200);
+}
+
 function exporteer() {
   const ok = D.voorstellen.filter(v => v.status === 'akkoord');
-  if (!ok.length) { alert('Er zijn nog geen voorstellen akkoord gegeven.'); return; }
+  if (!ok.length) { toast('Geef eerst een of meer voorstellen akkoord.'); return; }
   const r = [['voorstel_id', 'sku', 'naam', 'oude_prijs', 'nieuwe_prijs']];
   ok.forEach(v => r.push([v.id, v.sku, '"' + v.naam.replace(/"/g, '""') + '"', v.huidig.toFixed(2).replace('.', ','), v.voorstel.toFixed(2).replace('.', ',')]));
-  const blob = new Blob(['﻿' + r.map(x => x.join(';')).join('\n')], {type: 'text/csv'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob); a.download = `goedgekeurde-prijzen-${D.meta.datum}.csv`; a.click();
+  const csv = r.map(x => x.join(';')).join('\n');
+  $('#mdoos').innerHTML = `<button class="rond sluit" aria-label="Sluiten">${ICON.sluit}</button>
+    <div class="eyebrow" style="color:var(--tx-2)">Export</div>
+    <h2 id="mtitel" style="font:500 clamp(26px,3vw,38px)/1.1 var(--display);margin:14px 0 6px">${ok.length} goedgekeurde prijs${ok.length === 1 ? '' : 'zen'}</h2>
+    <p class="sub" style="margin:0 0 18px">Puntkomma-gescheiden, klaar voor import in kassa of webshop, of voor <code>python -m prijsscraper akkoord --csv</code>.</p>
+    <label class="sr" for="csvtekst">CSV</label><textarea class="csv" id="csvtekst" readonly>${esc(csv)}</textarea>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button class="btn btn-ink" id="kopieer">Kopieer CSV</button>
+      ${SERVER ? '<button class="btn btn-ghost" id="download">Download .csv</button>' : ''}</div>`;
+  $('#modal').classList.add('aan');
+  $('.sluit', $('#modal')).onclick = sluitModal;
+  $('#kopieer').onclick = () => {
+    const ta = $('#csvtekst');
+    (navigator.clipboard?.writeText(csv) || Promise.reject()).then(() => toast('CSV gekopieerd.'))
+      .catch(() => { ta.focus(); ta.select(); toast('Tekst geselecteerd. Kopieer met Ctrl+C of Cmd+C.'); });
+  };
+  if ($('#download')) $('#download').onclick = () => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], {type: 'text/csv'}));
+    a.download = `goedgekeurde-prijzen-${D.meta.datum}.csv`; a.click();
+    toast('Werkt de download hier niet? Gebruik Kopieer CSV.');
+  };
 }
 $('#export').onclick = exporteer;
 
