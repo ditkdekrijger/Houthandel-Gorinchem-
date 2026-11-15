@@ -71,8 +71,6 @@ def _sitemap_lijst(fetcher: Fetcher, url: str, diepte: int = 0) -> list[str]:
     except Exception as e:  # noqa: BLE001
         log.warning("sitemap %s: %s", url, e)
         return []
-    if raw[:2] == "\x1f\x8b":
-        raw = gzip.decompress(raw.encode("latin1")).decode("utf-8", "replace")
     locs = re.findall(r"<loc>\s*(?:<!\[CDATA\[)?\s*([^\]<\s]+)", raw)
     if "<sitemapindex" in raw and diepte < 2:
         uit = []
@@ -83,15 +81,41 @@ def _sitemap_lijst(fetcher: Fetcher, url: str, diepte: int = 0) -> list[str]:
     return locs
 
 
+def assortiment_patroon(namen: list[str], min_n: int = 3) -> re.Pattern:
+    """URL-filter uit het eigen assortiment: onderscheidende woorden die in minstens `min_n`
+    eigen productnamen voorkomen (bv. epdm, tytane, hermadix, schuifwand, slotbout, tafelblad).
+    Zo halen we bij concurrenten ook de niet-houtartikelen op die wij verkopen."""
+    from collections import Counter
+    stop = set("zwart groen bruin grijs antraciet wit naturel geschaafd bezaagd geimpregneerd inclusief compleet "
+               "modern classic premium combinatie zonder met voor per stuk stuks doos lengte breedte hoogte "
+               "verzinkt zijwand zijwanden achterwand achterwanden geschroefd planks dicht half recht".split())
+    tel = Counter()
+    for n in namen:
+        t = re.sub(r"[^a-z ]", " ", n.lower().replace("ï", "i").replace("é", "e"))
+        tel.update({w for w in t.split() if len(w) >= 5 and w not in stop})
+    woorden = sorted((w for w, c in tel.items() if c >= min_n), key=len, reverse=True)
+    return re.compile("|".join(map(re.escape, woorden)) or "^$", re.I)
+
+
+ASSORTIMENT_URL: re.Pattern | None = None   # wordt gezet door `aanbod` (cli) vanuit producten.csv
+PRIORITEIT_URL: re.Pattern | None = None    # woorden van artikelen die nog geen concurrentprijs hebben
+BEKENDE_URLS: set[str] = set()              # al verzameld (bij --aanvullen niet opnieuw ophalen)
+
+
 def sitemap(fetcher: Fetcher, conc, btw: float, max_paginas: int = 900) -> list[Aanbod]:
     cat = conc.catalogus or {}
     urls = []
     for s in cat.get("sitemaps") or [conc.basis_url.rstrip("/") + "/sitemap.xml"]:
         urls += _sitemap_lijst(fetcher, s)
     patroon = re.compile(cat["url_filter"], re.I) if cat.get("url_filter") else None
+    def relevant(u: str) -> bool:
+        return bool(HOUT_URL.search(u) or (ASSORTIMENT_URL and ASSORTIMENT_URL.search(u)))
     urls = [u for u in dict.fromkeys(urls)
-            if HOUT_URL.search(u) and (not cat.get("cijfer_vereist", True) or re.search(r"\d", u.rsplit("/", 1)[-1] or u))
-            and (not patroon or patroon.search(u))]
+            if relevant(u) and (not cat.get("cijfer_vereist", True) or re.search(r"\d", u.rsplit("/", 1)[-1] or u))
+            and (not patroon or patroon.search(u)) and u not in BEKENDE_URLS]
+    if PRIORITEIT_URL:
+        # eerst pagina's die passen bij artikelen zonder concurrentprijs
+        urls.sort(key=lambda u: -len(set(PRIORITEIT_URL.findall(u.lower()))))
     log.info("%s: %d kandidaat-pagina's (max %d)", conc.id, len(urls), max_paginas)
     res = []
     for u in urls[:max_paginas]:

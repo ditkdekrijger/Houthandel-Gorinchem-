@@ -108,6 +108,16 @@ def uit_jsonld(soup: BeautifulSoup, url: str | None = None) -> Extractie | None:
                 data = json.loads(re.sub(r",\s*([}\]])", r"\1", raw.strip()))
             except Exception:
                 continue
+        if not vid and url:
+            # variantpagina met eigen URL (bijv. per maat een aparte pagina): kies die variant
+            schoon = url.split("#")[0].rstrip("/")
+            for g in _walk(data):
+                if _is_type(g, "productgroup"):
+                    for v in g.get("hasVariant") or []:
+                        o = (v.get("offers") or {}) if isinstance(v, dict) else {}
+                        if isinstance(o, dict) and str(o.get("url", "")).split("#")[0].rstrip("/") == schoon \
+                                and o.get("price") is not None:
+                            vid = schoon
         if not vid:
             for g in _walk(data):
                 if _is_type(g, "productgroup"):

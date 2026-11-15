@@ -95,7 +95,7 @@ concurrenten:
     basis_url: https://www.onlinetuinhout.nl
     selectors:
       prijs: "#base_price"
-    catalogus: {soort: sitemap, sitemaps: ["https://www.onlinetuinhout.nl/sitemap.xml"], max_paginas: 1200}
+    catalogus: {soort: sitemap, sitemaps: ["https://www.onlinetuinhout.nl/sitemap.xml"], max_paginas: 3000}
 
   - id: opmaatzagen
     naam: OPMAATZAGEN.nl
@@ -143,7 +143,7 @@ concurrenten:
     gewicht: 1.2
     prijs_incl_btw: true
     basis_url: https://www.houthandelvangelder.nl
-    catalogus: {soort: sitemap, sitemaps: ["https://www.houthandelvangelder.nl/sitemap.xml"], url_filter: "\\.html$", cijfer_vereist: false, max_paginas: 1100}
+    catalogus: {soort: sitemap, sitemaps: ["https://www.houthandelvangelder.nl/sitemap.xml"], url_filter: "\\.html$", cijfer_vereist: false, max_paginas: 1500}
 
   - id: houtgemak
     naam: Houtgemak
@@ -175,7 +175,7 @@ concurrenten:
     gewicht: 1.1
     prijs_incl_btw: true
     basis_url: https://nubuiten.nl
-    catalogus: {soort: sitemap, sitemaps: ["https://nubuiten.nl/sitemap_index.xml"], max_paginas: 1400}
+    catalogus: {soort: sitemap, sitemaps: ["https://nubuiten.nl/sitemap_index.xml"], max_paginas: 3000}
 
   - id: azalp
     naam: Azalp
@@ -183,7 +183,7 @@ concurrenten:
     gewicht: 0.9
     prijs_incl_btw: true
     basis_url: https://www.azalp.nl
-    catalogus: {soort: sitemap, sitemaps: ["https://www.azalp.nl/sitemap.xml"], max_paginas: 400}
+    catalogus: {soort: sitemap, sitemaps: ["https://www.azalp.nl/sitemap.xml"], max_paginas: 900}
 
   - id: maxhout
     naam: Maxhout
@@ -199,4 +199,29 @@ concurrenten:
     gewicht: 0.9
     prijs_incl_btw: true
     basis_url: https://www.hubo.nl
+    catalogus: {soort: shopify}
+
+  # --- Specialistische bronnen (geen top-20 concurrent): voor assortiment dat houthandels niet voeren
+  - id: hmg
+    naam: HMG Benelux (EPDM, schuifwanden)
+    type: specialist
+    gewicht: 0.6
+    prijs_incl_btw: true
+    basis_url: https://www.hmg-benelux-shop.com
+    catalogus: {soort: sitemap, sitemaps: ["https://www.hmg-benelux-shop.com/sitemap-products.xml.gz"], cijfer_vereist: false, max_paginas: 2500}
+
+  - id: toolstation
+    naam: Toolstation (bevestiging, verf)
+    type: specialist
+    gewicht: 0.6
+    prijs_incl_btw: true
+    basis_url: https://www.toolstation.nl
+    catalogus: {soort: sitemap, sitemaps: ["https://www.toolstation.nl/sitemap.xml"], cijfer_vereist: false, max_paginas: 2500}
+
+  - id: kas20
+    naam: Kas20 (eiken tafels)
+    type: specialist
+    gewicht: 0.6
+    prijs_incl_btw: true
+    basis_url: https://kas20.nl
     catalogus: {soort: shopify}

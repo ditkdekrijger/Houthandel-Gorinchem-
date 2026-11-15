@@ -31,7 +31,10 @@ PAKKET = [
     ("overkapping", r"overkapping|veranda|terrasoverkapping|carport|lounge ?overkapping"),
     ("tuinhuis", r"tuinhuis|blokhut|kapschuur|buitenverblijf|tuinkamer|schuur(?!deur)|chalet|poolhouse"),
     ("sauna", r"sauna"),
+    ("tafelblad", r"tafelblad|boomstamblad|blad\b"),
+    ("tafel", r"eettafel|boomstamtafel|tuintafel|picknicktafel|tafel\b"),
 ]
+MIN_M2 = {"tafelblad": 0.5, "tafel": 0.5}
 
 
 def pakket(titel: str) -> tuple[str, float] | None:
@@ -54,7 +57,8 @@ def pakket(titel: str) -> tuple[str, float] | None:
             return None
         a, b = float(m.group(1)) * 100, float(m.group(2)) * 100
     m2 = a * b / 10000
-    return (soort, m2) if 2 <= m2 <= 120 else None
+    basis = soort.split("-")[0]
+    return (soort, m2) if MIN_M2.get(basis, 2) <= m2 <= 120 else None
 
 
 # ---------------------------------------------------------------- hulpfuncties
@@ -191,7 +195,8 @@ def bouwpakketten(eigen, aanbod, al_gekoppeld) -> list[dict]:
 
 # ---------------------------------------------------------------- B: merkartikelen / overige
 def merkartikelen(eigen, aanbod_k, al_gekoppeld) -> list[dict]:
-    rest = [(a, ak) for a, ak in aanbod_k if not ak.soort and ak.woorden]
+    # alle aanbod zonder bruikbare maatvoering (niet-hout, of hout zonder doorsnede: deuren, ramen, beits)
+    rest = [(a, ak) for a, ak in aanbod_k if ak.woorden and not (ak.soort and ak.doorsnede)]
     idf = _idf([ak.woorden for _, ak in rest] + [k.woorden for _, k in eigen])
     inv = defaultdict(list)
     for i, (a, ak) in enumerate(rest):
@@ -200,7 +205,7 @@ def merkartikelen(eigen, aanbod_k, al_gekoppeld) -> list[dict]:
                 inv[w].append(i)
     uit = []
     for e, k in eigen:
-        if k.soort or not k.woorden or pakket(e["naam"]):
+        if not k.woorden or (k.soort and k.doorsnede) or pakket(e["naam"]):
             continue
         zeldzaam = sorted(k.woorden, key=lambda w: -idf.get(w, 0))[:3]
         kand = {i for w in zeldzaam for i in inv.get(w, [])}
@@ -208,7 +213,7 @@ def merkartikelen(eigen, aanbod_k, al_gekoppeld) -> list[dict]:
         beste = {}
         for i in kand:
             a, ak = rest[i]
-            if (e["sku"], a["concurrent"]) in al_gekoppeld:
+            if (e["sku"], a["concurrent"]) in al_gekoppeld or (k.soort or ak.soort) and k.soort != ak.soort:
                 continue
             # getallen: gelijk, of al onze getallen komen voor en er is hooguit één extra (bv. '2st')
             if k.getallen != ak.getallen and not (k.getallen and k.getallen <= ak.getallen

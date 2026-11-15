@@ -63,3 +63,8 @@ def test_categorie_index_eerst_zelfde_producttype():
     idx = {f"s{i}": 0.8 for i in range(5)} | {f"t{i}": 1.2 for i in range(5)}
     r = categorie_index(prod, idx)
     assert r[0]["marktprijs"] == 20.0 and "zelfde type" in r[0]["toelichting"]
+
+
+def test_tafelblad_per_m2():
+    assert pakket("Eiken tafelblad recht RUSTIEK 160 x 100") == ("tafelblad", 1.6)
+    assert pakket("Eiken boomstamtafelblad 220 x 100 rustiek geborsteld")[0] == "tafelblad"

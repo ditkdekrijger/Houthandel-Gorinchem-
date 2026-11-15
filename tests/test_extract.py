@@ -63,3 +63,12 @@ def test_shopify_variant_uit_url():
     assert extraheer(html, None, basis + "?variant=56807733788998").prijs == 5.94   # 360 cm
     # zonder variant-id geen gok bij meerdere prijzen
     assert extraheer(html, None, basis).prijs is None
+
+
+def test_productgroup_variant_op_eigen_url():
+    html = """<script type="application/ld+json">{"@type":"ProductGroup","name":"Schuifdeur","hasVariant":[
+      {"@type":"Product","sku":"A","offers":{"@type":"Offer","url":"https://x.nl/a.html","price":1932.31,"availability":"https://schema.org/InStock"}},
+      {"@type":"Product","url":"https://x.nl/b.html","offers":{"@type":"Offer","url":"https://x.nl/b.html","price":999}}]}</script>"""
+    from prijsscraper.scraper.extract import extraheer
+    assert extraheer(html, {}, "https://x.nl/a.html").prijs == 1932.31
+    assert extraheer(html, {}, "https://x.nl/c.html").prijs is None

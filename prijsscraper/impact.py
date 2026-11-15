@@ -15,6 +15,7 @@ Alle uitkomsten zijn indicaties: afzet en inkoop per artikel zijn geschat.
 """
 from __future__ import annotations
 
+import re
 import statistics
 
 from .config import Config
@@ -49,7 +50,10 @@ def analyse(cfg: Config, db: DB, omzet_jaar: float, brutomarge: float, min_bronn
     max_uur = 24 * 30
     refs = db.marktreferenties()
     artikelen = []
+    afwijkend = re.compile(r"^sample|b-keus|cadeaubon|pakket \d", re.I)  # bewust afwijkend geprijsd
     for p in cfg.producten.values():
+        if afwijkend.search(p.naam):
+            continue
         obs = [o for o in db.laatste_observaties(p.sku, max_uur) if o["prijs_incl"]]
         rol = s["rollen"].get(p.rol) or s["rollen"]["kern"]
         if len(obs) >= min_bronnen:

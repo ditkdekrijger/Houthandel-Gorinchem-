@@ -98,3 +98,8 @@ def test_schermen_vereisen_zelfde_aantal_planken():
 def test_composiet_niet_tegen_aluminium():
     assert vergelijk(kenmerken("Composiet eindprofiel 58 x 58 mm 290 cm ceder"),
                      kenmerken("Aluminium Hoekprofiel 60 x 60 mm Red Cedar 300 cm")) is None
+
+
+def test_maalteken_wordt_herkend():
+    k = kenmerken("Composiet Vlonderplank 23 × 138 mm Donkergrijs 300 cm")
+    assert k.doorsnede == (23.0, 138.0) and k.lengte == 300

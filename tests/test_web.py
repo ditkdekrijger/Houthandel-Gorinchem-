@@ -24,7 +24,9 @@ def test_payload(demo):
     p = bouw_payload(laad_config(demo / "config"), db, "voorbeeld")
     assert p["kpis"]["voorstellen"] == len(p["voorstellen"]) > 0
     assert p["kpis"]["omhoog"] + p["kpis"]["omlaag"] == p["kpis"]["voorstellen"]
-    assert len(p["concurrenten"]) == 20 and all(c["status"] == "actief" for c in p["concurrenten"])
+    top = [c for c in p["concurrenten"] if c["type"] != "specialist"]
+    assert len(top) == 20 and all(c["status"] == "actief" for c in top)
+    assert p["kpis"]["concurrenten_totaal"] == 20
     v = p["voorstellen"][0]
     assert v["concurrenten"] and len(p["historie"][v["sku"]]) >= 20
     assert p["signalen"]

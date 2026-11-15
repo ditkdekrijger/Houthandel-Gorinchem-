@@ -64,6 +64,9 @@ class Fetcher:
                     time.sleep(min(60, 5 * 2 ** poging))
                     continue
                 r.raise_for_status()
+                if r.content[:2] == b"\x1f\x8b":  # gzip-bestand (bv. sitemap.xml.gz)
+                    import gzip
+                    return gzip.decompress(r.content).decode("utf-8", "replace")
                 r.encoding = r.encoding or r.apparent_encoding
                 return r.text
             except requests.RequestException as e:

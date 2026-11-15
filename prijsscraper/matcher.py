@@ -51,8 +51,9 @@ STOP = set("de het een en met voor van in op per stuk stuks mm cm m x tot incl e
 
 
 def _norm(t: str) -> str:
-    t = unicodedata.normalize("NFKD", t).encode("ascii", "ignore").decode().lower()
-    return t.replace("×", "x")
+    # '×' en Ø eerst vervangen: anders verdwijnen ze bij de omzetting naar ascii
+    t = t.replace("×", "x").replace("Ø", " diameter ").replace("ø", " diameter ")
+    return unicodedata.normalize("NFKD", t).encode("ascii", "ignore").decode().lower()
 
 
 @dataclass

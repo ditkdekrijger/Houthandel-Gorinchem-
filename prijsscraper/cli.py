@@ -143,6 +143,16 @@ def cmd_aanbod(args):
     btw = cfg.strategie["algemeen"]["btw"]
     fetcher = Fetcher(cfg.instellingen.get("user_agent", "Prijsmonitor/1.0"),
                       standaard_interval=cfg.instellingen.get("standaard_min_interval_sec", 2))
+    from . import markt
+    namen = [p.naam for p in cfg.producten.values()]
+    markt.ASSORTIMENT_URL = markt.assortiment_patroon(namen)
+    dbpad = Path(args.db) if getattr(args, "db", None) else None
+    if dbpad and dbpad.exists():
+        refs = DB(dbpad).marktreferenties()
+        open_ = [p.naam for p in cfg.producten.values() if refs.get(p.sku, {}).get("niveau") in (None, "D")]
+        markt.PRIORITEIT_URL = markt.assortiment_patroon(open_, min_n=2)
+    if args.aanvullen and Path(args.uit).exists():
+        markt.BEKENDE_URLS = {json.loads(r)["url"] for r in open(args.uit, encoding="utf-8") if r.strip()}
     bronnen = [c for c in cfg.concurrenten.values()
                if c.catalogus.get("soort") and c.bereikbaar and (not args.alleen or c.id in args.alleen.split(","))]
     uit = Path(args.uit)
@@ -232,8 +242,9 @@ def cmd_koppel(args):
         referenties.append({"sku": sku, "niveau": beste, "marktprijs": round(mp, 2), "bronnen": len(lijst),
                             "betrouwbaarheid": round(max(m["betrouwbaarheid"] for m in lijst), 3),
                             "toelichting": f"{len(lijst)} concurrentprijzen ({', '.join(sorted({m['niveau'] for m in lijst}))})"})
-    producten = [{"sku": p.sku, "naam": p.naam, "categorie": p.categorie, "rol": p.rol, "prijs": p.verkoopprijs_incl_btw}
-                 for p in cfg.producten.values() if not uitgesloten.search(p.naam)]
+    # ook B-keus/sale/samples krijgen een (indicatieve) referentie: via producttype van de naam zonder voorvoegsel
+    producten = [{"sku": p.sku, "naam": re.sub(r"(?i)^(sample|b-keus)\s*", "", p.naam), "categorie": p.categorie,
+                  "rol": p.rol, "prijs": p.verkoopprijs_incl_btw} for p in cfg.producten.values()]
     referenties += categorie_index(producten, index)
     db.bewaar_marktreferenties(referenties)
     db.commit()
@@ -242,7 +253,7 @@ def cmd_koppel(args):
     tel = Counter(r["niveau"] for r in referenties)
     print(f"{len(exact)} exacte en {len(afgeleid)} afgeleide koppelingen "
           f"({Counter(m['niveau'] for m in afgeleid)})")
-    print(f"Marktreferentie voor {len(referenties)} van {len(eigen)} artikelen: "
+    print(f"Marktreferentie voor {len(referenties)} van {len(cfg.producten)} artikelen: "
           + ", ".join(f"{n}={tel.get(n, 0)}" for n in "ABCD"))
 
 
