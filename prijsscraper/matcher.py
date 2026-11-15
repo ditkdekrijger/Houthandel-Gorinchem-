@@ -8,7 +8,7 @@ doorsnede (mm) en lengte (cm). Een koppeling vereist:
     als beide lengtes bekend zijn en ze niet meer dan 40% verschillen
 Voor niet-houtartikelen (bevestiging, beits, ...) geldt: zelfde getallen + sterke
 woordovereenkomst. Elke koppeling krijgt een betrouwbaarheid 0-1; alleen >= drempel
-wordt gebruikt. Prijsverschillen > factor 2 worden als waarschijnlijk foute koppeling
+wordt gebruikt. Prijsverschillen > factor 1,67 worden als waarschijnlijk foute koppeling
 (andere eenheid/verpakking) afgewezen.
 """
 from __future__ import annotations
@@ -19,6 +19,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 
 SOORTEN = [  # (groep, patroon) – volgorde: specifiek eerst
+    ("composiet", r"composiet|wpc\b"), ("aluminium", r"aluminium"),
     ("thermo", r"thermo|thermowood|thermogarant"),
     ("accoya", r"accoya"), ("cedar", r"cedar|ceder"), ("frake", r"frak[eé]"),
     ("bangkirai", r"bangkirai|bankirai"), ("azobe", r"azob[eé]"), ("ipe", r"\bip[eé]\b"),
@@ -27,7 +28,7 @@ SOORTEN = [  # (groep, patroon) – volgorde: specifiek eerst
     ("lariks", r"lariks(?!.{0,3}douglas)"), ("douglas", r"douglas"),
     ("steigerhout", r"steiger"), ("osb", r"\bosb"), ("underlayment", r"underlayment"),
     ("betonplex", r"betonplex"), ("multiplex", r"multiplex"), ("mdf", r"\bmdf"), ("spaanplaat", r"spaanplaat"),
-    ("composiet", r"composiet"), ("vuren", r"vuren|vurenhout|spruce"), ("grenen", r"grenen|pine|pinus"),
+    ("vuren", r"vuren|vurenhout|spruce"), ("grenen", r"grenen|pine|pinus"),
     ("hardhout", r"hardhout|tropisch"),
 ]
 TYPES = [
@@ -63,6 +64,7 @@ class Kenmerken:
     lengte: float | None = None          # cm
     getallen: frozenset = frozenset()
     woorden: frozenset = frozenset()
+    planken: int | None = None           # tuinschermen: aantal planken
 
 
 def _mm(waarde: float, eenheid: str | None, context_max: float) -> float:
@@ -143,10 +145,17 @@ def kenmerken(titel: str) -> Kenmerken:
             if m and 1 <= float(m.group(1)) <= 8:
                 lengte = float(m.group(1)) * 100
     k.lengte = lengte if lengte and 50 <= lengte <= 1000 else None
+    m = re.search(r"(\d{1,2})\s*-?\s*planks?\b", t)
+    k.planken = int(m.group(1)) if m else None
     k.getallen = frozenset(re.findall(r"\d+(?:\.\d+)?", t2))
     k.woorden = frozenset(w for w in re.findall(r"[a-z]{3,}", t) if w not in STOP)
     return k
 
+
+SCHERM_ALGEMEEN = set("""tuinscherm scherm schutting schuttingen tuinpoort poort poortdeur tuindeur douglas grenen vuren
+    hardhout lariks geimpregneerd groen zwart bruin geschaafd fijnbezaagd bezaagd planks planken rvs geschroefd
+    verloop toog toogscherm recht dicht frame verzinkt compleet afbouwscherm enkelzijdig dubbelzijdig bekleed
+    gespoten carpgarant red class wood hout houten stalen deur poortdeuren tuinpoorten combi""".split())
 
 VERWANT = {("plank", "vlonder"), ("plank", "rabat"), ("balk", "paal"), ("plank", "balk")}
 
@@ -165,7 +174,8 @@ def vergelijk(eigen: Kenmerken, ander: Kenmerken) -> tuple[float, float] | None:
             return None
         if len(eigen.doorsnede) != len(ander.doorsnede):
             return None
-        if any(abs(x - y) > max(2.0, 0.04 * x) for x, y in zip(eigen.doorsnede, ander.doorsnede)):
+        # dunne maat (planken): max 1,5 mm verschil; overige maten: max(2 mm, 4%)
+        if any(abs(x - y) > (1.5 if x < 40 else max(2.0, 0.04 * x)) for x, y in zip(eigen.doorsnede, ander.doorsnede)):
             return None
         score = 0.7
         if eigen.type == ander.type:
@@ -176,17 +186,26 @@ def vergelijk(eigen: Kenmerken, ander: Kenmerken) -> tuple[float, float] | None:
         if tegen:
             return None
         score += 0.05 * len(gedeeld)
+        if eigen.type == "scherm" or ander.type == "scherm":
+            # schermen/poorten zijn merk-/ontwerpgebonden: zelfde aantal planken vereist voor een volle score
+            # zelfde aantal planken of dezelfde modelnaam (bv. 'Oostende'), anders geen koppeling
+            model = (eigen.woorden & ander.woorden) - SCHERM_ALGEMEEN
+            if not ((eigen.planken and eigen.planken == ander.planken) or model):
+                return None
+        score = round(score, 3)
+        if eigen.type == "scherm" and ander.type == "scherm":
+            return (score, 1.0)  # afmeting (b x h) zit al in de doorsnede
         if eigen.type == "plaat":
             return (min(score + 0.1, 1.0), 1.0)
         if eigen.lengte and ander.lengte:
             factor = eigen.lengte / ander.lengte
             if abs(eigen.lengte - ander.lengte) < 1:
-                return (min(score + 0.15, 1.0), 1.0)
-            if 0.6 <= factor <= 1.67:
-                return (score - 0.05, round(factor, 4))
+                return (min(round(score + 0.15, 3), 1.0), 1.0)
+            if 0.7 <= factor <= 1.43:
+                return (round(score - 0.05, 3), round(factor, 4))
             return None
         if not eigen.lengte and not ander.lengte:
-            return (score - 0.1, 1.0)
+            return (round(score - 0.1, 3), 1.0)
         return None
     # overige artikelen: zelfde getallen + woordoverlap
     if not eigen.getallen or eigen.getallen != ander.getallen:
@@ -223,7 +242,7 @@ def koppel(eigen: list[dict], aanbod: list[dict], drempel: float = 0.7) -> list[
             score, factor = r
             prijs_eenheid = a["prijs_incl"] * factor
             ratio = prijs_eenheid / e["prijs"] if e["prijs"] else 0
-            if not 0.5 <= ratio <= 2.0:
+            if not 0.6 <= ratio <= 1.67:  # groter verschil = vrijwel altijd andere verpakking/uitvoering
                 continue
             sleutel = (e["sku"], a["concurrent"])
             # voorkeur: hoogste score, dan kleinste lengteverschil

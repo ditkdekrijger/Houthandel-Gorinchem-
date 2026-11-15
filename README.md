@@ -120,6 +120,28 @@ handmatige steekproeven, of de site om toestemming vragen.
 Let op: een prijs die alleen via de heuristiek gevonden wordt krijgt status `onzeker` en telt
 **niet** mee. In run 1 pakte de heuristiek bij Online Tuinhout de prijs van een gerelateerd product.
 
+## Volledig assortiment + impact (15-11-2026)
+
+```bash
+python3 -m prijsscraper --config data/live/config importeer --uit data/live/config/producten.csv --omzet 10000000 --marge 0.17
+python3 -m prijsscraper --config data/live/config aanbod --uit data/live/aanbod.jsonl      # catalogi concurrenten
+python3 -m prijsscraper --config data/live/config --db data/live/prijzen.db koppel --aanbod data/live/aanbod.jsonl
+python3 -m prijsscraper --config data/live/config --db data/live/prijzen.db --uitvoer data/live/output voorstellen
+python3 -m prijsscraper --config data/live/config --db data/live/prijzen.db web --export docs/omgeving-live.html
+```
+
+| | |
+|---|---|
+| Eigen artikelen (incl. lengtevarianten) | 2.623 uit 1.287 productpagina's |
+| Concurrentproducten ingeladen | 139.020 van 12 webshops |
+| Automatisch gekoppeld | 276 artikelen (134 met 2+ concurrenten), ca. 10,5% van de omzet |
+| Mediane prijsindex | 91 (Gorinchem ca. 9% onder de markt) |
+| Voorstellen run | 20 (15 omhoog, 5 omlaag) |
+| Indicatie extra brutowinst (realistisch, hele assortiment) | € 58k – € 207k per jaar |
+
+Inkoopprijzen en afzet per artikel zijn **geschat** (17% marge, € 10 mln omzet gelijk verdeeld).
+Met een ERP-export (inkoop, afzet per artikel) worden voorstellen en impact exact.
+
 ## Volgende stappen
 
 - **Koppeling kassa/webshop**: `producten.csv` automatisch vullen vanuit het ERP en goedgekeurde

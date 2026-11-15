@@ -206,6 +206,8 @@ table.kale .r{text-align:right}
 /* impact */
 .scen{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .scen .ckaart{min-height:0}
+.scen .cstats b{white-space:nowrap}
+.scen .ckaart.uit .notitie{color:inherit;opacity:.75}
 .scen .ckaart.uit{background:var(--tx);color:var(--bg);border-color:var(--tx)}
 .scen .ckaart.uit .sub,.scen .ckaart.uit .cstats span{color:inherit;opacity:.7}
 .scen .ckaart.uit .cstats{border-color:rgba(127,127,127,.35)}
@@ -631,6 +633,7 @@ function signalen() {
 
 function impactView() {
   const I = D.impact, R = I.scenario.realistisch;
+  const kEur = x => '€ ' + (Math.round(x / 1000)).toLocaleString('nl-NL') + 'k';
   const pctS = x => pct(x);
   const vol = I.dekking_omzet < 0.95;
   const kaart = (naam, sc, uit) => `<article class="ckaart ${uit ? 'uit' : ''}">
@@ -651,8 +654,10 @@ function impactView() {
     </tbody></table>` : `<p class="sub">${leeg}</p>`}</div>`;
   return `<section class="hero"><div class="wrap">
       <div class="eyebrow">Impact · indicatie op jaarbasis</div>
-      <h1 style="font-size:clamp(44px,7vw,104px)">+${eur0.format(vol ? R.brutowinst_delta_eur_volledige_dekking : R.brutowinst_delta_eur)}<span class="dot">.</span></h1>
-      <p class="lead">Extra brutowinst per jaar bij goed gebruik van de prijsmonitor (realistisch scenario${vol ? ', hele assortiment gekoppeld' : ''}),
+      ${I.bandbreedte && vol
+        ? `<h1 style="font-size:clamp(40px,6.2vw,92px)">+${kEur(I.bandbreedte.laag)} – ${kEur(I.bandbreedte.hoog)}<span class="dot">.</span></h1>`
+        : `<h1 style="font-size:clamp(44px,7vw,104px)">+${eur0.format(vol ? R.brutowinst_delta_eur_volledige_dekking : R.brutowinst_delta_eur)}<span class="dot">.</span></h1>`}
+      <p class="lead">Extra brutowinst per jaar bij goed gebruik van de prijsmonitor (realistisch scenario${vol ? ', doorgetrokken naar het hele assortiment' : ''}${I.bandbreedte && vol ? `; ondergrens = alleen artikelen met 2+ concurrenten, bovengrens = alle koppelingen. omzet +${kEur(Math.min(I.bandbreedte.omzet_laag, I.bandbreedte.omzet_hoog))} – ${kEur(Math.max(I.bandbreedte.omzet_laag, I.bandbreedte.omzet_hoog))}` : ''}),
       op een omzet van <b>${eur0.format(I.omzet_jaar)}</b> en een brutomarge van <b>${pct(I.brutomarge, false)}</b>.
       Nu gekoppeld: <b>${I.artikelen_gekoppeld} van ${I.artikelen_totaal} artikelen</b> (${pct(I.dekking_omzet, false)} van de omzet).</p>
       <div class="kpis">

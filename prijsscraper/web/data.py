@@ -129,7 +129,15 @@ def bouw_payload(cfg: Config, db: DB, modus: str = "live") -> dict:
     if bedrijf:
         from ..impact import analyse
         impact = analyse(cfg, db, bedrijf["omzet_jaar"], bedrijf["brutomarge"])
-        idx = sorted((a for a in artikelen if a.get("index")), key=lambda a: a["index"])
+        # ondergrens: alleen artikelen met >= 2 concurrentprijzen (betrouwbaarder)
+        streng = analyse(cfg, db, bedrijf["omzet_jaar"], bedrijf["brutomarge"], min_bronnen=2)
+        impact["bandbreedte"] = {
+            "laag": streng["scenario"]["realistisch"]["brutowinst_delta_eur_volledige_dekking"],
+            "hoog": impact["scenario"]["realistisch"]["brutowinst_delta_eur_volledige_dekking"],
+            "omzet_laag": streng["scenario"]["realistisch"]["omzet_delta_eur_volledige_dekking"],
+            "omzet_hoog": impact["scenario"]["realistisch"]["omzet_delta_eur_volledige_dekking"],
+        }
+        idx = sorted((a for a in artikelen if a.get("index") and a["n"] >= 2), key=lambda a: a["index"])
         impact["kansen_omhoog"] = [{k: a[k] for k in ("sku", "naam", "prijs", "mediaan", "index", "n", "rol")}
                                    for a in idx if a["index"] < 0.95][:12]
         impact["kansen_omlaag"] = [{k: a[k] for k in ("sku", "naam", "prijs", "mediaan", "index", "n", "rol")}

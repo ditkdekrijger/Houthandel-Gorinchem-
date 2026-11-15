@@ -76,3 +76,25 @@ def test_parse_variaties_uit_js_variabele():
         ("18828-01", "Douglas Balk 50 x 100 mm 300 cm", 11.67, 12.5, True),
         ("18828-02", "Douglas Balk 50 x 100 mm 500 cm", 19.45, None, False)]
     assert kenmerken(r[0]["naam"]).lengte == 300
+
+
+def test_afronding_en_strengere_dikte():
+    # 0.7 + 0.1 - 0.05 moet precies 0.75 zijn (geen float-afwijking eronder)
+    r = vergelijk(kenmerken("Bangkirai vlonderplank 21 x 145 mm 244 cm"),
+                  kenmerken("Vlonderplank bankirai 2,1 x 14,5 x 245 cm"))
+    assert r and r[0] >= 0.75
+    # 16 mm vs 18 mm is een ander product
+    assert vergelijk(kenmerken("Douglas plank 18 x 145 mm 400 cm"), kenmerken("Douglas plank 16 x 140 mm 400 cm")) is None
+
+
+def test_schermen_vereisen_zelfde_aantal_planken():
+    a = kenmerken("Tuinscherm douglas 15-planks 180 x 180 cm")
+    assert vergelijk(a, kenmerken("Tuinscherm douglas 19-planks 180 x 180 cm")) is None
+    assert vergelijk(kenmerken("Tuinscherm Oostende, vuren 180 x 180 cm"),
+                     kenmerken("Tuinscherm Oostende 180x180cm vuren schutting"))[0] >= 0.75
+    assert vergelijk(a, kenmerken("Douglas tuinscherm 15 planks 180x180 cm"))[0] >= 0.75
+
+
+def test_composiet_niet_tegen_aluminium():
+    assert vergelijk(kenmerken("Composiet eindprofiel 58 x 58 mm 290 cm ceder"),
+                     kenmerken("Aluminium Hoekprofiel 60 x 60 mm Red Cedar 300 cm")) is None
