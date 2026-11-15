@@ -1,6 +1,11 @@
 # Prijsstrategie voor de dagelijkse prijsvoorstellen.
 # Alle bedragen zijn incl. btw tenzij anders vermeld.
 
+# Bedrijfscijfers voor de impactindicatie (scherm Impact)
+bedrijf:
+  omzet_jaar: 10000000
+  brutomarge: 0.17
+
 algemeen:
   btw: 0.21
   voorstellen_per_dag: 20        # maximaal aantal voorstellen per run

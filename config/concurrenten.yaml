@@ -1,4 +1,9 @@
-# Top-10 concurrenten van Houthandel Gorinchem.
+# Top-20 concurrenten van Houthandel Gorinchem.
+#
+# LET OP: winkels van de eigen groep (HoutUnie) zijn GEEN concurrent en staan hier bewust niet in:
+# houthandelgorinchem.nl, brabantsehouthandel.nl, houthandelbelgie.be, tuinhoutvoordeel.nl,
+# 123douglashout.nl, overkappingen.nl, tuinhoutonline.nl (≠ onlinetuinhout.nl!), houtenplanken.nl,
+# houthandelbreda.nl, houthandelarnhem.nl, rotterdamsehouthandel.nl
 #
 # VOORSTEL – valideer deze lijst met de verkoop: wie verliezen we offertes/klanten aan?
 #
@@ -63,6 +68,7 @@ concurrenten:
     gewicht: 1.4
     prijs_incl_btw: false
     basis_url: https://www.bouwmaat.nl
+    catalogus: {soort: shopify}
 
   - id: houthandelonline
     naam: HouthandelOnline
@@ -89,6 +95,7 @@ concurrenten:
     basis_url: https://www.onlinetuinhout.nl
     selectors:
       prijs: "#base_price"
+    catalogus: {soort: sitemap, sitemaps: ["https://www.onlinetuinhout.nl/sitemap.xml"], max_paginas: 1200}
 
   - id: opmaatzagen
     naam: OPMAATZAGEN.nl
@@ -112,3 +119,84 @@ concurrenten:
     #   prijs: ".product-info .price-final"
     #   actieprijs: ".product-info .price-special"
     #   voorraad: ".stock-status"
+
+  # ---- uitbreiding naar 20 (november 2026) ----------------------------------------
+  - id: houtdirect
+    naam: Houtdirect
+    type: houthandel
+    gewicht: 1.6          # regionaal: 's-Gravendeel, ± 25 km
+    prijs_incl_btw: true
+    basis_url: https://www.houtdirect.nl
+    catalogus: {soort: shopify}
+
+  - id: geschaafddouglas
+    naam: Geschaafd Douglas
+    type: houthandel
+    gewicht: 1.5          # regionaal: Culemborg, ± 20 km
+    prijs_incl_btw: true
+    basis_url: https://www.geschaafddouglas.nl
+    catalogus: {soort: sitemap, sitemaps: ["https://www.geschaafddouglas.nl/sitemaps.xml"], max_paginas: 400}
+
+  - id: houthandelvangelder
+    naam: Houthandel van Gelder
+    type: online
+    gewicht: 1.2
+    prijs_incl_btw: true
+    basis_url: https://www.houthandelvangelder.nl
+    catalogus: {soort: sitemap, sitemaps: ["https://www.houthandelvangelder.nl/sitemap.xml"], url_filter: "\\.html$", cijfer_vereist: false, max_paginas: 1100}
+
+  - id: houtgemak
+    naam: Houtgemak
+    type: online
+    gewicht: 1.1
+    prijs_incl_btw: true
+    basis_url: https://www.houtgemak.nl
+    catalogus: {soort: shopify}
+
+  - id: houthandelveneman
+    naam: Houthandel Veneman
+    type: houthandel
+    gewicht: 1.1
+    prijs_incl_btw: true
+    basis_url: https://houthandelveneman.nl
+    catalogus: {soort: shopify}
+
+  - id: vandouglashout
+    naam: Van Douglas Hout
+    type: online
+    gewicht: 1.2
+    prijs_incl_btw: true
+    basis_url: https://vandouglashout.com
+    catalogus: {soort: shopify}
+
+  - id: nubuiten
+    naam: NuBuiten
+    type: online
+    gewicht: 1.1
+    prijs_incl_btw: true
+    basis_url: https://nubuiten.nl
+    catalogus: {soort: sitemap, sitemaps: ["https://nubuiten.nl/sitemap_index.xml"], max_paginas: 1400}
+
+  - id: azalp
+    naam: Azalp
+    type: bouwmarkt
+    gewicht: 0.9
+    prijs_incl_btw: true
+    basis_url: https://www.azalp.nl
+    catalogus: {soort: sitemap, sitemaps: ["https://www.azalp.nl/sitemap.xml"], max_paginas: 400}
+
+  - id: maxhout
+    naam: Maxhout
+    type: online
+    gewicht: 1.0
+    prijs_incl_btw: true
+    basis_url: https://www.maxhout.nl
+    catalogus: {soort: shopify}
+
+  - id: hubo
+    naam: Hubo
+    type: bouwmarkt
+    gewicht: 0.9
+    prijs_incl_btw: true
+    basis_url: https://www.hubo.nl
+    catalogus: {soort: shopify}

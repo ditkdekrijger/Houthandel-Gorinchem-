@@ -203,6 +203,24 @@ table.kale .r{text-align:right}
 .sig .cirkel.onder_bodem{color:var(--down);border-color:var(--down)}
 .sig .cirkel.te_weinig_data{color:var(--tx-2);border-color:var(--tx-2)}
 
+/* impact */
+.scen{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.scen .ckaart{min-height:0}
+.scen .ckaart.uit{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.scen .ckaart.uit .sub,.scen .ckaart.uit .cstats span{color:inherit;opacity:.7}
+.scen .ckaart.uit .cstats{border-color:rgba(127,127,127,.35)}
+.groot{font:500 clamp(32px,3.4vw,46px)/1.05 var(--display);letter-spacing:-.02em}
+.twee{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.staaf{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;align-items:end;height:200px;margin-top:8px}
+.staaf div{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;gap:6px}
+.staaf i{display:block;width:100%;max-width:72px;border-radius:4px 4px 0 0;background:var(--maple-deep)}
+.staaf i.mid{background:var(--muted-dark)}
+.staaf b{font:500 16px/1 var(--display)}
+.staaf span{font-size:12px;color:var(--tx-2);text-align:center}
+ul.aannames{margin:0;padding-left:18px;color:var(--tx-2);font-size:15px;line-height:1.6}
+ul.aannames b{color:var(--tx)}
+@media (max-width:1080px){.scen,.twee{grid-template-columns:1fr}}
+
 /* modal */
 .modal{position:fixed;inset:0;background:rgba(5,5,5,.55);display:none;align-items:flex-start;justify-content:center;padding:6vh 16px;z-index:40;overflow:auto}
 .modal.aan{display:flex}
@@ -258,6 +276,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
       <a href="#vandaag" data-v="vandaag">Vandaag</a>
       <a href="#artikelen" data-v="artikelen">Artikelen</a>
       <a href="#concurrenten" data-v="concurrenten">Concurrenten</a>
+      <a href="#impact" data-v="impact" id="navimpact">Impact</a>
       <a href="#signalen" data-v="signalen">Signalen<span class="cnt" id="sigcnt"></span></a>
     </nav>
     <button class="btn btn-maple" id="export" title="Exporteer goedgekeurde prijzen als CSV">
@@ -383,7 +402,8 @@ function render() {
   $('#sigcnt').hidden = !D.signalen.length;
   $('#voet').textContent = `Laatste scrape ${new Date(D.meta.laatste_scrape + 'Z').toLocaleString('nl-NL', {dateStyle: 'medium', timeStyle: 'short'})} · ${D.kpis.artikelen} artikelen · ${D.kpis.concurrenten_actief} van ${D.kpis.concurrenten_totaal} concurrenten actief`;
   const app = $('#app');
-  app.innerHTML = ({vandaag, artikelen, concurrenten, signalen}[v] || vandaag)();
+  $('#navimpact').hidden = !D.impact;
+  app.innerHTML = ({vandaag, artikelen, concurrenten, signalen, impact: D.impact ? impactView : vandaag}[v] || vandaag)();
   bind(v);
 }
 
@@ -607,6 +627,56 @@ function signalen() {
       <div><div class="titel" style="font-size:20px">${esc(kop[x.soort] || x.soort)}</div><div class="sub"><b style="color:var(--tx)">${esc(x.naam)}</b> (${esc(x.sku)}) – ${esc(x.tekst.replace(/\s*\(https?:[^)]*\)/g, ''))}</div></div>
       <button class="rond" data-sku="${esc(x.sku)}" aria-label="Bekijk artikel">${ICON.pijl}</button></div>`).join('') || '<div class="leeg">Geen signalen. Alles ziet er goed uit.</div>'}</div>
   </div></section>`;
+}
+
+function impactView() {
+  const I = D.impact, R = I.scenario.realistisch;
+  const pctS = x => pct(x);
+  const vol = I.dekking_omzet < 0.95;
+  const kaart = (naam, sc, uit) => `<article class="ckaart ${uit ? 'uit' : ''}">
+      <span class="nr" style="${uit ? 'color:var(--maple)' : ''}">${naam}</span>
+      <div><div class="groot num">+${eur0.format(sc.brutowinst_delta_eur)}</div><div class="sub">extra brutowinst per jaar${vol ? ' op het gekoppelde deel' : ''}</div></div>
+      <div class="cstats">
+        <div><b class="num">${sc.omzet_delta_eur >= 0 ? '+' : ''}${eur0.format(sc.omzet_delta_eur)}</b><span>omzet</span></div>
+        <div><b class="num">${pct(sc.marge_nieuw_totaal, false)}</b><span>marge totaal</span></div>
+        <div><b class="num">${sc.artikelen_omhoog}↑ ${sc.artikelen_omlaag}↓</b><span>aanpassingen</span></div>
+      </div>
+      <p class="notitie">${Math.round(sc.adoptie * 100)}% van de voorstellen doorgevoerd, max. ${Math.round(sc.max_jaar * 100)}% per artikel per jaar.
+      ${vol ? `Bij koppeling van het hele assortiment: <b style="color:inherit">+${eur0.format(sc.brutowinst_delta_eur_volledige_dekking)}</b>.` : ''}</p>
+    </article>`;
+  const v = I.verdeling_index, mx = Math.max(...Object.values(v), 1);
+  const lbl = {'<90': 'ruim onder\nmarkt', '90-97': 'onder\nmarkt', '97-103': 'op\nmarkt', '103-110': 'boven\nmarkt', '>110': 'ruim boven\nmarkt'};
+  const tab = (rij, titel, leeg) => `<div class="kaart"><h3>${titel}</h3>${rij.length ? `<table class="kale"><thead><tr><th>Artikel</th><th class="r">Wij</th><th class="r">Markt</th><th class="r">Index</th></tr></thead><tbody>
+    ${rij.map(a => `<tr data-sku="${esc(a.sku)}" class="klik" style="cursor:pointer"><td>${esc(a.naam)}<div class="sub">${a.n} concurrent${a.n === 1 ? '' : 'en'} · ${ROL[a.rol] || a.rol}</div></td><td class="r num">${eur.format(a.prijs)}</td><td class="r num">${eur.format(a.mediaan)}</td><td class="r num"><b>${Math.round(a.index * 100)}</b></td></tr>`).join('')}
+    </tbody></table>` : `<p class="sub">${leeg}</p>`}</div>`;
+  return `<section class="hero"><div class="wrap">
+      <div class="eyebrow">Impact · indicatie op jaarbasis</div>
+      <h1 style="font-size:clamp(44px,7vw,104px)">+${eur0.format(vol ? R.brutowinst_delta_eur_volledige_dekking : R.brutowinst_delta_eur)}<span class="dot">.</span></h1>
+      <p class="lead">Extra brutowinst per jaar bij goed gebruik van de prijsmonitor (realistisch scenario${vol ? ', hele assortiment gekoppeld' : ''}),
+      op een omzet van <b>${eur0.format(I.omzet_jaar)}</b> en een brutomarge van <b>${pct(I.brutomarge, false)}</b>.
+      Nu gekoppeld: <b>${I.artikelen_gekoppeld} van ${I.artikelen_totaal} artikelen</b> (${pct(I.dekking_omzet, false)} van de omzet).</p>
+      <div class="kpis">
+        <div class="kpi"><span class="n">01</span><span class="v num">${I.index_mediaan ? Math.round(I.index_mediaan * 100) : '–'}</span><span class="l">mediane prijsindex t.o.v. markt (100 = gelijk)</span></div>
+        <div class="kpi"><span class="n">02</span><span class="v num">${I.artikelen_gekoppeld}</span><span class="l">artikelen met concurrentprijs</span></div>
+        <div class="kpi"><span class="n">03</span><span class="v num">${I.artikelen_2plus}</span><span class="l">met 2 of meer concurrenten</span></div>
+        <div class="kpi"><span class="n">04</span><span class="v num">${pctS(R.brutowinst_delta_pct_gekoppeld)}</span><span class="l">brutowinst op gekoppelde artikelen (realistisch)</span></div>
+      </div></div></section>
+    <section class="blok"><div class="wrap">
+      <div class="kop"><div><div class="eyebrow" style="color:var(--tx-2)">Drie scenario's</div><h2 style="margin-top:14px">Wat goed gebruik oplevert</h2>
+      <p>Verschil zit in hoeveel voorstellen worden doorgevoerd, hoe ver prijzen per jaar bewegen en hoe prijsgevoelig klanten zijn.</p></div></div>
+      <div class="scen">${kaart('Voorzichtig', I.scenario.voorzichtig)}${kaart('Realistisch', R, true)}${kaart('Ambitieus', I.scenario.ambitieus)}</div>
+      <div class="twee">
+        <div class="kaart"><h3>Waar staan we t.o.v. de markt?</h3><p class="sub" style="margin:0">Aantal gekoppelde artikelen per prijsindex (onze prijs ÷ marktmediaan).</p>
+          <div class="staaf" role="img" aria-label="Verdeling prijsindex">${Object.entries(v).map(([k, n]) => `<div title="${n} artikelen, index ${k}"><b class="num">${n}</b><i class="${k === '97-103' ? 'mid' : ''}" style="height:${Math.max(2, n / mx * 150)}px"></i><span>${k}<br>${lbl[k].replace('\n', ' ')}</span></div>`).join('')}</div></div>
+        <div class="kaart"><h3>Aannames</h3><ul class="aannames">
+          <li><b>Inkoop en afzet per artikel zijn geschat</b>: inkoop uit ${pct(I.brutomarge, false)} gemiddelde marge, afzet door de omzet gelijk over artikelen te verdelen. Een ERP-export maakt dit exact.</li>
+          <li><b>Prijselasticiteit</b> per rol (trekker −2,5, kern −1,6, marge −0,9), sterker als we boven de markt zitten.</li>
+          <li><b>Doelpositie</b>: trekkers net onder het goedkoopste kwart, kern 2% onder de mediaan, marge-artikelen 4% erboven; nooit onder de margebodem.</li>
+          <li>Concurrentprijzen van ${D.kpis.concurrenten_actief} actieve concurrenten; koppelingen automatisch, alleen bij hoge betrouwbaarheid.</li>
+        </ul></div>
+      </div>
+      <div class="twee">${tab(I.kansen_omhoog, 'Grootste kansen: wij ruim onder de markt', 'Geen artikelen meer dan 5% onder de markt.')}${tab(I.kansen_omlaag, 'Risico: trekkers en kern ruim boven de markt', 'Geen trekker- of kernartikelen meer dan 8% boven de markt.')}</div>
+    </div></section>`;
 }
 
 /* ---------- events ---------- */

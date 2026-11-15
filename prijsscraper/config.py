@@ -20,6 +20,7 @@ class Concurrent:
     selectors: dict = field(default_factory=dict)
     bereikbaar: bool = True
     notitie: str = ""
+    catalogus: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -74,6 +75,7 @@ def laad_concurrenten(pad: Path) -> tuple[dict, dict[str, Concurrent]]:
             selectors=c.get("selectors") or {},
             bereikbaar=bool(c.get("bereikbaar", True)),
             notitie=c.get("notitie", ""),
+            catalogus=c.get("catalogus") or {},
         )
     return data.get("instellingen", {}), res
 

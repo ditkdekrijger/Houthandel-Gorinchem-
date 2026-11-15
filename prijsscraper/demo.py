@@ -51,21 +51,26 @@ ASSORTIMENT = [
 ]
 
 CONCURRENTEN = ["gamma", "karwei", "praxis", "hornbach", "bouwmaat", "houthandelonline",
-                "gadero", "onlinetuinhout", "opmaatzagen", "bouwbestel"]
+                "gadero", "onlinetuinhout", "opmaatzagen", "bouwbestel", "houtdirect", "geschaafddouglas",
+                "houthandelvangelder", "houtgemak", "houthandelveneman", "vandouglashout", "nubuiten", "azalp",
+                "maxhout", "hubo"]
 # structureel prijsniveau t.o.v. markt
 NIVEAU = {"gamma": 1.06, "karwei": 1.08, "praxis": 1.05, "hornbach": 0.97, "bouwmaat": 0.95,
-          "houthandelonline": 0.96, "gadero": 1.00, "onlinetuinhout": 0.98, "opmaatzagen": 1.04, "bouwbestel": 0.99}
+          "houthandelonline": 0.96, "gadero": 1.00, "onlinetuinhout": 0.98, "opmaatzagen": 1.04, "bouwbestel": 0.99,
+          "houtdirect": 0.95, "geschaafddouglas": 0.99, "houthandelvangelder": 0.97, "houtgemak": 1.01,
+          "houthandelveneman": 0.98, "vandouglashout": 0.96, "nubuiten": 1.00, "azalp": 1.03, "maxhout": 0.97,
+          "hubo": 1.07}
 # welke concurrenten voeren welke categorie
 VOERT = {
-    "steigerhout": CONCURRENTEN,
-    "plaatmateriaal": ["gamma", "karwei", "praxis", "hornbach", "bouwmaat", "houthandelonline", "opmaatzagen", "bouwbestel"],
-    "constructiehout": ["gamma", "karwei", "praxis", "hornbach", "bouwmaat", "houthandelonline", "bouwbestel"],
-    "tuinhout": ["gamma", "karwei", "praxis", "hornbach", "houthandelonline", "gadero", "onlinetuinhout"],
-    "vlonderhout": ["hornbach", "houthandelonline", "gadero", "onlinetuinhout", "praxis", "gamma"],
-    "gevelbekleding": ["houthandelonline", "gadero", "onlinetuinhout", "hornbach", "bouwmaat"],
-    "hardhout": ["houthandelonline", "gadero", "bouwmaat", "hornbach", "opmaatzagen"],
-    "houtbehandeling": ["gamma", "karwei", "praxis", "hornbach", "houthandelonline", "gadero"],
-    "bevestiging": ["gamma", "karwei", "praxis", "hornbach", "bouwmaat", "houthandelonline", "gadero"],
+    "steigerhout": CONCURRENTEN[:10] + ["houtdirect", "maxhout", "houthandelvangelder", "hubo"],
+    "plaatmateriaal": ["gamma", "karwei", "praxis", "hornbach", "bouwmaat", "houthandelonline", "opmaatzagen", "bouwbestel", "houtdirect", "azalp", "hubo"],
+    "constructiehout": ["gamma", "karwei", "praxis", "hornbach", "bouwmaat", "houthandelonline", "bouwbestel", "houtdirect", "houtgemak", "houthandelveneman", "azalp", "hubo"],
+    "tuinhout": ["gamma", "karwei", "praxis", "hornbach", "houthandelonline", "gadero", "onlinetuinhout", "houtdirect", "geschaafddouglas", "houthandelvangelder", "houtgemak", "houthandelveneman", "vandouglashout", "nubuiten"],
+    "vlonderhout": ["hornbach", "houthandelonline", "gadero", "onlinetuinhout", "praxis", "gamma", "houtdirect", "houthandelvangelder", "nubuiten", "vandouglashout"],
+    "gevelbekleding": ["houthandelonline", "gadero", "onlinetuinhout", "hornbach", "bouwmaat", "geschaafddouglas", "houthandelvangelder", "vandouglashout", "nubuiten"],
+    "hardhout": ["houthandelonline", "gadero", "bouwmaat", "hornbach", "opmaatzagen", "houtdirect", "houthandelvangelder", "nubuiten"],
+    "houtbehandeling": ["gamma", "karwei", "praxis", "hornbach", "houthandelonline", "gadero", "geschaafddouglas", "maxhout", "hubo", "azalp"],
+    "bevestiging": ["gamma", "karwei", "praxis", "hornbach", "bouwmaat", "houthandelonline", "gadero", "houtdirect", "hubo", "azalp"],
 }
 
 

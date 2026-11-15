@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import csv
 import logging
+import re
 import sys
 from datetime import date
 from pathlib import Path
@@ -124,6 +125,67 @@ def cmd_doorvoeren(args):
           f"(of koppel een export, zie README).")
 
 
+def cmd_importeer(args):
+    from .catalogus import importeer
+    res = importeer(args.url, Path(args.uit), args.omzet, args.marge, interval=args.interval)
+    print(f"{res['artikelen']} artikelen uit {res['paginas']} productpagina's -> {args.uit}")
+
+
+def cmd_aanbod(args):
+    """Assortimenten van alle concurrenten met een catalogusbron verzamelen."""
+    import json
+    from concurrent.futures import ThreadPoolExecutor
+    from .markt import naar_dict, verzamel
+    from .scraper.fetch import Fetcher
+    cfgmap, _ = _paden(args)
+    cfg = laad_config(cfgmap)
+    btw = cfg.strategie["algemeen"]["btw"]
+    fetcher = Fetcher(cfg.instellingen.get("user_agent", "Prijsmonitor/1.0"),
+                      standaard_interval=cfg.instellingen.get("standaard_min_interval_sec", 2))
+    bronnen = [c for c in cfg.concurrenten.values()
+               if c.catalogus.get("soort") and c.bereikbaar and (not args.alleen or c.id in args.alleen.split(","))]
+    uit = Path(args.uit)
+    uit.parent.mkdir(parents=True, exist_ok=True)
+    totaal = 0
+    with ThreadPoolExecutor(max_workers=max(1, len(bronnen))) as pool, open(uit, "a" if args.aanvullen else "w") as f:
+        for c, res in zip(bronnen, pool.map(lambda c: verzamel(c, btw, fetcher), bronnen)):
+            for a in res:
+                f.write(json.dumps(naar_dict(a), ensure_ascii=False) + "\n")
+            totaal += len(res)
+            print(f"{c.naam}: {len(res)} producten/varianten", flush=True)
+    print(f"Totaal {totaal} -> {uit}")
+
+
+def cmd_koppel(args):
+    """Eigen artikelen automatisch koppelen aan het verzamelde aanbod; schrijft matches.csv
+    en zet de gevonden prijzen als observaties in de database."""
+    import json
+    from .matcher import koppel
+    cfgmap, dbpad = _paden(args)
+    cfg = laad_config(cfgmap)
+    aanbod = [json.loads(r) for r in open(args.aanbod, encoding="utf-8") if r.strip()]
+    eigen = [{"sku": p.sku, "naam": p.naam, "prijs": p.verkoopprijs_incl_btw} for p in cfg.producten.values()
+             if not re.search(r"b-keus|pakket \d|cadeaubon|sale", p.naam, re.I)]
+    matches = koppel(eigen, aanbod, args.drempel)
+    with open(cfgmap / "matches.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["sku", "concurrent", "url", "omrekenfactor", "opmerking"])
+        for m in sorted(matches, key=lambda m: (m["sku"], m["concurrent"])):
+            w.writerow([m["sku"], m["concurrent"], m["url"], m["omrekenfactor"],
+                        f"auto {m['betrouwbaarheid']:.2f}: {m['titel_concurrent'][:90]}"])
+    db = DB(dbpad)
+    for m in matches:
+        db.voeg_observatie_toe(sku=m["sku"], concurrent=m["concurrent"], url=m["url"],
+                               prijs_ruw=m["prijs_incl"], prijs_incl=round(m["prijs_incl"] * m["omrekenfactor"], 4),
+                               adviesprijs=round(m["adviesprijs"] * m["omrekenfactor"], 4) if m.get("adviesprijs") else None,
+                               op_voorraad=m.get("op_voorraad"), status="ok",
+                               melding=f"catalogus/auto {m['betrouwbaarheid']:.2f}")
+    db.commit()
+    db.close()
+    skus = {m["sku"] for m in matches}
+    print(f"{len(matches)} koppelingen voor {len(skus)} van {len(eigen)} artikelen -> {cfgmap / 'matches.csv'}")
+
+
 def cmd_web(args):
     from .web.data import bouw_payload
     from .web.server import render_app, serve
@@ -167,6 +229,20 @@ def main(argv=None):
         s = sub.add_parser(naam); s.add_argument("ids", nargs="*"); s.add_argument("--csv")
         s.set_defaults(fn=lambda a, st=st: cmd_status(a, st))
     sub.add_parser("doorvoeren").set_defaults(fn=cmd_doorvoeren)
+    s = sub.add_parser("importeer", help="eigen assortiment uit de WooCommerce-webshop inlezen")
+    s.add_argument("--url", default="https://www.houthandelgorinchem.nl")
+    s.add_argument("--uit", default="config/producten.csv")
+    s.add_argument("--omzet", type=float, default=10_000_000, help="jaaromzet voor de afzetschatting")
+    s.add_argument("--marge", type=float, default=0.17, help="gemiddelde brutomarge voor de inkoopschatting")
+    s.add_argument("--interval", type=float, default=1.0)
+    s.set_defaults(fn=cmd_importeer)
+    s = sub.add_parser("aanbod", help="assortimenten van concurrenten verzamelen")
+    s.add_argument("--uit", default="data/aanbod.jsonl"); s.add_argument("--alleen")
+    s.add_argument("--aanvullen", action="store_true")
+    s.set_defaults(fn=cmd_aanbod)
+    s = sub.add_parser("koppel", help="eigen artikelen automatisch aan concurrentaanbod koppelen")
+    s.add_argument("--aanbod", default="data/aanbod.jsonl"); s.add_argument("--drempel", type=float, default=0.75)
+    s.set_defaults(fn=cmd_koppel)
     s = sub.add_parser("web", help="webomgeving starten of als statisch bestand exporteren")
     s.add_argument("--host", default="127.0.0.1"); s.add_argument("--poort", type=int, default=8080)
     s.add_argument("--export", help="schrijf een zelfstandige HTML-versie naar dit pad")

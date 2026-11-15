@@ -124,6 +124,17 @@ def bouw_payload(cfg: Config, db: DB, modus: str = "live") -> dict:
         p = cfg.producten.get(s["sku"])
         signalen.append({"sku": s["sku"], "naam": p.naam if p else s["sku"], "soort": s["soort"], "tekst": s["tekst"]})
 
+    impact = None
+    bedrijf = cfg.strategie.get("bedrijf")
+    if bedrijf:
+        from ..impact import analyse
+        impact = analyse(cfg, db, bedrijf["omzet_jaar"], bedrijf["brutomarge"])
+        idx = sorted((a for a in artikelen if a.get("index")), key=lambda a: a["index"])
+        impact["kansen_omhoog"] = [{k: a[k] for k in ("sku", "naam", "prijs", "mediaan", "index", "n", "rol")}
+                                   for a in idx if a["index"] < 0.95][:12]
+        impact["kansen_omlaag"] = [{k: a[k] for k in ("sku", "naam", "prijs", "mediaan", "index", "n", "rol")}
+                                   for a in reversed(idx) if a["index"] > 1.08 and a["rol"] != "marge"][:12]
+
     gedekt = sum(1 for a in artikelen if a["n"] >= cfg.strategie["algemeen"]["min_concurrenten"])
     return {
         "meta": {"datum": datum, "gegenereerd": nu.replace(microsecond=0).isoformat() + "Z", "modus": modus,
@@ -140,5 +151,5 @@ def bouw_payload(cfg: Config, db: DB, modus: str = "live") -> dict:
             "signalen": len(signalen),
         },
         "voorstellen": voorstellen, "artikelen": artikelen, "historie": historie,
-        "concurrenten": concurrenten, "signalen": signalen,
+        "concurrenten": concurrenten, "signalen": signalen, "impact": impact,
     }
