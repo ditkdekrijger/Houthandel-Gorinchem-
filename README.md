@@ -130,16 +130,27 @@ python3 -m prijsscraper --config data/live/config --db data/live/prijzen.db --ui
 python3 -m prijsscraper --config data/live/config --db data/live/prijzen.db web --export docs/omgeving-live.html
 ```
 
-| | |
-|---|---|
-| Eigen artikelen (incl. lengtevarianten) | 2.623 uit 1.287 productpagina's |
-| Concurrentproducten ingeladen | 139.020 van 12 webshops |
-| Automatisch gekoppeld | 276 artikelen (134 met 2+ concurrenten), ca. 10,5% van de omzet |
-| Mediane prijsindex | 91 (Gorinchem ca. 9% onder de markt) |
-| Voorstellen run | 20 (15 omhoog, 5 omlaag) |
-| Indicatie extra brutowinst (realistisch, hele assortiment) | € 58k – € 207k per jaar |
+### Elk artikel een marktreferentie (`prijsscraper/marktmodel.py`)
 
-Inkoopprijzen en afzet per artikel zijn **geschat** (17% marge, € 10 mln omzet gelijk verdeeld).
+| Niveau | Hoe | Artikelen | Gebruik |
+|---|---|---|---|
+| A exact | zelfde product en maat | 276 | voorstellen, volle weging |
+| B gelijkwaardig | zelfde doorsnede/plaat/merkartikel, andere lengte of verpakking, omgerekend | 132 | voorstellen, weging 0,75 |
+| C marktmodel | dichtstbijzijnde aanbod geschaald per m/m²/m³ (hout), per m² basisuitvoering (bouwpakketten), per stuk (bevestiging) | 478 | voorstellen met halve stap, weging 0,5 |
+| D categorie-index | geen vergelijkbaar product online: index van gekoppelde artikelen van hetzelfde producttype, anders dezelfde categorie | 1.517 | alleen inzicht en impact |
+
+Samen 2.403 artikelen (alles behalve B-keus en samples); 886 met concurrentprijzen, 623 met 2+ concurrenten.
+Afgeleide koppelingen staan in `koppelingen-afgeleid.csv` (controleerbaar per regel).
+
+### Indicatie (realistisch scenario, € 10 mln omzet, 17% brutomarge)
+
+| | Extra brutowinst per jaar |
+|---|---|
+| Alleen A + B doorvoeren | € 33k |
+| A t/m D | € 177k (A 18k, B 15k, C 60k, D 84k) |
+
+Omzet +€ 63k – € 122k; brutomarge naar ca. 17,2% – 18,5%.
+Inkoopprijzen en afzet per artikel zijn **geschat** (17% marge, omzet gelijk verdeeld).
 Met een ERP-export (inkoop, afzet per artikel) worden voorstellen en impact exact.
 
 ## Volgende stappen

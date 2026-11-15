@@ -31,6 +31,7 @@ class ConcurrentPrijs:
     uitschieter: bool = False
     op_voorraad: bool | None = None
     url: str = ""
+    niveau: str = "A"          # A exact | B gelijkwaardig | C marktmodel
 
 
 @dataclass
@@ -75,6 +76,9 @@ class Analyse:
     geanalyseerd: int
     signalen: list[Signaal]
 
+
+# Gewicht per koppelniveau: afgeleide prijzen tellen minder zwaar mee
+NIVEAU_GEWICHT = {"A": 1.0, "B": 0.75, "C": 0.5}
 
 # ------------------------------------------------------------------ hulpfuncties
 def gewogen_kwantiel(waarden: list[tuple[float, float]], q: float) -> float:
@@ -129,7 +133,12 @@ def rond_af(prijs: float, methode: str = "psychologisch", richting: str | None =
     afronding nooit een grotere stap oplevert dan bedoeld."""
     if methode == "geen":
         return round(prijs, 4)
-    if methode == "cent":
+    if methode == "cent" or prijs < 2:
+        # kleine prijzen (bouten, schroeven per stuk): prijspunten liggen te ver uit elkaar -> centen
+        if richting == "omlaag":
+            return math.floor(prijs * 100 + 1e-6) / 100
+        if richting == "omhoog":
+            return math.ceil(prijs * 100 - 1e-6) / 100
         return round(prijs, 2)
     k = prijspunten(prijs, methode)
     if richting == "omlaag":
@@ -177,9 +186,11 @@ class PrijsEngine:
                 continue
             if o["op_voorraad"] == 0 and not self.kw.get("niet_op_voorraad_meetellen", False):
                 continue
-            cp = ConcurrentPrijs(concurrent=c.id, naam=c.naam, prijs=o["prijs_incl"], gewicht=c.gewicht,
+            niveau = o.get("niveau") or "A"
+            cp = ConcurrentPrijs(concurrent=c.id, naam=c.naam, prijs=o["prijs_incl"],
+                                 gewicht=c.gewicht * NIVEAU_GEWICHT.get(niveau, 0.5),
                                  op_voorraad=None if o["op_voorraad"] is None else bool(o["op_voorraad"]),
-                                 url=o["url"] or "")
+                                 url=o["url"] or "", niveau=niveau)
             # Actiedetectie: doorgestreepte prijs of flink onder eigen 30-dagen mediaan
             drempel = self.kw["actie_drempel"]
             if o["adviesprijs"] and o["prijs_incl"] < o["adviesprijs"] * (1 - drempel / 2):
@@ -228,6 +239,11 @@ class PrijsEngine:
 
         huidig = p.verkoopprijs_incl_btw
         max_stap = huidig * self.alg["max_stap_pct"]
+        # Alleen modelprijzen (niveau C) of minder dan min_concurrenten exacte/gelijkwaardige bronnen:
+        # voorzichtiger bijsturen (halve stap)
+        sterk = sum(1 for c in geldig if c.niveau in ("A", "B"))
+        if sterk < self.alg["min_concurrenten"]:
+            max_stap /= 2
         nieuw = huidig + max(-max_stap, min(max_stap, doel - huidig))
         afronding = self.alg.get("afronding", "psychologisch")
         # afronden richting de huidige prijs (conservatief: nooit groter dan max_stap)
@@ -302,6 +318,9 @@ class PrijsEngine:
                          f"{ref_naam} {_eur(ref)} laat ruimte voor marge")
         else:
             delen.append(f"{goedkoper} van {n} concurrenten goedkoper; {ref_naam} {_eur(ref)}")
+        afgeleid = sum(1 for c in geldig if c.niveau != "A")
+        if afgeleid:
+            delen.append(f"{afgeleid} van {n} prijzen afgeleid (gelijkwaardig product of marktmodel)")
         acties = [c.naam for c in geldig if c.actie]
         if acties:
             delen.append(f"tijdelijke actie bij {', '.join(acties)} (telt half mee)")

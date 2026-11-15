@@ -109,3 +109,10 @@ def test_selectie_balans():
     gekozen = selecteer(k, {"voorstellen_per_dag": 20, "min_aandeel_omhoog": 0.25, "min_aandeel_omlaag": 0.25})
     assert len(gekozen) == 20
     assert sum(v.richting == "omlaag" for v in gekozen) == 5
+
+
+def test_kleine_prijzen_afronden_op_centen():
+    from prijsscraper.pricing import rond_af
+    assert rond_af(0.2808, "psychologisch", "omlaag") == 0.28
+    assert rond_af(0.2551, "psychologisch", "omhoog") == 0.26
+    assert rond_af(1.234, "psychologisch") == 1.23

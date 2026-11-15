@@ -150,6 +150,10 @@ table.kale td,table.kale th{padding:9px 0;border-bottom:1px solid var(--rule);te
 table.kale th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-2);font-weight:600}
 table.kale tr:last-child td{border-bottom:0}
 table.kale .r{text-align:right}
+.niv{display:inline-block;font-size:11px;font-weight:700;padding:1px 7px;border-radius:99px;margin-right:6px;border:1px solid currentColor;opacity:.85}
+.niv.A{color:var(--up)}.niv.B{color:var(--maple-deep)}.niv.C{color:var(--tx-2)}.niv.D{color:var(--tx-2);border-style:dashed}
+.nivbalk{display:flex;height:14px;border-radius:99px;overflow:hidden;margin:14px 0 18px}
+.nivbalk span{display:block}
 .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:99px;background:var(--cream);color:var(--maple-deep);margin-left:6px}
 .wij td{font-weight:600}
 
@@ -319,7 +323,7 @@ const ICON = {
 const ROL = {trekker: 'Trekker', kern: 'Kern', marge: 'Marge'};
 
 let D = null;
-const UI = {filter: 'alle', open: new Set(), zoek: '', cat: '', sort: 'index'};
+const UI = {filter: 'alle', open: new Set(), zoek: '', cat: '', niv: '', sort: 'index'};
 const SERVER = DATA_INGEBED === null;
 const LSKEY = () => 'prijsmonitor-status-' + (D?.meta?.datum || '');
 
@@ -474,13 +478,18 @@ function rijHTML(v) {
   </div>`;
 }
 
+const NIVEAU = {A: 'exact', B: 'gelijkwaardig', C: 'marktmodel', D: 'categorie-index'};
+const NIVEAU_LANG = {A: 'Exact: zelfde product en maat', B: 'Gelijkwaardig: zelfde product in andere lengte/verpakking, omgerekend',
+  C: 'Marktmodel: afgeleid uit vergelijkbaar aanbod (per m, m², m³ of stuk)', D: 'Categorie-index: geen vergelijkbaar product online; index van gekoppelde artikelen in dezelfde categorie'};
+const nivTag = n => n ? `<span class="niv ${n}" title="${NIVEAU_LANG[n]}">${n} · ${NIVEAU[n]}</span>` : '';
+
 function concTabel(conc, eigen, voorstel) {
   const rijen = conc.map(c => ({...c, wij: false}));
   rijen.push({naam: 'Houthandel Gorinchem (nu)', prijs: eigen, wij: true});
   if (voorstel != null) rijen.push({naam: 'Houthandel Gorinchem (voorstel)', prijs: voorstel, wij: true});
   rijen.sort((a, b) => a.prijs - b.prijs);
   return `<table class="kale"><thead><tr><th>Aanbieder</th><th class="r">Prijs per eenheid</th><th class="r">t.o.v. ons</th></tr></thead><tbody>
-    ${rijen.map(c => `<tr class="${c.wij ? 'wij' : ''}"><td>${c.url && !c.url.includes('demo.invalid') ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.naam)}</a>` : esc(c.naam)}${c.actie ? '<span class="tag">actie</span>' : ''}</td>
+    ${rijen.map(c => `<tr class="${c.wij ? 'wij' : ''}"><td>${c.url && !c.url.includes('demo.invalid') ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.naam)}</a>` : esc(c.naam)}${c.actie ? '<span class="tag">actie</span>' : ''}${c.niveau && c.niveau !== 'A' ? `<span class="tag" title="${NIVEAU_LANG[c.niveau]}">${NIVEAU[c.niveau]}</span>` : ''}</td>
       <td class="r num">${eur.format(c.prijs)}</td><td class="r num">${c.wij ? '' : pct(c.prijs / eigen - 1)}</td></tr>`).join('')}
   </tbody></table>`;
 }
@@ -554,24 +563,26 @@ function spark(sku) {
 
 function artikelen() {
   const cats = [...new Set(D.artikelen.map(a => a.categorie))].sort();
-  let rij = D.artikelen.filter(a => (!UI.cat || a.categorie === UI.cat) &&
+  let rij = D.artikelen.filter(a => (!UI.cat || a.categorie === UI.cat) && (!UI.niv || a.niveau === UI.niv) &&
     (!UI.zoek || (a.naam + ' ' + a.sku).toLowerCase().includes(UI.zoek.toLowerCase())));
-  const sorteer = {index: (a, b) => (b.index ?? -9) - (a.index ?? -9), naam: (a, b) => a.naam.localeCompare(b.naam), marge: (a, b) => a.marge - b.marge};
+  const sorteer = {index: (a, b) => (b.index ?? b.index_geschat ?? -9) - (a.index ?? a.index_geschat ?? -9), naam: (a, b) => a.naam.localeCompare(b.naam), marge: (a, b) => a.marge - b.marge};
   rij.sort(sorteer[UI.sort]);
   return `<section class="blok"><div class="wrap">
     <div class="kop"><div><div class="eyebrow" style="color:var(--tx-2)">Assortiment</div><h2 style="margin-top:14px">Artikelen in de markt</h2>
-      <p>Prijsindex = onze prijs t.o.v. de mediaan van de concurrenten. Boven 100 zijn we duurder.</p></div>
+      <p>Prijsindex = onze prijs t.o.v. de mediaan van de concurrenten. Boven 100 zijn we duurder. Elk artikel heeft een niveau: A exact, B gelijkwaardig, C marktmodel, D categorie-index (≈).</p></div>
       <div class="zoek"><input id="zoek" type="search" placeholder="Zoek artikel of SKU" value="${esc(UI.zoek)}" aria-label="Zoeken">
         <select id="cat" aria-label="Categorie"><option value="">Alle categorieën</option>${cats.map(c => `<option ${c === UI.cat ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select>
+        <select id="niv" aria-label="Niveau"><option value="">Alle niveaus</option>${'ABCD'.split('').map(n => `<option value="${n}" ${UI.niv === n ? 'selected' : ''}>${n} · ${NIVEAU[n]} (${D.artikelen.filter(a => a.niveau === n).length})</option>`).join('')}</select>
         <select id="sort" aria-label="Sorteren"><option value="index" ${UI.sort === 'index' ? 'selected' : ''}>Duurste t.o.v. markt eerst</option><option value="marge" ${UI.sort === 'marge' ? 'selected' : ''}>Laagste marge eerst</option><option value="naam" ${UI.sort === 'naam' ? 'selected' : ''}>Naam</option></select></div></div>
     <div style="overflow-x:auto"><table class="tabel"><thead><tr><th>Artikel</th><th class="r">Onze prijs</th><th class="r verberg-m">Markt (laag – mediaan – hoog)</th><th class="r">Index</th><th class="r verberg-m">Marge</th><th class="verberg-m">Mediaan 30 dagen</th></tr></thead><tbody>
     ${rij.map(a => {
-      const idx = a.index == null ? null : Math.round(a.index * 100);
+      const geschat = a.index == null && a.index_geschat != null;
+      const idx = a.index != null ? Math.round(a.index * 100) : geschat ? Math.round(a.index_geschat * 100) : null;
       const cls = idx == null ? '' : idx > 103 ? 'hoog' : idx < 97 ? 'laag' : 'mid';
-      return `<tr class="klik" data-sku="${esc(a.sku)}" tabindex="0"><td><div class="titel" style="font-size:18px">${esc(a.naam)}</div><div class="sub">${esc(a.sku)} · ${esc(a.categorie)} · ${ROL[a.rol] || ''} · ${a.n} concurrent${a.n === 1 ? '' : 'en'}</div></td>
+      return `<tr class="klik" data-sku="${esc(a.sku)}" tabindex="0"><td><div class="titel" style="font-size:18px">${esc(a.naam)}</div><div class="sub">${nivTag(a.niveau)}${esc(a.sku)} · ${esc(a.categorie)} · ${ROL[a.rol] || ''} · ${a.n} concurrent${a.n === 1 ? '' : 'en'}</div></td>
       <td class="r num"><b>${eur.format(a.prijs)}</b></td>
       <td class="r num verberg-m">${a.mediaan != null ? `${eur.format(a.laagste)} – <b>${eur.format(a.mediaan)}</b> – ${eur.format(a.hoogste)}` : '<span class="sub">geen data</span>'}</td>
-      <td class="r">${idx == null ? '–' : `<span class="idx ${cls} num">${idx}</span>`}</td>
+      <td class="r">${idx == null ? '–' : geschat ? `<span class="sub num" title="${esc(a.toelichting || '')}">≈${idx}</span>` : `<span class="idx ${cls} num">${idx}</span>`}</td>
       <td class="r num verberg-m">${pct(a.marge, false)}</td><td class="verberg-m">${spark(a.sku)}</td></tr>`;
     }).join('') || '<tr><td colspan="6" class="leeg">Geen artikelen gevonden.</td></tr>'}
     </tbody></table></div></div></section>`;
@@ -585,7 +596,7 @@ function openArtikel(sku) {
     <h2 id="mtitel" style="font:500 clamp(26px,3vw,38px)/1.1 var(--display);margin:14px 0 6px;padding-right:56px">${esc(a.naam)}</h2>
     <p class="sub" style="margin:0 0 22px">Rol: ${ROL[a.rol] || a.rol} · inkoop ${eur.format(a.inkoop)} excl. btw · marge ${pct(a.marge, false)} · afzet ${a.afzet} per week${v ? ` · <b style="color:var(--tx)">voorstel vandaag: ${eur.format(v.voorstel)}</b>` : ''}</p>
     <div class="rij open" style="border:0"><div class="detail" style="padding:0;grid-template-columns:1fr">
-      <div class="kaart"><h3>Concurrenten nu</h3>${a.concurrenten.length ? concTabel(a.concurrenten, a.prijs, v?.voorstel) : '<p class="sub">Nog geen concurrenten gekoppeld voor dit artikel.</p>'}</div>
+      <div class="kaart"><h3>Concurrenten nu</h3><p style="margin:-4px 0 12px">${nivTag(a.niveau)}<span class="sub">${a.niveau ? NIVEAU_LANG[a.niveau] : ''}</span></p>${a.concurrenten.length ? concTabel(a.concurrenten, a.prijs, v?.voorstel) : `<p class="sub">${a.toelichting ? `Geschatte marktpositie: ${esc(a.toelichting)} (≈${Math.round(a.index_geschat * 100)}). Hier worden geen prijsvoorstellen op gebaseerd.` : 'Nog geen concurrenten gekoppeld voor dit artikel.'}</p>`}</div>
       <div class="kaart"><h3>Marktprijs afgelopen 30 dagen</h3>${grafiekHTML(a.sku, a.prijs, v?.voorstel)}</div>
     </div></div>`;
   $('#modal').classList.add('aan'); bindGrafieken($('#mdoos'));
@@ -635,7 +646,9 @@ function impactView() {
   const I = D.impact, R = I.scenario.realistisch;
   const kEur = x => '€ ' + (Math.round(x / 1000)).toLocaleString('nl-NL') + 'k';
   const pctS = x => pct(x);
-  const vol = I.dekking_omzet < 0.95;
+  const vol = !I.per_niveau && I.dekking_omzet < 0.95;
+  const PN = I.per_niveau, PE = R.brutowinst_per_niveau_eur || {};
+  const NKLEUR = {A: 'var(--up)', B: 'var(--maple-deep)', C: 'var(--maple)', D: 'var(--line)'};
   const kaart = (naam, sc, uit) => `<article class="ckaart ${uit ? 'uit' : ''}">
       <span class="nr" style="${uit ? 'color:var(--maple)' : ''}">${naam}</span>
       <div><div class="groot num">+${eur0.format(sc.brutowinst_delta_eur)}</div><div class="sub">extra brutowinst per jaar${vol ? ' op het gekoppelde deel' : ''}</div></div>
@@ -654,15 +667,15 @@ function impactView() {
     </tbody></table>` : `<p class="sub">${leeg}</p>`}</div>`;
   return `<section class="hero"><div class="wrap">
       <div class="eyebrow">Impact · indicatie op jaarbasis</div>
-      ${I.bandbreedte && vol
+      ${I.bandbreedte && (vol || PN)
         ? `<h1 style="font-size:clamp(40px,6.2vw,92px)">+${kEur(I.bandbreedte.laag)} – ${kEur(I.bandbreedte.hoog)}<span class="dot">.</span></h1>`
         : `<h1 style="font-size:clamp(44px,7vw,104px)">+${eur0.format(vol ? R.brutowinst_delta_eur_volledige_dekking : R.brutowinst_delta_eur)}<span class="dot">.</span></h1>`}
-      <p class="lead">Extra brutowinst per jaar bij goed gebruik van de prijsmonitor (realistisch scenario${vol ? ', doorgetrokken naar het hele assortiment' : ''}${I.bandbreedte && vol ? `; ondergrens = alleen artikelen met 2+ concurrenten, bovengrens = alle koppelingen. omzet +${kEur(Math.min(I.bandbreedte.omzet_laag, I.bandbreedte.omzet_hoog))} – ${kEur(Math.max(I.bandbreedte.omzet_laag, I.bandbreedte.omzet_hoog))}` : ''}),
+      <p class="lead">Extra brutowinst per jaar bij goed gebruik van de prijsmonitor (realistisch scenario${PN ? `, over het hele assortiment; ondergrens = alleen exacte en gelijkwaardige marktprijzen doorvoeren, bovengrens = ook marktmodel en categorie-index. Omzet +${kEur(Math.min(I.bandbreedte.omzet_laag, I.bandbreedte.omzet_hoog))} – ${kEur(Math.max(I.bandbreedte.omzet_laag, I.bandbreedte.omzet_hoog))}` : ''}${vol ? ', doorgetrokken naar het hele assortiment' : ''}${I.bandbreedte && vol ? `; ondergrens = alleen artikelen met 2+ concurrenten, bovengrens = alle koppelingen. Omzet +${kEur(Math.min(I.bandbreedte.omzet_laag, I.bandbreedte.omzet_hoog))} – ${kEur(Math.max(I.bandbreedte.omzet_laag, I.bandbreedte.omzet_hoog))}` : ''}),
       op een omzet van <b>${eur0.format(I.omzet_jaar)}</b> en een brutomarge van <b>${pct(I.brutomarge, false)}</b>.
-      Nu gekoppeld: <b>${I.artikelen_gekoppeld} van ${I.artikelen_totaal} artikelen</b> (${pct(I.dekking_omzet, false)} van de omzet).</p>
+      ${PN ? `Marktreferentie voor <b>${I.artikelen_met_referentie} van ${I.artikelen_totaal} artikelen</b> (B-keus en samples niet meegeteld), waarvan <b>${I.artikelen_gekoppeld}</b> met concurrentprijzen.` : `Nu gekoppeld: <b>${I.artikelen_gekoppeld} van ${I.artikelen_totaal} artikelen</b> (${pct(I.dekking_omzet, false)} van de omzet).`}</p>
       <div class="kpis">
         <div class="kpi"><span class="n">01</span><span class="v num">${I.index_mediaan ? Math.round(I.index_mediaan * 100) : '–'}</span><span class="l">mediane prijsindex t.o.v. markt (100 = gelijk)</span></div>
-        <div class="kpi"><span class="n">02</span><span class="v num">${I.artikelen_gekoppeld}</span><span class="l">artikelen met concurrentprijs</span></div>
+        <div class="kpi"><span class="n">02</span><span class="v num">${I.artikelen_gekoppeld}</span><span class="l">artikelen met concurrentprijs (A–C)</span></div>
         <div class="kpi"><span class="n">03</span><span class="v num">${I.artikelen_2plus}</span><span class="l">met 2 of meer concurrenten</span></div>
         <div class="kpi"><span class="n">04</span><span class="v num">${pctS(R.brutowinst_delta_pct_gekoppeld)}</span><span class="l">brutowinst op gekoppelde artikelen (realistisch)</span></div>
       </div></div></section>
@@ -670,6 +683,11 @@ function impactView() {
       <div class="kop"><div><div class="eyebrow" style="color:var(--tx-2)">Drie scenario's</div><h2 style="margin-top:14px">Wat goed gebruik oplevert</h2>
       <p>Verschil zit in hoeveel voorstellen worden doorgevoerd, hoe ver prijzen per jaar bewegen en hoe prijsgevoelig klanten zijn.</p></div></div>
       <div class="scen">${kaart('Voorzichtig', I.scenario.voorzichtig)}${kaart('Realistisch', R, true)}${kaart('Ambitieus', I.scenario.ambitieus)}</div>
+      ${PN ? `<div class="kaart" style="margin:14px 0"><h3>Hoe zeker is de marktprijs? Opbouw per niveau</h3>
+        <div class="nivbalk" role="img" aria-label="Artikelen per niveau">${'ABCD'.split('').map(n => `<span style="width:${PN[n] / I.artikelen_met_referentie * 100}%;background:${NKLEUR[n]}" title="${n}: ${PN[n]} artikelen"></span>`).join('')}</div>
+        <table class="kale"><thead><tr><th>Niveau</th><th class="r">Artikelen</th><th class="r">Extra brutowinst (realistisch)</th></tr></thead><tbody>
+        ${'ABCD'.split('').map(n => `<tr><td><span class="niv ${n}">${n} · ${NIVEAU[n]}</span><div class="sub">${NIVEAU_LANG[n].split(': ')[1]}</div></td><td class="r num">${PN[n]}</td><td class="r num">+${eur0.format(PE[n] || 0)}</td></tr>`).join('')}
+        </tbody></table><p class="sub" style="margin:12px 0 0">Prijsvoorstellen komen alleen uit A, B en C (bij alleen C met halve stappen). D telt mee in de indicatie, met een lagere doorvoer (35%).</p></div>` : ''}
       <div class="twee">
         <div class="kaart"><h3>Waar staan we t.o.v. de markt?</h3><p class="sub" style="margin:0">Aantal gekoppelde artikelen per prijsindex (onze prijs ÷ marktmediaan).</p>
           <div class="staaf" role="img" aria-label="Verdeling prijsindex">${Object.entries(v).map(([k, n]) => `<div title="${n} artikelen, index ${k}"><b class="num">${n}</b><i class="${k === '97-103' ? 'mid' : ''}" style="height:${Math.max(2, n / mx * 150)}px"></i><span>${k}<br>${lbl[k].replace('\n', ' ')}</span></div>`).join('')}</div></div>
@@ -677,7 +695,7 @@ function impactView() {
           <li><b>Inkoop en afzet per artikel zijn geschat</b>: inkoop uit ${pct(I.brutomarge, false)} gemiddelde marge, afzet door de omzet gelijk over artikelen te verdelen. Een ERP-export maakt dit exact.</li>
           <li><b>Prijselasticiteit</b> per rol (trekker −2,5, kern −1,6, marge −0,9), sterker als we boven de markt zitten.</li>
           <li><b>Doelpositie</b>: trekkers net onder het goedkoopste kwart, kern 2% onder de mediaan, marge-artikelen 4% erboven; nooit onder de margebodem.</li>
-          <li>Concurrentprijzen van ${D.kpis.concurrenten_actief} actieve concurrenten; koppelingen automatisch, alleen bij hoge betrouwbaarheid.</li>
+          <li>Concurrentprijzen van ${D.kpis.concurrenten_actief} actieve concurrenten; koppelingen automatisch. Hoe lager het niveau, hoe minder gewicht en hoe kleiner het deel dat wordt doorgevoerd (A 100%, B 85%, C 60%, D 35%).</li>
         </ul></div>
       </div>
       <div class="twee">${tab(I.kansen_omhoog, 'Grootste kansen: wij ruim onder de markt', 'Geen artikelen meer dan 5% onder de markt.')}${tab(I.kansen_omlaag, 'Risico: trekkers en kern ruim boven de markt', 'Geen trekker- of kernartikelen meer dan 8% boven de markt.')}</div>
@@ -699,6 +717,7 @@ function bind(v) {
   const z = $('#zoek'); if (z) { z.oninput = () => { UI.zoek = z.value; const pos = z.selectionStart; render(); const n = $('#zoek'); n.focus(); n.setSelectionRange(pos, pos); }; }
   const c = $('#cat'); if (c) c.onchange = () => { UI.cat = c.value; render(); };
   const s = $('#sort'); if (s) s.onchange = () => { UI.sort = s.value; render(); };
+  const nv = $('#niv'); if (nv) nv.onchange = () => { UI.niv = nv.value; render(); };
   bindGrafieken(app);
 }
 

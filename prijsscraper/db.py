@@ -42,6 +42,19 @@ CREATE TABLE IF NOT EXISTS signalen (
     tekst  TEXT
 );
 
+-- Marktreferentie per artikel op het best haalbare niveau (zie marktmodel.py).
+-- A exact, B gelijkwaardig, C marktmodel (per m/m2/m3), D categorie-index
+CREATE TABLE IF NOT EXISTS marktreferenties (
+    tijdstip       TEXT NOT NULL,
+    sku            TEXT NOT NULL,
+    niveau         TEXT NOT NULL,
+    marktprijs     REAL,
+    bronnen        INTEGER,
+    betrouwbaarheid REAL,
+    toelichting    TEXT
+);
+CREATE INDEX IF NOT EXISTS ix_mr ON marktreferenties (sku, tijdstip);
+
 CREATE TABLE IF NOT EXISTS eigen_prijzen (
     tijdstip  TEXT NOT NULL,
     sku       TEXT NOT NULL,
@@ -65,6 +78,9 @@ class DB:
         self.con = sqlite3.connect(str(pad))
         self.con.row_factory = sqlite3.Row
         self.con.executescript(SCHEMA)
+        kolommen = {r[1] for r in self.con.execute("PRAGMA table_info(observaties)")}
+        if "niveau" not in kolommen:  # migratie: koppelniveau A/B/C (NULL = handmatig/exact)
+            self.con.execute("ALTER TABLE observaties ADD COLUMN niveau TEXT")
 
     def close(self):
         self.con.close()
@@ -72,13 +88,28 @@ class DB:
     # --- observaties ---------------------------------------------------
     def voeg_observatie_toe(self, *, sku, concurrent, url, prijs_ruw, prijs_incl,
                             adviesprijs=None, op_voorraad=None, status="ok",
-                            melding=None, tijdstip=None):
+                            melding=None, tijdstip=None, niveau=None):
         self.con.execute(
             "INSERT INTO observaties (tijdstip, sku, concurrent, url, prijs_ruw, prijs_incl,"
-            " adviesprijs, op_voorraad, status, melding) VALUES (?,?,?,?,?,?,?,?,?,?)",
+            " adviesprijs, op_voorraad, status, melding, niveau) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
             (tijdstip or nu(), sku, concurrent, url, prijs_ruw, prijs_incl, adviesprijs,
-             None if op_voorraad is None else int(op_voorraad), status, melding),
+             None if op_voorraad is None else int(op_voorraad), status, melding, niveau),
         )
+
+    def bewaar_marktreferenties(self, rijen: list[dict], tijdstip: str | None = None):
+        t = tijdstip or nu()
+        self.con.executemany(
+            "INSERT INTO marktreferenties (tijdstip, sku, niveau, marktprijs, bronnen, betrouwbaarheid, toelichting)"
+            " VALUES (?,?,?,?,?,?,?)",
+            [(t, r["sku"], r["niveau"], r.get("marktprijs"), r.get("bronnen"), r.get("betrouwbaarheid"),
+              r.get("toelichting")) for r in rijen])
+
+    def marktreferenties(self) -> dict[str, dict]:
+        """Laatste marktreferentie per sku."""
+        rows = self.con.execute(
+            """SELECT m.* FROM marktreferenties m JOIN (SELECT sku, MAX(tijdstip) t FROM marktreferenties GROUP BY sku) x
+               ON m.sku=x.sku AND m.tijdstip=x.t""").fetchall()
+        return {r["sku"]: dict(r) for r in rows}
 
     def commit(self):
         self.con.commit()

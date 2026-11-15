@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+from collections import Counter, defaultdict
 import logging
 import re
 import sys
@@ -157,33 +158,92 @@ def cmd_aanbod(args):
 
 
 def cmd_koppel(args):
-    """Eigen artikelen automatisch koppelen aan het verzamelde aanbod; schrijft matches.csv
-    en zet de gevonden prijzen als observaties in de database."""
+    """Elk eigen artikel een marktreferentie geven (niveaus A-D, zie marktmodel.py); schrijft
+    matches.csv (A) en koppelingen-afgeleid.csv (B/C), zet de prijzen als observaties in de database
+    en bewaart per artikel de marktreferentie."""
     import json
-    from .matcher import koppel
+    import statistics
+    from .marktmodel import (bevestiging, bouwpakketten, breedteprofielen, categorie_index, hout_en_platen,
+                              merkartikelen)
+    from .matcher import kenmerken, koppel
     cfgmap, dbpad = _paden(args)
     cfg = laad_config(cfgmap)
     aanbod = [json.loads(r) for r in open(args.aanbod, encoding="utf-8") if r.strip()]
+    afwijkend = re.compile(r"b-keus|tweede keus|2e keus|bundel|restpartij|outlet|pakket van|set van \d|per pallet|cadeaubon", re.I)
+    aanbod = [a for a in aanbod if a.get("prijs_incl") and a["concurrent"] in cfg.concurrenten
+              and not afwijkend.search(a["titel"])]
+    uitgesloten = re.compile(r"b-keus|pakket \d|cadeaubon|sale|^sample", re.I)
     eigen = [{"sku": p.sku, "naam": p.naam, "prijs": p.verkoopprijs_incl_btw} for p in cfg.producten.values()
-             if not re.search(r"b-keus|pakket \d|cadeaubon|sale|^sample", p.naam, re.I)]
-    matches = koppel(eigen, aanbod, args.drempel)
+             if not uitgesloten.search(p.naam)]
+
+    # A: exact
+    exact = koppel(eigen, aanbod, args.drempel)
+    for m in exact:
+        m["niveau"] = "A"
+    gekoppeld = {(m["sku"], m["concurrent"]) for m in exact}
+    # B/C: afgeleid
+    ek = [(e, kenmerken(e["naam"])) for e in eigen]
+    ak = [(a, kenmerken(a["titel"])) for a in aanbod]
+    afgeleid = hout_en_platen(ek, ak, gekoppeld)
+    gekoppeld |= {(m["sku"], m["concurrent"]) for m in afgeleid}
+    afgeleid += bouwpakketten(ek, aanbod, gekoppeld)
+    gekoppeld |= {(m["sku"], m["concurrent"]) for m in afgeleid}
+    for stap in (lambda: bevestiging(ek, aanbod, gekoppeld), lambda: breedteprofielen(ek, ak, gekoppeld),
+                 lambda: merkartikelen(ek, ak, gekoppeld)):
+        nieuw = stap()
+        afgeleid += nieuw
+        gekoppeld |= {(m["sku"], m["concurrent"]) for m in nieuw}
+
     with open(cfgmap / "matches.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["sku", "concurrent", "url", "omrekenfactor", "opmerking"])
-        for m in sorted(matches, key=lambda m: (m["sku"], m["concurrent"])):
+        for m in sorted(exact, key=lambda m: (m["sku"], m["concurrent"])):
             w.writerow([m["sku"], m["concurrent"], m["url"], m["omrekenfactor"],
                         f"auto {m['betrouwbaarheid']:.2f}: {m['titel_concurrent'][:90]}"])
+    with open(cfgmap / "koppelingen-afgeleid.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["sku", "concurrent", "niveau", "betrouwbaarheid", "omrekenfactor", "prijs_concurrent",
+                    "prijs_omgerekend", "titel_concurrent", "url"])
+        for m in sorted(afgeleid, key=lambda m: (m["sku"], m["concurrent"])):
+            w.writerow([m["sku"], m["concurrent"], m["niveau"], m["betrouwbaarheid"], m["omrekenfactor"],
+                        m["prijs_incl"], round(m["prijs_incl"] * m["omrekenfactor"], 2), m["titel_concurrent"][:140],
+                        m["url"]])
+
     db = DB(dbpad)
-    for m in matches:
+    alles = exact + afgeleid
+    for m in alles:
         db.voeg_observatie_toe(sku=m["sku"], concurrent=m["concurrent"], url=m["url"],
                                prijs_ruw=m["prijs_incl"], prijs_incl=round(m["prijs_incl"] * m["omrekenfactor"], 4),
                                adviesprijs=round(m["adviesprijs"] * m["omrekenfactor"], 4) if m.get("adviesprijs") else None,
-                               op_voorraad=m.get("op_voorraad"), status="ok",
-                               melding=f"catalogus/auto {m['betrouwbaarheid']:.2f}")
+                               op_voorraad=m.get("op_voorraad"), status="ok", niveau=m["niveau"],
+                               melding=f"catalogus/{m['niveau']} {m['betrouwbaarheid']:.2f}: {m['titel_concurrent'][:80]}")
+
+    # marktreferentie per artikel (A-C) + categorie-index (D) voor de rest
+    per_sku = defaultdict(list)
+    for m in alles:
+        per_sku[m["sku"]].append(m)
+    prijs = {e["sku"]: e["prijs"] for e in eigen}
+    referenties, index = [], {}
+    for sku, lijst in per_sku.items():
+        beste = min(m["niveau"] for m in lijst)
+        prijzen = [m["prijs_incl"] * m["omrekenfactor"] for m in lijst]
+        mp = statistics.median(prijzen)
+        index[sku] = prijs[sku] / mp
+        referenties.append({"sku": sku, "niveau": beste, "marktprijs": round(mp, 2), "bronnen": len(lijst),
+                            "betrouwbaarheid": round(max(m["betrouwbaarheid"] for m in lijst), 3),
+                            "toelichting": f"{len(lijst)} concurrentprijzen ({', '.join(sorted({m['niveau'] for m in lijst}))})"})
+    producten = [{"sku": p.sku, "naam": p.naam, "categorie": p.categorie, "rol": p.rol, "prijs": p.verkoopprijs_incl_btw}
+                 for p in cfg.producten.values() if not uitgesloten.search(p.naam)]
+    referenties += categorie_index(producten, index)
+    db.bewaar_marktreferenties(referenties)
     db.commit()
     db.close()
-    skus = {m["sku"] for m in matches}
-    print(f"{len(matches)} koppelingen voor {len(skus)} van {len(eigen)} artikelen -> {cfgmap / 'matches.csv'}")
+
+    tel = Counter(r["niveau"] for r in referenties)
+    print(f"{len(exact)} exacte en {len(afgeleid)} afgeleide koppelingen "
+          f"({Counter(m['niveau'] for m in afgeleid)})")
+    print(f"Marktreferentie voor {len(referenties)} van {len(eigen)} artikelen: "
+          + ", ".join(f"{n}={tel.get(n, 0)}" for n in "ABCD"))
 
 
 def cmd_web(args):

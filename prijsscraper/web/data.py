@@ -45,6 +45,7 @@ def bouw_payload(cfg: Config, db: DB, modus: str = "live") -> dict:
         historie[sku] = reeks
 
     # --- artikelen ------------------------------------------------------------------
+    refs = db.marktreferenties()
     artikelen = []
     for p in cfg.producten.values():
         obs = db.laatste_observaties(p.sku, max_uur, ref + timedelta(seconds=1))
@@ -56,8 +57,17 @@ def bouw_payload(cfg: Config, db: DB, modus: str = "live") -> dict:
              "concurrenten": sorted([{"id": o["concurrent"], "naam": cfg.concurrenten[o["concurrent"]].naam
                                       if o["concurrent"] in cfg.concurrenten else o["concurrent"],
                                       "prijs": _r(o["prijs_incl"]), "url": o["url"] or "",
-                                      "actie": bool(o["adviesprijs"] and o["prijs_incl"] < o["adviesprijs"])}
+                                      "actie": bool(o["adviesprijs"] and o["prijs_incl"] < o["adviesprijs"]),
+                                      "niveau": o.get("niveau") or "A"}
                                      for o in obs if o["prijs_incl"]], key=lambda c: c["prijs"])}
+        ref_ = refs.get(p.sku)
+        if obs:
+            a["niveau"] = min((o.get("niveau") or "A") for o in obs)
+        elif ref_:
+            a["niveau"] = ref_["niveau"]
+            if ref_["niveau"] == "D" and ref_["marktprijs"]:
+                a["index_geschat"] = _r(p.verkoopprijs_incl_btw / ref_["marktprijs"], 4)
+                a["toelichting"] = ref_["toelichting"]
         if prijzen:
             med = statistics.median(prijzen)
             a.update(laagste=_r(prijzen[0]), mediaan=_r(med), hoogste=_r(prijzen[-1]),
@@ -129,13 +139,12 @@ def bouw_payload(cfg: Config, db: DB, modus: str = "live") -> dict:
     if bedrijf:
         from ..impact import analyse
         impact = analyse(cfg, db, bedrijf["omzet_jaar"], bedrijf["brutomarge"])
-        # ondergrens: alleen artikelen met >= 2 concurrentprijzen (betrouwbaarder)
-        streng = analyse(cfg, db, bedrijf["omzet_jaar"], bedrijf["brutomarge"], min_bronnen=2)
+        # ondergrens: alleen zekere marktprijzen (A exact, B gelijkwaardig) doorvoeren
+        zeker = analyse(cfg, db, bedrijf["omzet_jaar"], bedrijf["brutomarge"], niveaus="AB")
+        R = impact["scenario"]["realistisch"]
         impact["bandbreedte"] = {
-            "laag": streng["scenario"]["realistisch"]["brutowinst_delta_eur_volledige_dekking"],
-            "hoog": impact["scenario"]["realistisch"]["brutowinst_delta_eur_volledige_dekking"],
-            "omzet_laag": streng["scenario"]["realistisch"]["omzet_delta_eur_volledige_dekking"],
-            "omzet_hoog": impact["scenario"]["realistisch"]["omzet_delta_eur_volledige_dekking"],
+            "laag": zeker["scenario"]["realistisch"]["brutowinst_delta_eur"], "hoog": R["brutowinst_delta_eur"],
+            "omzet_laag": zeker["scenario"]["realistisch"]["omzet_delta_eur"], "omzet_hoog": R["omzet_delta_eur"],
         }
         idx = sorted((a for a in artikelen if a.get("index") and a["n"] >= 2), key=lambda a: a["index"])
         impact["kansen_omhoog"] = [{k: a[k] for k in ("sku", "naam", "prijs", "mediaan", "index", "n", "rol")}
