@@ -134,22 +134,23 @@ python3 -m prijsscraper --config data/live/config --db data/live/prijzen.db web 
 
 | Niveau | Hoe | Artikelen | Gebruik |
 |---|---|---|---|
-| A exact | zelfde product en maat | 276 | voorstellen, volle weging |
-| B gelijkwaardig | zelfde doorsnede/plaat/merkartikel, andere lengte of verpakking, omgerekend | 132 | voorstellen, weging 0,75 |
-| C marktmodel | dichtstbijzijnde aanbod geschaald per m/m²/m³ (hout), per m² basisuitvoering (bouwpakketten), per stuk (bevestiging) | 478 | voorstellen met halve stap, weging 0,5 |
-| D categorie-index | geen vergelijkbaar product online: index van gekoppelde artikelen van hetzelfde producttype, anders dezelfde categorie | 1.517 | alleen inzicht en impact |
+| A exact | zelfde product en maat | 537 | voorstellen, volle weging |
+| B gelijkwaardig | zelfde doorsnede/plaat/merkartikel, andere lengte of verpakking, omgerekend | 183 | voorstellen, weging 0,75 |
+| C marktmodel | dichtstbijzijnde aanbod geschaald per m/m²/m³ (hout), per m² basisuitvoering (bouwpakketten), per stuk (bevestiging) | 483 | voorstellen met halve stap, weging 0,5 |
+| D categorie-index | geen vergelijkbaar product online: index van gekoppelde artikelen van hetzelfde producttype, anders dezelfde categorie | 1.200 | alleen inzicht en impact |
 
-Samen 2.403 artikelen (alles behalve B-keus en samples); 886 met concurrentprijzen, 623 met 2+ concurrenten.
+Samen 2.403 artikelen (alles behalve B-keus en samples); 1.203 met concurrentprijzen, 878 met 2+ concurrenten.
 Afgeleide koppelingen staan in `koppelingen-afgeleid.csv` (controleerbaar per regel).
 
 ### Indicatie (realistisch scenario, € 10 mln omzet, 17% brutomarge)
 
 | | Extra brutowinst per jaar |
 |---|---|
-| Alleen A + B doorvoeren | € 33k |
-| A t/m D | € 177k (A 18k, B 15k, C 60k, D 84k) |
+| Alleen A + B doorvoeren | € 56k |
+| A t/m D | € 158k (A 43k, B 14k, C 50k, D 52k) |
 
-Omzet +€ 63k – € 122k; brutomarge naar ca. 17,2% – 18,5%.
+Omzet +€ 90k – € 137k; brutomarge naar ca. 17,6% – 18,3%.
+Bronnen: 20 concurrenten plus specialisten HMG (EPDM/polycarbonaat), Toolstation (bevestiging, verf) en Kas20 (eiken tafels).
 Inkoopprijzen en afzet per artikel zijn **geschat** (17% marge, omzet gelijk verdeeld).
 Met een ERP-export (inkoop, afzet per artikel) worden voorstellen en impact exact.
 

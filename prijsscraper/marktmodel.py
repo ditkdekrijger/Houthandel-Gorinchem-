@@ -31,7 +31,7 @@ PAKKET = [
     ("overkapping", r"overkapping|veranda|terrasoverkapping|carport|lounge ?overkapping"),
     ("tuinhuis", r"tuinhuis|blokhut|kapschuur|buitenverblijf|tuinkamer|schuur(?!deur)|chalet|poolhouse"),
     ("sauna", r"sauna"),
-    ("tafelblad", r"tafelblad|boomstamblad|blad\b"),
+    ("tafelblad", r"tafelblad|boomstamblad|blad\b|deens ovaal|ovaal \d"),
     ("tafel", r"eettafel|boomstamtafel|tuintafel|picknicktafel|tafel\b"),
 ]
 MIN_M2 = {"tafelblad": 0.5, "tafel": 0.5}
@@ -317,6 +317,8 @@ def bevestiging_spec(titel: str) -> tuple | None:
     soort = next((g for g, p in BEVESTIGING if re.search(p, t)), None)
     if not soort or re.search(r"plug|bit\b|bitje|sleutel|boor|set\b|assortiment", t):
         return None
+    if "schroef" in soort and re.search(r"metaalschroef|machineschroef|\bm\d{1,2}\s*x", t):
+        soort += "-metaal"  # metrische schroef is geen houtschroef van dezelfde maat
     t2 = re.sub(r"(\d) 0 x", r"\1.0 x", t)
     t2 = re.sub(r"(\d),(\d)", r"\1.\2", t2)
     maten = re.findall(r"m?(\d{1,2}(?:\.\d)?)\s*x\s*(\d{2,3})(?!\s*-)\s*(?:mm)?", t2)

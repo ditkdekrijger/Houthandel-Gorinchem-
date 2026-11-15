@@ -146,7 +146,7 @@ def bouw_payload(cfg: Config, db: DB, modus: str = "live") -> dict:
             "laag": zeker["scenario"]["realistisch"]["brutowinst_delta_eur"], "hoog": R["brutowinst_delta_eur"],
             "omzet_laag": zeker["scenario"]["realistisch"]["omzet_delta_eur"], "omzet_hoog": R["omzet_delta_eur"],
         }
-        idx = sorted((a for a in artikelen if a.get("index") and a["n"] >= 2), key=lambda a: a["index"])
+        idx = sorted((a for a in artikelen if a.get("index") and a["n"] >= 2 and a.get("niveau") in ("A", "B")), key=lambda a: a["index"])
         impact["kansen_omhoog"] = [{k: a[k] for k in ("sku", "naam", "prijs", "mediaan", "index", "n", "rol")}
                                    for a in idx if a["index"] < 0.95][:12]
         impact["kansen_omlaag"] = [{k: a[k] for k in ("sku", "naam", "prijs", "mediaan", "index", "n", "rol")}

@@ -68,3 +68,15 @@ def test_categorie_index_eerst_zelfde_producttype():
 def test_tafelblad_per_m2():
     assert pakket("Eiken tafelblad recht RUSTIEK 160 x 100") == ("tafelblad", 1.6)
     assert pakket("Eiken boomstamtafelblad 220 x 100 rustiek geborsteld")[0] == "tafelblad"
+
+
+def test_metaalschroef_is_geen_houtschroef():
+    from prijsscraper.marktmodel import bevestiging_spec
+    hout = bevestiging_spec("Wofix Wit verzinkte Torx schroeven 5 0 x 40 mm")
+    metaal = bevestiging_spec("Metaalschroeven cilinderkop M5x40mm PH2")
+    assert hout and metaal and hout[:4] != metaal[:4]
+
+
+def test_deens_ovaal_is_tafelblad():
+    from prijsscraper.marktmodel import pakket
+    assert pakket("Deens ovaal 280 x 120 cm met facet gladde afwerking")[0] == "tafelblad"
