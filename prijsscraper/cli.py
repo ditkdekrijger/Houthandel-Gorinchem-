@@ -165,7 +165,7 @@ def cmd_koppel(args):
     cfg = laad_config(cfgmap)
     aanbod = [json.loads(r) for r in open(args.aanbod, encoding="utf-8") if r.strip()]
     eigen = [{"sku": p.sku, "naam": p.naam, "prijs": p.verkoopprijs_incl_btw} for p in cfg.producten.values()
-             if not re.search(r"b-keus|pakket \d|cadeaubon|sale", p.naam, re.I)]
+             if not re.search(r"b-keus|pakket \d|cadeaubon|sale|^sample", p.naam, re.I)]
     matches = koppel(eigen, aanbod, args.drempel)
     with open(cfgmap / "matches.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)

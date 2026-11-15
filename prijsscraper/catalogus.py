@@ -36,9 +36,37 @@ def bepaal_rol(naam: str, categorie: str) -> str:
 
 
 def _sitemap_urls(fetcher: Fetcher, basis: str) -> list[str]:
-    xml = fetcher.haal(basis.rstrip("/") + "/product-sitemap.xml", 1)
-    urls = re.findall(r"<loc>\s*(?:<!\[CDATA\[)?\s*(https?://[^\]<\s]+/product/[^\]<\s]+)", xml)
+    """Alle product-sitemaps (Yoast splitst per 1000: product-sitemap.xml, product-sitemap2.xml, ...)."""
+    urls: list[str] = []
+    for n in range(1, 30):
+        naam = "product-sitemap.xml" if n == 1 else f"product-sitemap{n}.xml"
+        try:
+            xml = fetcher.haal(basis.rstrip("/") + "/" + naam, 1)
+        except Exception:  # noqa: BLE001
+            break
+        gevonden = re.findall(r"<loc>\s*(?:<!\[CDATA\[)?\s*(https?://[^\]<\s]+/product/[^\]<\s]+)", xml)
+        if not gevonden:
+            break
+        urls += gevonden
     return sorted(set(urls))
+
+
+def _variaties(html: str) -> list[dict]:
+    """WooCommerce-variaties: attribuut data-product_variations of JS `var variations = [...]`."""
+    m = re.search(r'data-product_variations="([^"]+)"', html)
+    if m and m.group(1) != "false":
+        try:
+            return json.loads(htmlmod.unescape(m.group(1)))
+        except (json.JSONDecodeError, ValueError):
+            pass
+    m = re.search(r"var\s+variations\s*=\s*\[", html)
+    if m:
+        try:
+            data, _ = json.JSONDecoder().raw_decode(html, m.end() - 1)
+            return data if isinstance(data, list) else []
+        except (json.JSONDecodeError, ValueError):
+            pass
+    return []
 
 
 def parse_productpagina(url: str, html: str) -> list[dict]:
@@ -68,13 +96,7 @@ def parse_productpagina(url: str, html: str) -> list[dict]:
     basis_sku = str(prod.get("sku") or "").strip()
     regels = []
 
-    m = re.search(r'data-product_variations="([^"]+)"', html)
-    variaties = []
-    if m and m.group(1) != "false":
-        try:
-            variaties = json.loads(htmlmod.unescape(m.group(1)))
-        except (json.JSONDecodeError, ValueError):
-            variaties = []
+    variaties = [v for v in _variaties(html) if isinstance(v, dict)]
     if variaties:
         for v in variaties:
             if not v.get("display_price"):
@@ -86,7 +108,8 @@ def parse_productpagina(url: str, html: str) -> list[dict]:
                 "naam": f"{naam} {attr}".strip(),
                 "categorie": categorie,
                 "verkoopprijs_incl_btw": float(v["display_price"]),
-                "van_prijs": float(v.get("display_regular_price") or 0) or None,
+                "van_prijs": (float(v.get("display_regular_price") or 0)
+                              if float(v.get("display_regular_price") or 0) > float(v["display_price"]) else None),
                 "op_voorraad": bool(v.get("is_in_stock", True)),
                 "url": f"{url}?variation_id={v['variation_id']}",
             })

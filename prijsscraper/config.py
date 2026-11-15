@@ -102,6 +102,8 @@ def laad_producten(pad: Path) -> dict[str, Product]:
 
 def laad_matches(pad: Path) -> list[Match]:
     res = []
+    if not pad.exists():
+        return res
     with open(pad, newline="", encoding="utf-8-sig") as f:
         for r in csv.DictReader(f):
             if not r.get("sku") or not r.get("url"):

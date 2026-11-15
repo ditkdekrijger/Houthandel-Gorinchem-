@@ -60,4 +60,19 @@ def test_parse_woocommerce_variaties():
       &quot;variation_id&quot;:7,&quot;is_in_stock&quot;:true}]"></form>'''
     r = parse_productpagina("https://x/product/p/", html)
     assert r == [{"sku": "1-300", "naam": "Douglas plank 22x200 300 cm", "categorie": "", "verkoopprijs_incl_btw": 14.95,
-                  "van_prijs": 14.95, "op_voorraad": True, "url": "https://x/product/p/?variation_id=7"}]
+                  "van_prijs": None, "op_voorraad": True, "url": "https://x/product/p/?variation_id=7"}]
+
+
+def test_parse_variaties_uit_js_variabele():
+    html = '''<script type="application/ld+json">{"@type":"Product","name":"Douglas Balk 50 x 100 mm","sku":"18828",
+      "offers":{"@type":"Offer","price":"11.67"}}</script>
+      <script>var productID = '2650';
+      var variations = [{"attributes":{"attribute_pa_lengtemaat":"300-cm"},"display_price":11.67,
+        "display_regular_price":12.5,"sku":"18828-01","variation_id":2653,"is_in_stock":true},
+       {"attributes":{"attribute_pa_lengtemaat":"500-cm"},"display_price":19.45,"display_regular_price":19.45,
+        "sku":"18828-02","variation_id":14645,"is_in_stock":false}];</script>'''
+    r = parse_productpagina("https://x/product/balk/", html)
+    assert [(x["sku"], x["naam"], x["verkoopprijs_incl_btw"], x["van_prijs"], x["op_voorraad"]) for x in r] == [
+        ("18828-01", "Douglas Balk 50 x 100 mm 300 cm", 11.67, 12.5, True),
+        ("18828-02", "Douglas Balk 50 x 100 mm 500 cm", 19.45, None, False)]
+    assert kenmerken(r[0]["naam"]).lengte == 300
